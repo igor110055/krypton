@@ -9,6 +9,7 @@ use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
+use app\models\Api;
 
 class SiteController extends Controller
 {
@@ -61,7 +62,13 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        $api = new Api;
+        $result = '';
+//        $result = $api->getMarkets();
+//        $result = $api->getOpenOrders();
+        return $this->render('index', [
+            'result' => json_decode($result, true)
+        ]);
     }
 
     /**

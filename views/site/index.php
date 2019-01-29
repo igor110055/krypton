@@ -49,5 +49,9 @@ $this->title = 'My Yii Application';
             </div>
         </div>
 
+        <pre>
+            <?php print_r($result) ?>
+        </pre>
+
     </div>
 </div>
