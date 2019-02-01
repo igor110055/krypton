@@ -25,15 +25,120 @@ class Api
         return $this->getResponse($endPoint);
     }
 
-    public function getOpenOrders()
+    public function getCurrencies()
+    {
+        $endPoint = 'public/getcurrencies';
+
+        return $this->getResponse($endPoint);
+    }
+
+    public function getTicker($market)
+    {
+        $endPoint = 'public/getticker';
+
+        if ($market) {
+            $params = [
+                'market' => $market
+            ];
+        }
+
+        return $this->getResponse($endPoint, $params);
+    }
+
+    public function getMarketSummaries()
+    {
+        $endPoint = 'public/getmarketsummaries';
+
+        return $this->getResponse($endPoint);
+    }
+
+    public function getMarketSummary($market)
+    {
+        $endPoint = 'public/getmarketsummary';
+
+        if ($market) {
+            $params = [
+                'market' => $market
+            ];
+        }
+
+        return $this->getResponse($endPoint, $params);
+    }
+
+    public function getOrderBook($market, $type = 'both')
+    {
+        $endPoint = 'public/getorderbook';
+
+        if ($market && $type) {
+            $params = [
+                'market' => $market,
+                'type' => $type
+            ];
+        }
+
+        return $this->getResponse($endPoint, $params);
+    }
+
+    public function getMarketHistory($market)
+    {
+        $endPoint = 'public/getmarkethistory';
+
+        if ($market) {
+            $params = [
+                'market' => $market
+            ];
+        }
+
+        return $this->getResponse($endPoint, $params);
+    }
+
+    public function getOpenOrders($market = null)
     {
         $endPoint = 'market/getopenorders';
 
+        if ($market) {
+            $params = [
+                'market' => $market
+            ];
+        }
+
+        return $this->getResponse($endPoint, $params, true);
+    }
+
+    public function getAccountBalances()
+    {
+        $endPoint = 'account/getbalances';
 
         return $this->getResponse($endPoint, null, true);
     }
 
-    protected function getResponse($endPoint, $params, $auth = false)
+    public function getAccountBalance($currency)
+    {
+        $endPoint = 'account/getbalance';
+
+        if ($currency) {
+            $params = [
+                'currency' => $currency
+            ];
+        }
+
+        return $this->getResponse($endPoint, $params, true);
+    }
+
+    public function getAccountDepositAddress($currency)
+    {
+        $endPoint = 'account/getdepositaddress';
+
+        if ($currency) {
+            $params = [
+                'currency' => $currency
+            ];
+        }
+
+        return $this->getResponse($endPoint, $params, true);
+    }
+
+    protected function getResponse($endPoint, $params = null, $auth = false)
     {
         $authParams = [
             'apikey' => $this->apiKey,

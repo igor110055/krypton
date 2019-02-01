@@ -66,6 +66,15 @@ class SiteController extends Controller
         $result = '';
 //        $result = $api->getMarkets();
 //        $result = $api->getOpenOrders();
+//        $result = $api->getCurrencies();
+//        $result = $api->getTicker('BTC-TRX');
+//        $result = $api->getMarketSummaries();
+//        $result = $api->getMarketSummary('BTC-TRX');
+//        $result = $api->getOrderBook('BTC-TRX');
+//        $result = $api->getMarketHistory('BTC-TRX');
+//        $result = $api->getAccountBalances();
+//        $result = $api->getAccountBalance('TRX');
+        $result = $api->getAccountDepositAddress('BTC');
         return $this->render('index', [
             'result' => json_decode($result, true)
         ]);
