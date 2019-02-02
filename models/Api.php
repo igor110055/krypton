@@ -105,14 +105,58 @@ class Api
         return $this->getResponse($endPoint, $params, true);
     }
 
-    public function getAccountBalances()
+    public function placeBuyOrder($market, $quantity, $rate)
+    {
+        $endPoint = 'market/buylimit';
+
+        if ($market && $quantity && $rate) {
+            $params = [
+                'market' => $market,
+                'quantity' => $quantity,
+                'rate' => $rate
+            ];
+        }
+
+        $response = $this->getResponse($endPoint, $params, true);
+        return $response;
+    }
+
+    public function placeSellOrder($market, $quantity, $rate)
+    {
+        $endPoint = 'market/selllimit';
+
+        if ($market && $quantity && $rate) {
+            $params = [
+                'market' => $market,
+                'quantity' => $quantity,
+                'rate' => $rate
+            ];
+        }
+
+        $response = $this->getResponse($endPoint, $params, true);
+        return $response;
+    }
+
+    public function cancelOrder($uuid)
+    {
+        $endPoint = 'market/cancel';
+
+        if ($uuid) {
+            $params['uuid'] = $uuid;
+        }
+
+        $response = $this->getResponse($endPoint, $params, true);
+        return $response;
+    }
+
+    public function getBalances()
     {
         $endPoint = 'account/getbalances';
 
         return $this->getResponse($endPoint, null, true);
     }
 
-    public function getAccountBalance($currency)
+    public function getBalance($currency)
     {
         $endPoint = 'account/getbalance';
 
@@ -125,7 +169,7 @@ class Api
         return $this->getResponse($endPoint, $params, true);
     }
 
-    public function getAccountDepositAddress($currency)
+    public function getDepositAddress($currency)
     {
         $endPoint = 'account/getdepositaddress';
 
@@ -136,6 +180,70 @@ class Api
         }
 
         return $this->getResponse($endPoint, $params, true);
+    }
+
+    public function withdraw($currency, $quantity, $address, $paymentId = null)
+    {
+        $endPoint = 'account/withdraw';
+
+        if ($currency && $quantity && $address) {
+            $params = [
+                'currency' => $currency,
+                'quantity' => $quantity,
+                'address' => $address
+            ];
+        }
+        if ($paymentId) {
+            $params['paymentid'] = $paymentId;
+        }
+
+        $response = $this->getResponse($endPoint, $params, true);
+
+        return $response;
+    }
+
+    public function getOrder($uuid)
+    {
+        $endPoint = 'account/getorder';
+
+        if ($uuid) {
+            $params['uuid'] = $uuid;
+        }
+
+        $response = $this->getResponse($endPoint, $params, true);
+
+        return $response;
+    }
+
+    public function getOrders($market = null)
+    {
+        $endPoint = 'account/getorderhistory';
+
+        if ($market) {
+            $params['market'] = $market;
+        }
+
+        $response = $this->getResponse($endPoint, $params, true);
+
+        return $response;
+    }
+
+    public function getWithdrawalHistory()
+    {
+        $endPoint = 'account/getwithdrawalhistory';
+
+        $response = $this->getResponse($endPoint, null, true);
+
+        return $response;
+    }
+
+    public function getDepositHistory()
+    {
+        $endPoint = 'account/getdeposithistory';
+
+        $response = $this->getResponse($endPoint, null, true);
+
+        return $response;
     }
 
     protected function getResponse($endPoint, $params = null, $auth = false)
@@ -157,10 +265,10 @@ class Api
         if (is_array($params)) {
             $url .= '?'.http_build_query($params);
         }
-
-        $hash = $this->getMessageHash($url);
-
-        $this->curl->setHeader('apisign', $hash);
+        if ($auth) {
+            $hash = $this->getMessageHash($url);
+            $this->curl->setHeader('apisign', $hash);
+        }
         $response = $this->curl->get($url);
 
         return $response;

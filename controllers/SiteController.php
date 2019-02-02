@@ -72,9 +72,16 @@ class SiteController extends Controller
 //        $result = $api->getMarketSummary('BTC-TRX');
 //        $result = $api->getOrderBook('BTC-TRX');
 //        $result = $api->getMarketHistory('BTC-TRX');
-//        $result = $api->getAccountBalances();
-//        $result = $api->getAccountBalance('TRX');
-        $result = $api->getAccountDepositAddress('BTC');
+//        $result = $api->getBalances();
+//        $result = $api->getBalance('TRX');
+//        $result = $api->getDepositAddress('BTC');
+//        $result = $api->getOrder('b25d4c8f-f455-458e-aebe-11d89b70080f');
+//        $result = $api->getOrders();
+//        $result = $api->getOrders('BTC-TRX');
+//        $result = $api->getWithdrawalHistory();
+//        $result = $api->getDepositHistory();
+//        $result = $api->placeSellOrder('BTC-REP',4.49110895, 0.0042);
+//        $result = $api->cancelOrder('056bb71e-40f5-49df-afcc-f37dce42e011');
         return $this->render('index', [
             'result' => json_decode($result, true)
         ]);
@@ -137,6 +144,13 @@ class SiteController extends Controller
      */
     public function actionAbout()
     {
-        return $this->render('about');
+        $api = new Api;
+
+        $result = $api->getOpenOrders('BTC-REP');
+//        $result = $api->getTicker('BTC-REP');
+
+        return $this->render('about', [
+            'result' => json_decode($result, true)
+        ]);
     }
 }
