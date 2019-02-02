@@ -31,7 +31,7 @@ $config = [
             // send all mails to a file by default. You have to set
             // 'useFileTransport' to false and configure a transport
             // for the mailer to send real emails.
-            'useFileTransport' => true,
+            'useFileTransport' => false,
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
@@ -59,14 +59,14 @@ if (YII_ENV_DEV) {
     $config['modules']['debug'] = [
         'class' => 'yii\debug\Module',
         // uncomment the following to add your IP if you are not connecting from localhost.
-        //'allowedIPs' => ['127.0.0.1', '::1'],
+        'allowedIPs' => ['127.0.0.1', '::1', '77.65.91.35'],
     ];
 
     $config['bootstrap'][] = 'gii';
     $config['modules']['gii'] = [
         'class' => 'yii\gii\Module',
         // uncomment the following to add your IP if you are not connecting from localhost.
-        //'allowedIPs' => ['127.0.0.1', '::1'],
+        'allowedIPs' => ['127.0.0.1', '::1', '77.65.91.35'],
     ];
 }
 
