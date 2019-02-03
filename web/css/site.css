@@ -3,6 +3,10 @@ body {
     height: 100%;
 }
 
+.container {
+    width: 100%;
+}
+
 .wrap {
     min-height: 100%;
     height: auto;
@@ -96,6 +100,12 @@ a.desc:after {
     border: none;
 }
 
+#start-chart {
+    height: 600px;
+}
+.body-content {
+    padding: 15px
+}
 @media(max-width:767px) {
     .nav li > form > button.logout {
         display:block;
