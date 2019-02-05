@@ -30,7 +30,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'market',
             ['attribute' => 'price',
              'value' => function($model) {
-                return floatval($model->price);
+                return number_format($model->price, 8);
             }],
             'condition',
             'message:ntext',
