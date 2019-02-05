@@ -12,11 +12,16 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'market')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'market')->dropdownList(
+        $model->getMarketList(), ['prompt'=>'Select market']
+    ) ?>
 
     <?= $form->field($model, 'price')->textInput() ?>
 
-    <?= $form->field($model, 'condition')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'condition')->dropDownList([
+            'COND_MORE' => $model::COND_MORE,
+            'COND_LESS' => $model::COND_LESS
+    ]) ?>
 
     <?= $form->field($model, 'message')->textarea(['rows' => 6]) ?>
 

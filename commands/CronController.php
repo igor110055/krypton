@@ -9,6 +9,8 @@ namespace app\commands;
 
 use yii\console\Controller;
 use app\models\BotEngine;
+use app\models\EndPointCacher;
+use app\models\Api\Bittrex;
 
 class CronController extends Controller
 {
@@ -17,5 +19,14 @@ class CronController extends Controller
         $engine = new BotEngine();
 
         $engine->testMail();
+    }
+
+    public function actionDownloadMarkets()
+    {
+        $bittrexApi = new Bittrex();
+        $bittrexCacher = new EndPointCacher($bittrexApi);
+
+        $bittrexCacher->downloadMarkets();
+
     }
 }

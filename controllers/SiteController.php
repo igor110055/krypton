@@ -9,7 +9,7 @@ use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
-use app\models\Api;
+use app\models\Api\Bittrex;
 
 class SiteController extends Controller
 {
@@ -62,7 +62,7 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        $api = new Api;
+        $api = new Bittrex;
         $result = '';
 //        $result = $api->getMarkets();
 //        $result = $api->getOpenOrders();
@@ -144,7 +144,7 @@ class SiteController extends Controller
      */
     public function actionAbout()
     {
-        $api = new Api;
+        $api = new Bittrex;
 
         $result = $api->getOpenOrders('BTC-REP');
 //        $result = $api->getTicker('BTC-REP');

@@ -1,15 +1,20 @@
 <?php
-namespace app\models;
+namespace app\models\Api;
 
 use Yii;
 use linslin\yii2\curl;
 
-class Api
+class Bittrex
 {
     private $apiUrl = 'https://api.bittrex.com/api/v1.1/';
     private $apiSecret;
     private $apiKey;
     private $curl;
+    private $cachePath = 'datasource/api/bittrex/';
+
+    private $dataSource = [
+        'markets' => 'markets.json'
+    ];
 
     public function __construct()
     {
@@ -290,6 +295,19 @@ class Api
     protected function getApiSecret()
     {
         return $this->apiSecret;
+    }
+
+    public function getCachePath()
+    {
+        return $this->cachePath;
+    }
+
+    public function getDataSource($key)
+    {
+        if (isset($this->dataSource[$key])) {
+            return $this->dataSource[$key];
+        }
+        return $this->dataSource;
     }
 
 }

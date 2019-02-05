@@ -3,6 +3,9 @@
 namespace app\models;
 
 use Yii;
+use app\models\Api\Bittrex;
+use app\models\EndPointCacher;
+use app\utils\BittrexParser;
 
 /**
  * This is the model class for table "alert".
@@ -17,6 +20,9 @@ use Yii;
  */
 class Alert extends \yii\db\ActiveRecord
 {
+    const COND_MORE = '>=';
+    const COND_LESS = '<=';
+
     /**
      * {@inheritdoc}
      */
@@ -53,5 +59,17 @@ class Alert extends \yii\db\ActiveRecord
             'modified' => 'Modified',
             'crdate' => 'Crdate',
         ];
+    }
+
+    public function getMarketList()
+    {
+        $bittrexApi = new Bittrex();
+        $bittrexCacher = new EndPointCacher($bittrexApi);
+
+        $marketJson = $bittrexCacher->getMartkets();
+
+        $marketList = BittrexParser::getMarketList($marketJson);
+
+        return $marketList;
     }
 }
