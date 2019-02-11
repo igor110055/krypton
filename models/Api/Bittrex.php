@@ -276,7 +276,7 @@ class Bittrex
         }
         $response = $this->curl->get($url);
 
-        return $response;
+        return json_decode($response, true);
 
     }
 

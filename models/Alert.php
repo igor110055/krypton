@@ -67,7 +67,6 @@ class Alert extends \yii\db\ActiveRecord
         $bittrexCacher = new EndPointCacher($bittrexApi);
 
         $marketJson = $bittrexCacher->getMartkets();
-
         $marketList = BittrexParser::getMarketList($marketJson);
 
         return $marketList;

@@ -14,7 +14,7 @@ class EndPointCacher
 
     public function getMartkets()
     {
-        $path = Yii::$app->basePath.'/'.$this->api->getcachePath().$this->api->getDataSource('markets');
+        $path = Yii::$app->basePath.'/'.$this->api->getCachePath().$this->api->getDataSource('markets');
 
         if (file_exists($path)) {
             return file_get_contents($path);
@@ -24,7 +24,7 @@ class EndPointCacher
     public function downloadMarkets()
     {
         $markets = $this->api->getMarkets();
-        $savePath = $this->api->getcachePath();
+        $savePath = $this->api->getCachePath();
         $fileName = $this->api->getDataSource('markets');
 
         $path = Yii::$app->basePath.'/'.$savePath.$fileName;
