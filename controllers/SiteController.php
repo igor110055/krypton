@@ -83,8 +83,8 @@ class SiteController extends Controller
 //        $result = $api->getDepositHistory();
 //        $result = $api->placeSellOrder('BTC-REP',4.49110895, 0.0042);
 //        $result = $api->cancelOrder('056bb71e-40f5-49df-afcc-f37dce42e011');
-        $bot = new BotEngine();
-        $result = $bot->checkAlerts();
+//        $bot = new BotEngine();
+//        $result = $bot->checkAlerts();
         return $this->render('index', [
             'result' => json_decode($result, true)
         ]);

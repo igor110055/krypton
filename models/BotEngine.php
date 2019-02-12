@@ -1,35 +1,31 @@
 <?php
 namespace app\models;
 
+use app\utils\BittrexParser;
 use Yii;
 use app\models\Alert;
 use app\models\Api\Bittrex;
 
 class BotEngine
 {
+    private $api;
+    private $marketLastBids;
+
+    public function __construct()
+    {
+        $this->api = new Bittrex();
+    }
+
     public function checkAlerts()
     {
-        $api = new Bittrex();
-        $marketSummaries = $api->getMarketSummaries();
-
-        if (!$marketSummaries['success']) {
-            return false;
-        }
-
         $alerts = Alert::findAll([
             'is_active' => 1
         ]);
 
-        foreach ($marketSummaries['result'] as $marketSummary) {
-            if (strstr($marketSummary['MarketName'], 'BTC')){
-                $marketLastBids[$marketSummary['MarketName']] = $marketSummary['Last'];
-            }
-        }
-
         foreach ($alerts as $alert) {
 
             $alertData = $alert->getAttributes();
-            $actualMarketPrice = $marketLastBids[$alertData['market']];
+            $actualMarketPrice = $this->marketLastBids[$alertData['market']];
 
             switch ($alertData['condition']) {
                 case 'COND_MORE':
@@ -69,5 +65,16 @@ class BotEngine
             ->setSubject($subject)
             ->setTextBody($body)
             ->send();
+    }
+
+    public function prepareActualPrices()
+    {
+        $marketSummaries = $this->api->getMarketSummaries();
+
+        if (!$marketSummaries['success']) {
+            return false;
+        }
+
+        $this->marketLastBids = BittrexParser::getPricesFromSummaries($marketSummaries);
     }
 }

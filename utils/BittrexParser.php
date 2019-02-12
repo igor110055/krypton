@@ -25,6 +25,16 @@ class BittrexParser
 
         asort($marketList);
         return $marketList;
+    }
 
+    public static function getPricesFromSummaries($marketSummaries)
+    {
+        foreach ($marketSummaries['result'] as $marketSummary) {
+            if (strstr($marketSummary['MarketName'], 'BTC')){
+                $marketLastBids[$marketSummary['MarketName']] = $marketSummary['Last'];
+            }
+        }
+
+        return $marketLastBids;
     }
 }

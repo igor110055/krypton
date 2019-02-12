@@ -14,6 +14,13 @@ use app\models\Api\Bittrex;
 
 class CronController extends Controller
 {
+    public function actionMinute()
+    {
+        $engine = new BotEngine();
+        $engine->prepareActualPrices();
+        $engine->checkAlerts();
+    }
+
     public function actionDownloadMarkets()
     {
         $bittrexApi = new Bittrex();
