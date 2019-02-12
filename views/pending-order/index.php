@@ -31,9 +31,9 @@ $this->params['breadcrumbs'][] = $this->title;
             'quantity',
             'price',
             'type',
-            //'stop_loss',
-            //'start_earn',
-            //'last_bid',
+            'stop_loss',
+            'start_earn',
+            'last_bid',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

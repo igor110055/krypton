@@ -18,6 +18,10 @@ class BotEngine
 
     public function checkAlerts()
     {
+        if (!$this->marketLastBids) {
+            return false;
+        }
+
         $alerts = Alert::findAll([
             'is_active' => 1
         ]);
@@ -44,6 +48,11 @@ class BotEngine
                     break;
             }
         }
+    }
+
+    public function checkPendingOrders()
+    {
+
     }
 
     public function sendAlertMail($alertData, $price)
