@@ -14,13 +14,6 @@ use app\models\Api\Bittrex;
 
 class CronController extends Controller
 {
-    public function actionIndex($message = 'hello world balbla')
-    {
-        $engine = new BotEngine();
-
-        $engine->testMail();
-    }
-
     public function actionDownloadMarkets()
     {
         $bittrexApi = new Bittrex();
@@ -28,5 +21,12 @@ class CronController extends Controller
 
         $bittrexCacher->downloadMarkets();
 
+    }
+
+    public function actionCheckAlerts()
+    {
+        $engine = new BotEngine();
+
+        $engine->checkAlerts();
     }
 }

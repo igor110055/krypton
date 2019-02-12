@@ -34,6 +34,7 @@ $this->params['breadcrumbs'][] = $this->title;
             }],
             'condition',
             'message:ntext',
+            'is_active',
             //'modified',
             //'crdate',
 

@@ -15,6 +15,7 @@ use app\utils\BittrexParser;
  * @property double $price
  * @property string $condition
  * @property string $message
+ * @property boolean $is_active
  * @property string $modified
  * @property string $crdate
  */
@@ -39,6 +40,7 @@ class Alert extends \yii\db\ActiveRecord
         return [
             [['market', 'price', 'condition'], 'required'],
             [['price'], 'number'],
+            [['is_active'], 'boolean'],
             [['message'], 'string'],
             [['modified', 'crdate'], 'safe'],
             [['market', 'condition'], 'string', 'max' => 255],
@@ -56,6 +58,7 @@ class Alert extends \yii\db\ActiveRecord
             'price' => 'Price',
             'condition' => 'Condition',
             'message' => 'Message',
+            'is_active' => 'Is active',
             'modified' => 'Modified',
             'crdate' => 'Crdate',
         ];

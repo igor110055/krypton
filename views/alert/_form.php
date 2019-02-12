@@ -25,6 +25,11 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'message')->textarea(['rows' => 6]) ?>
 
+    <?= $form->field($model, 'is_active')->dropDownList([
+        0 => 'No',
+        1 => 'Yes'
+    ]) ?>
+
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
     </div>

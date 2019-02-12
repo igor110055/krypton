@@ -17,7 +17,7 @@ class AlertSearch extends Alert
     public function rules()
     {
         return [
-            [['id'], 'integer'],
+            [['id', 'is_active'], 'integer'],
             [['market', 'condition', 'message', 'modified', 'crdate'], 'safe'],
             [['price'], 'number'],
         ];

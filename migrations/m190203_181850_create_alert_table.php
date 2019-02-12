@@ -19,6 +19,7 @@ class m190203_181850_create_alert_table extends Migration
             'price' => $this->double()->notNull(),
             'condition' => $this->string()->notNull(),
             'message' => $this->text(),
+            'is_active' => $this->boolean(),
             'modified' => $this->timestamp(),
             'crdate' => $this->timestamp()
         ]);
