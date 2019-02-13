@@ -18,7 +18,7 @@ class PendingOrderSearch extends PendingOrder
     {
         return [
             [['id', 'type', 'stop_loss', 'start_earn'], 'integer'],
-            [['market'], 'safe'],
+            [['market', 'condition'], 'safe'],
             [['quantity', 'price', 'last_bid'], 'number'],
         ];
     }

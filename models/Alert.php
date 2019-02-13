@@ -4,7 +4,6 @@ namespace app\models;
 
 use Yii;
 use app\models\Api\Bittrex;
-use app\models\EndPointCacher;
 use app\utils\BittrexParser;
 
 /**

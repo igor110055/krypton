@@ -12,19 +12,27 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'market')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'market')->dropdownList(
+        $model->getMarketList(), ['prompt'=>'Select market']
+    ) ?>
 
     <?= $form->field($model, 'quantity')->textInput() ?>
 
     <?= $form->field($model, 'price')->textInput() ?>
 
-    <?= $form->field($model, 'type')->textInput() ?>
+    <?= $form->field($model, 'type')->dropDownList([
+        'SELL' => 'SELL',
+        'BUY' => 'BUY'
+    ]) ?>
+
+    <?= $form->field($model, 'condition')->dropDownList([
+        'COND_MORE' => $model::COND_MORE,
+        'COND_LESS' => $model::COND_LESS
+    ]) ?>
 
     <?= $form->field($model, 'stop_loss')->textInput() ?>
 
     <?= $form->field($model, 'start_earn')->textInput() ?>
-
-    <?= $form->field($model, 'last_bid')->textInput() ?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

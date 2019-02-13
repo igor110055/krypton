@@ -16,13 +16,13 @@ class m190202_100857_create_pending_order_table extends Migration
         $this->createTable('pending_order', [
             'id' => $this->primaryKey(),
             'market' => $this->string()->notNull(),
-            'quantity' => $this->double()->notNull(),
-            'price' => $this->double()->notNull(),
+            'quantity' => $this->float()->notNull(),
+            'price' => $this->float()->notNull(),
             'condition' => $this->string()->notNull(),
-            'type' => $this->integer()->notNull(),
-            'stop_loss' => $this->integer(),
-            'start_earn' => $this->integer(),
-            'last_bid' => $this->double(),
+            'type' => $this->string()->notNull(),
+            'stop_loss' => $this->float(),
+            'start_earn' => $this->float(),
+            'last_bid' => $this->float(),
             'modified' => $this->timestamp(),
             'crdate' => $this->timestamp()
         ]);

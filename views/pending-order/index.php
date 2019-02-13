@@ -30,6 +30,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'market',
             'quantity',
             'price',
+            'condition',
             'type',
             'stop_loss',
             'start_earn',

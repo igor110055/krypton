@@ -16,7 +16,7 @@ class m190203_181850_create_alert_table extends Migration
         $this->createTable('{{%alert}}', [
             'id' => $this->primaryKey(),
             'market' => $this->string()->notNull(),
-            'price' => $this->double()->notNull(),
+            'price' => $this->float()->notNull(),
             'condition' => $this->string()->notNull(),
             'message' => $this->text(),
             'is_active' => $this->boolean(),

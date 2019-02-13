@@ -3,6 +3,8 @@
 namespace app\models;
 
 use Yii;
+use app\models\Api\Bittrex;
+use app\utils\BittrexParser;
 
 /**
  * This is the model class for table "pending_order".
@@ -18,6 +20,9 @@ use Yii;
  */
 class PendingOrder extends \yii\db\ActiveRecord
 {
+    const COND_MORE = '>=';
+    const COND_LESS = '<=';
+
     /**
      * {@inheritdoc}
      */
@@ -32,10 +37,10 @@ class PendingOrder extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['market', 'quantity', 'price', 'type'], 'required'],
-            [['quantity', 'price', 'last_bid'], 'number'],
-            [['type', 'stop_loss', 'start_earn'], 'integer'],
-            [['market'], 'string', 'max' => 255],
+            [['market', 'quantity', 'price', 'type', 'condition'], 'required'],
+            [['quantity', 'price', 'last_bid'], 'float'],
+            [['stop_loss', 'start_earn'], 'float'],
+            [['market', 'condition', 'type'], 'string', 'max' => 255],
         ];
     }
 
@@ -50,9 +55,21 @@ class PendingOrder extends \yii\db\ActiveRecord
             'quantity' => 'Quantity',
             'price' => 'Price',
             'type' => 'Type',
+            'condition' => 'Condition',
             'stop_loss' => 'Stop Loss',
             'start_earn' => 'Start Earn',
             'last_bid' => 'Last Bid',
         ];
+    }
+
+    public function getMarketList()
+    {
+        $bittrexApi = new Bittrex();
+        $bittrexCacher = new EndPointCacher($bittrexApi);
+
+        $marketJson = $bittrexCacher->getMartkets();
+        $marketList = BittrexParser::getMarketList($marketJson);
+
+        return $marketList;
     }
 }
