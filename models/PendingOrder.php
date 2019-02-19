@@ -38,8 +38,8 @@ class PendingOrder extends \yii\db\ActiveRecord
     {
         return [
             [['market', 'quantity', 'price', 'type', 'condition'], 'required'],
-            [['quantity', 'price', 'last_bid'], 'float'],
-            [['stop_loss', 'start_earn'], 'float'],
+            [['quantity', 'price', 'value', 'last_bid'], 'number'],
+            [['stop_loss', 'start_earn'], 'number'],
             [['market', 'condition', 'type'], 'string', 'max' => 255],
         ];
     }
@@ -54,6 +54,7 @@ class PendingOrder extends \yii\db\ActiveRecord
             'market' => 'Market',
             'quantity' => 'Quantity',
             'price' => 'Price',
+            'value' => 'Value (BTC)',
             'type' => 'Type',
             'condition' => 'Condition',
             'stop_loss' => 'Stop Loss',

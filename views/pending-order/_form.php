@@ -15,10 +15,13 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'market')->dropdownList(
         $model->getMarketList(), ['prompt'=>'Select market']
     ) ?>
+    <div id="actualPrice"></div>
+
+    <?= $form->field($model, 'value')->textInput() ?>
+    <?= $form->field($model, 'price')->textInput() ?>
 
     <?= $form->field($model, 'quantity')->textInput() ?>
-
-    <?= $form->field($model, 'price')->textInput() ?>
+    <div class="btn btn-primary" id="calcQtyBtn">Calc quantity</div>
 
     <?= $form->field($model, 'type')->dropDownList([
         'SELL' => 'SELL',
@@ -41,3 +44,35 @@ use yii\widgets\ActiveForm;
     <?php ActiveForm::end(); ?>
 
 </div>
+
+
+<?php
+$script = <<< JS
+
+$('#pendingorder-market').change(function (data) {
+    var market = this.value;
+    $.get( "/ajax/get-ticker", { market: market }, function( data ) {
+        var html = '<table>' +
+         '<tr><td>Ask</td><td>' + data.result.Ask + '</td></tr>' +
+         '<tr><td>Bid</td><td>' + data.result.Bid + '</td></tr>' +
+         '<tr><td>Last</td><td>' + data.result.Last + '</td></tr>' +
+          '</table>';
+        $('#actualPrice').html(html);
+        $('#pendingorder-price').val(data.result.Last);
+    });
+})
+
+$('#calcQtyBtn').click(function() {
+
+  var value = $('#pendingorder-value').val();
+  var price = $('#pendingorder-price').val();
+  
+  if (value && price) {
+      var qty = value / price;
+      $('#pendingorder-quantity').val(parseFloat(qty).toFixed(2));
+  }
+})
+
+JS;
+$position = \yii\web\View::POS_READY;
+$this->registerJs($script, $position);
