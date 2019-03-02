@@ -27,12 +27,16 @@ class LagController extends Controller
         $comparedPrices = [];
         foreach ($bittrexPrices as $market => $value) {
             if (isset($binancePrices[$market])) {
-                $diff = floatval($binancePrices[$market]) - floatval($value);
+                $binanceValue = floatval($binancePrices[$market]);
+                $bittrexValue = floatval($value);
+                $diff = $binanceValue - $bittrexValue;
+                $percent = round($diff / $bittrexValue * 100, 2);
                 $comparedPrices[$market] = [
                     'Market' => $market,
                     'Bittrex' => number_format($value, 8),
                     'Binance' => number_format($binancePrices[$market], 8),
                     'Diff' => number_format($diff, 8),
+                    'Percent' => $percent
                 ];
             }
         }
@@ -45,7 +49,8 @@ class LagController extends Controller
                 'pageSize' => 200,
             ],
             'sort' => [
-                'attributes' => ['Market','Diff'],
+                'attributes' => ['Market','Diff', 'Percent'],
+                'defaultOrder' => ['Percent' => SORT_DESC]
             ],
         ]);
 
