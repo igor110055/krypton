@@ -107,6 +107,23 @@ class BotEngine
                 $result = $this->api->placeSellOrder($pendingOrder->market, $pendingOrder->quantity, $bestOffer);
                 break;
         }
+
+        $this->checkOrders();
+    }
+
+    public function checkOrders()
+    {
+        $orders = Order::findAll([
+            'status' => Order::STATUS_CLOSED
+        ]);
+
+        foreach ($orders as $order) {
+            $orderEarn = new PendingOrder();
+
+
+            $orderLoss = new PendingOrder();
+        }
+
     }
 
     public function sendAlertMail($alertData, $price)
