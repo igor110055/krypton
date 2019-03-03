@@ -1,6 +1,7 @@
 <?php
 namespace app\models\Api;
 
+use app\utils\BittrexParser;
 use Yii;
 use linslin\yii2\curl;
 
@@ -278,6 +279,14 @@ class Bittrex
 
         return json_decode($response, true);
 
+    }
+
+    public function getActualPrices()
+    {
+        $bittrexSummaries = $this->getMarketSummaries();
+        $prices = BittrexParser::getPricesFromSummaries($bittrexSummaries);
+
+        return $prices;
     }
 
     protected function getMessageHash($message)

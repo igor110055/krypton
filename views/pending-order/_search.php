@@ -32,7 +32,6 @@ use yii\widgets\ActiveForm;
 
     <?php // echo $form->field($model, 'start_earn') ?>
 
-    <?php // echo $form->field($model, 'last_bid') ?>
 
     <div class="form-group">
         <?= Html::submitButton('Search', ['class' => 'btn btn-primary']) ?>

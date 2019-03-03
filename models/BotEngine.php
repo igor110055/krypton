@@ -5,6 +5,8 @@ use app\utils\BittrexParser;
 use Yii;
 use app\models\Alert;
 use app\models\Api\Bittrex;
+use app\models\PendingOrder;
+use app\models\Order;
 
 class BotEngine
 {
@@ -52,7 +54,59 @@ class BotEngine
 
     public function checkPendingOrders()
     {
+        $this->prepareActualPrices();
+        $pendingOrders = PendingOrder::find()->all();
 
+        foreach ($pendingOrders as $pendingOrder) {
+
+            $actualMarketPrice = $this->marketLastBids[$pendingOrder->market];
+
+            switch ($pendingOrder->condition) {
+                case 'COND_MORE':
+                    if ($actualMarketPrice >= $pendingOrder->price) {
+                        $this->placeOrder($pendingOrder);
+                    }
+                    break;
+                case 'COND_LESS':
+                    if ($actualMarketPrice <= $pendingOrder->price) {
+                        $this->placeOrder($pendingOrder);
+                    }
+                    break;
+            }
+        }
+    }
+
+    public function placeOrder(PendingOrder $pendingOrder)
+    {
+        $actualTicker = $this->api->getTicker($pendingOrder->market);
+
+        switch ($pendingOrder->type) {
+            case 'BUY':
+                $bestOffer = $actualTicker['result']['Ask'];
+                $result = $this->api->placeBuyOrder($pendingOrder->market, $pendingOrder->quantity, $bestOffer);
+                if ($result['success']) {
+
+                    $order = new Order();
+
+                    $order->uuid = $result['result']['uuid'];
+                    $order->market = $pendingOrder->market;
+                    $order->quantity = $pendingOrder->quantity;
+                    $order->price = $pendingOrder->price;
+                    $order->value = $pendingOrder->price * $pendingOrder->quantity;
+                    $order->type = $pendingOrder->type;
+                    $order->stop_loss = $pendingOrder->stop_loss;
+                    $order->start_earn = $pendingOrder->start_earn;
+                    $order->status = Order::STATUS_OPEN;
+
+                    $order->save();
+                }
+
+                break;
+            case 'SELL':
+                $bestOffer = $actualTicker['result']['Bid'];
+                $result = $this->api->placeSellOrder($pendingOrder->market, $pendingOrder->quantity, $bestOffer);
+                break;
+        }
     }
 
     public function sendAlertMail($alertData, $price)

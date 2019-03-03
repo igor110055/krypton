@@ -38,9 +38,9 @@ class PendingOrder extends \yii\db\ActiveRecord
     {
         return [
             [['market', 'quantity', 'price', 'type', 'condition'], 'required'],
-            [['quantity', 'price', 'value', 'last_bid'], 'number'],
+            [['quantity', 'price', 'value'], 'number'],
             [['stop_loss', 'start_earn'], 'number'],
-            [['market', 'condition', 'type'], 'string', 'max' => 255],
+            [['market', 'condition', 'type', 'uuid'], 'string', 'max' => 255],
         ];
     }
 
@@ -59,8 +59,14 @@ class PendingOrder extends \yii\db\ActiveRecord
             'condition' => 'Condition',
             'stop_loss' => 'Stop Loss',
             'start_earn' => 'Start Earn',
-            'last_bid' => 'Last Bid',
+            'uuid' => 'UUID'
         ];
+    }
+
+    public function beforeSave($insert)
+    {
+        $this->crdate = date('Y-m-d H:i:s');
+        return parent::beforeSave($insert);
     }
 
     public function getMarketList()

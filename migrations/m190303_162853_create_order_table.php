@@ -1,30 +1,28 @@
 <?php
 
 use yii\db\Migration;
-use yii\db\Schema;
 
 /**
- * Handles the creation of table `{{%pending_order}}`.
+ * Handles the creation of table `{{%order}}`.
  */
-class m190202_100857_create_pending_order_table extends Migration
+class m190303_162853_create_order_table extends Migration
 {
     /**
      * {@inheritdoc}
      */
     public function safeUp()
     {
-        $this->createTable('pending_order', [
+        $this->createTable('{{%order}}', [
             'id' => $this->primaryKey(),
+            'uuid' => $this->string()->notNull(),
             'market' => $this->string()->notNull(),
             'quantity' => $this->float()->notNull(),
             'price' => $this->float()->notNull(),
-            'value' => $this->float()->notNull(),
-            'condition' => $this->string()->notNull(),
+            'value' => $this->float(),
             'type' => $this->string()->notNull(),
             'stop_loss' => $this->float(),
             'start_earn' => $this->float(),
-            'uuid' => $this->string(),
-            'modified' => $this->timestamp(),
+            'status' => $this->string(),
             'crdate' => $this->timestamp()
         ]);
     }
@@ -34,6 +32,6 @@ class m190202_100857_create_pending_order_table extends Migration
      */
     public function safeDown()
     {
-        $this->dropTable('pending_order');
+        $this->dropTable('{{%order}}');
     }
 }

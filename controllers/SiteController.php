@@ -76,17 +76,18 @@ class SiteController extends Controller
 //        $result = $api->getBalances();
 //        $result = $api->getBalance('TRX');
 //        $result = $api->getDepositAddress('BTC');
-//        $result = $api->getOrder('b25d4c8f-f455-458e-aebe-11d89b70080f');
+//        $result = $api->getOrder('613626e2-ee4e-419f-9502-9246642340be');
 //        $result = $api->getOrders();
 //        $result = $api->getOrders('BTC-TRX');
 //        $result = $api->getWithdrawalHistory();
 //        $result = $api->getDepositHistory();
 //        $result = $api->placeSellOrder('BTC-REP',4.49110895, 0.0042);
 //        $result = $api->cancelOrder('056bb71e-40f5-49df-afcc-f37dce42e011');
-//        $bot = new BotEngine();
+        $bot = new BotEngine();
 //        $result = $bot->checkAlerts();
+//        $result = $bot->checkPendingOrders();
         return $this->render('index', [
-            'result' => json_decode($result, true)
+            'result' => $result
         ]);
     }
 
