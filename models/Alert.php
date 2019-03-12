@@ -73,4 +73,10 @@ class Alert extends \yii\db\ActiveRecord
 
         return $marketList;
     }
+
+    public function beforeSave($insert)
+    {
+        $this->crdate = date('Y-m-d H:i:s');
+        return parent::beforeSave($insert);
+    }
 }
