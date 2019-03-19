@@ -54,7 +54,10 @@ class BotEngine
 
     public function checkPendingOrders()
     {
-        $this->prepareActualPrices();
+        if (!$this->marketLastBids) {
+            return false;
+        }
+
         $pendingOrders = PendingOrder::find()->all();
 
         foreach ($pendingOrders as $pendingOrder) {
@@ -85,6 +88,8 @@ class BotEngine
                 $bestOffer = $actualTicker['result']['Ask'];
                 $result = $this->api->placeBuyOrder($pendingOrder->market, $pendingOrder->quantity, $bestOffer);
                 if ($result['success']) {
+
+                    $this->sendPendingOrderMail($pendingOrder);
 
                     $order = new Order();
 
@@ -138,6 +143,23 @@ class BotEngine
         }
         $body = 'Aktualna cena: '.number_format($price, 8)."\n";
         $body .= 'Info: '.$alertData['message']."\n";
+
+        $mail = Yii::$app->mailer->compose();
+        $mail->setFrom('admin@wales.usermd.net')
+            ->setTo('leszek.walszewski@gmail.com')
+            ->setSubject($subject)
+            ->setTextBody($body)
+            ->send();
+    }
+
+    public function sendPendingOrderMail(PendingOrder $pendingOrder)
+    {
+        $value = $pendingOrder->price * $pendingOrder->quantity;
+        $value = round($value, 2);
+
+        $subject = '[' . $pendingOrder->market . '] ' . $pendingOrder->type  . ' | PRICE: ' . number_format($pendingOrder->price, 8) . '| VAL: ' . $value;
+
+        $body = 'Order realized';
 
         $mail = Yii::$app->mailer->compose();
         $mail->setFrom('admin@wales.usermd.net')

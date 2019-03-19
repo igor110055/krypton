@@ -19,6 +19,7 @@ class CronController extends Controller
         $engine = new BotEngine();
         $engine->prepareActualPrices();
         $engine->checkAlerts();
+        $engine->checkPendingOrders();
     }
 
     public function actionDownloadMarkets()
