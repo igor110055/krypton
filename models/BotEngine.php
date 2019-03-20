@@ -104,12 +104,16 @@ class BotEngine
                     $order->status = Order::STATUS_OPEN;
 
                     $order->save();
+                    $pendingOrder->delete();
                 }
 
                 break;
             case 'SELL':
                 $bestOffer = $actualTicker['result']['Bid'];
                 $result = $this->api->placeSellOrder($pendingOrder->market, $pendingOrder->quantity, $bestOffer);
+                if ($result['success']) {
+                    $this->sendPendingOrderMail($pendingOrder);
+                }
                 break;
         }
 

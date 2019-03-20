@@ -22,6 +22,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'quantity')->textInput() ?>
     <div class="btn btn-primary" id="calcQtyBtn">Calc quantity</div>
+    <div class="btn btn-primary" id="calcValBtn">Calc value</div>
 
     <?= $form->field($model, 'type')->dropDownList([
         'SELL' => 'SELL',
@@ -70,6 +71,17 @@ $('#calcQtyBtn').click(function() {
   if (value && price) {
       var qty = value / price;
       $('#pendingorder-quantity').val(parseFloat(qty).toFixed(2));
+  }
+})
+
+$('#calcValBtn').click(function() {
+
+  var qty = $('#pendingorder-quantity').val();
+  var price = $('#pendingorder-price').val();
+  
+  if (qty && price) {
+      var value = qty * price;
+      $('#pendingorder-value').val(parseFloat(value));
   }
 })
 

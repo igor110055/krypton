@@ -20,8 +20,8 @@ use app\utils\BittrexParser;
  */
 class PendingOrder extends \yii\db\ActiveRecord
 {
-    const COND_MORE = '>=';
-    const COND_LESS = '<=';
+    const COND_MORE = 'More than price';
+    const COND_LESS = 'Less than price';
 
     /**
      * {@inheritdoc}
