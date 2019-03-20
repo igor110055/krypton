@@ -81,7 +81,7 @@ $('#calcValBtn').click(function() {
   
   if (qty && price) {
       var value = qty * price;
-      $('#pendingorder-value').val(parseFloat(value));
+      $('#pendingorder-value').val(parseFloat(value).toFixed(8));
   }
 })
 
