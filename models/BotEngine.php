@@ -113,6 +113,7 @@ class BotEngine
                 $result = $this->api->placeSellOrder($pendingOrder->market, $pendingOrder->quantity, $bestOffer);
                 if ($result['success']) {
                     $this->sendPendingOrderMail($pendingOrder);
+                    $pendingOrder->delete();
                 }
                 break;
         }
@@ -161,9 +162,16 @@ class BotEngine
         $value = $pendingOrder->price * $pendingOrder->quantity;
         $value = round($value, 2);
 
-        $subject = '[' . $pendingOrder->market . '] ' . $pendingOrder->type  . ' | PRICE: ' . number_format($pendingOrder->price, 8) . '| VAL: ' . $value;
+        $subject = '[' . $pendingOrder->market . '] ' . $pendingOrder->type  . ': price: ' . number_format($pendingOrder->price, 8) . ' | val: ' . $value;
 
-        $body = 'Order realized';
+        switch ($pendingOrder->condition) {
+            case 'COND_MORE':
+                $body = 'Order realized. Earn :)';
+                break;
+            case 'COND_LESS':
+                $body = 'Order realized. Loss :(';
+                break;
+        }
 
         $mail = Yii::$app->mailer->compose();
         $mail->setFrom('admin@wales.usermd.net')
