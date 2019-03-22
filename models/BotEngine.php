@@ -121,6 +121,31 @@ class BotEngine
         $this->checkOrders();
     }
 
+    public function checkOpenOrders($market = null)
+    {
+        $result = $this->api->getOpenOrders($market);
+        $openOrders = [];
+
+        if ($result['success']) {
+            if(count($result['result']) > 1) {
+                foreach ($result['result'] as $openOrder){
+                    $openOrders[] = $openOrder['OrderUuid'];
+                }
+            }
+        }
+
+        $orders = Order::findAll([
+            'status' => Order::STATUS_OPEN
+        ]);
+
+        foreach ($orders as $order) {
+            if (!in_array($order->uuid, $openOrders)) {
+                $order->status = Order::STATUS_CLOSED;
+                $order->save();
+            }
+        }
+    }
+
     public function checkOrders()
     {
         $orders = Order::findAll([
