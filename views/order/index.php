@@ -32,8 +32,24 @@ $this->params['breadcrumbs'][] = $this->title;
             }],
             //'value',
             'type',
-            'stop_loss',
-            'start_earn',
+            ['attribute' => 'stop_loss',
+                'value' => function($model) {
+                    if ($model->stop_loss > 0) {
+                        $val = number_format($model->stop_loss, 8);
+                    } else {
+                        $val = null;
+                    }
+                    return $val;
+                }],
+            ['attribute' => 'start_earn',
+                'value' => function($model) {
+                    if ($model->start_earn > 0) {
+                        $val = number_format($model->start_earn, 8);
+                    } else {
+                        $val = null;
+                    }
+                    return $val;
+                }],
             'status',
             //'crdate',
 

@@ -89,15 +89,15 @@ class BotEngine
                 $result = $this->api->placeBuyOrder($pendingOrder->market, $pendingOrder->quantity, $bestOffer);
                 if ($result['success']) {
 
-                    $this->sendPendingOrderMail($pendingOrder);
+                    $this->sendPlaceOrderMail($pendingOrder);
 
                     $order = new Order();
 
                     $order->uuid = $result['result']['uuid'];
                     $order->market = $pendingOrder->market;
                     $order->quantity = $pendingOrder->quantity;
-                    $order->price = $pendingOrder->price;
-                    $order->value = $pendingOrder->price * $pendingOrder->quantity;
+                    $order->price = $bestOffer;
+                    $order->value = $bestOffer * $pendingOrder->quantity;
                     $order->type = $pendingOrder->type;
                     $order->stop_loss = $pendingOrder->stop_loss;
                     $order->start_earn = $pendingOrder->start_earn;
@@ -112,41 +112,46 @@ class BotEngine
                 $bestOffer = $actualTicker['result']['Bid'];
                 $result = $this->api->placeSellOrder($pendingOrder->market, $pendingOrder->quantity, $bestOffer);
                 if ($result['success']) {
-                    $this->sendPendingOrderMail($pendingOrder);
+                    $this->sendPlaceOrderMail($pendingOrder);
                     $pendingOrder->delete();
                 }
                 break;
         }
 
-        $this->checkOrders();
+        $this->checkOpenOrders();
     }
 
     public function checkOpenOrders($market = null)
     {
-        $result = $this->api->getOpenOrders($market);
-        $openOrders = [];
-
-        if ($result['success']) {
-            if(count($result['result']) > 1) {
-                foreach ($result['result'] as $openOrder){
-                    $openOrders[] = $openOrder['OrderUuid'];
-                }
-            }
-        }
-
         $orders = Order::findAll([
             'status' => Order::STATUS_OPEN
         ]);
 
+        if (count($orders) == 0) {
+            return false;
+        }
+
+        $result = $this->api->getOpenOrders($market);
+        $openOrdersUuids = [];
+
+        if ($result['success']) {
+            if(count($result['result']) > 1) {
+                foreach ($result['result'] as $openOrder){
+                    $openOrdersUuids[] = $openOrder['OrderUuid'];
+                }
+            }
+        }
+
         foreach ($orders as $order) {
-            if (!in_array($order->uuid, $openOrders)) {
+            if (!in_array($order->uuid, $openOrdersUuids)) {
                 $order->status = Order::STATUS_CLOSED;
                 $order->save();
+                $this->sendRealizedOrderMail($order);
             }
         }
     }
 
-    public function checkOrders()
+    public function createPendingOrdersForClosedOrders()
     {
         $orders = Order::findAll([
             'status' => Order::STATUS_CLOSED
@@ -154,11 +159,26 @@ class BotEngine
 
         foreach ($orders as $order) {
             $orderEarn = new PendingOrder();
-
+            $orderEarn->market = $order->market;
+            $orderEarn->quantity = $order->quantity;
+            $orderEarn->price = $order->start_earn;
+            $orderEarn->type = 'SELL';
+            $orderEarn->condition = 'COND_MORE';
+            $orderEarn->uuid = $order->uuid;
+            $orderEarn->save();
 
             $orderLoss = new PendingOrder();
-        }
+            $orderLoss->market = $order->market;
+            $orderLoss->quantity = $order->quantity;
+            $orderLoss->price = $order->stop_loss;
+            $orderLoss->type = 'SELL';
+            $orderLoss->condition = 'COND_LESS';
+            $orderLoss->uuid = $order->uuid;
+            $orderLoss->save();
 
+            $order->status = Order::STATUS_PROCESSED;
+            $order->save();
+        }
     }
 
     public function sendAlertMail($alertData, $price)
@@ -182,21 +202,39 @@ class BotEngine
             ->send();
     }
 
-    public function sendPendingOrderMail(PendingOrder $pendingOrder)
+    public function sendPlaceOrderMail(PendingOrder $pendingOrder)
     {
         $value = $pendingOrder->price * $pendingOrder->quantity;
         $value = round($value, 2);
 
         $subject = '[' . $pendingOrder->market . '] ' . $pendingOrder->type  . ': price: ' . number_format($pendingOrder->price, 8) . ' | val: ' . $value;
 
-        switch ($pendingOrder->condition) {
-            case 'COND_MORE':
-                $body = 'Order realized. Earn :)';
-                break;
-            case 'COND_LESS':
-                $body = 'Order realized. Loss :(';
-                break;
+        if ($pendingOrder->type == 'SELL') {
+            switch ($pendingOrder->condition) {
+                case 'COND_MORE':
+                    $body = 'Order placed. Earn :)';
+                    break;
+                case 'COND_LESS':
+                    $body = 'Order placed. Loss :(';
+                    break;
+            }
+        } else {
+            $body = 'Order placed.';
         }
+
+        $mail = Yii::$app->mailer->compose();
+        $mail->setFrom('admin@wales.usermd.net')
+            ->setTo('leszek.walszewski@gmail.com')
+            ->setSubject($subject)
+            ->setTextBody($body)
+            ->send();
+    }
+
+    public function sendRealizedOrderMail(Order $order)
+    {
+        $subject = '[' . $order->market . '] ' . $order->type  . ': price: ' . number_format($order->price, 8) . ' | val: ' . $order->value;
+
+        $body = 'Order closed.';
 
         $mail = Yii::$app->mailer->compose();
         $mail->setFrom('admin@wales.usermd.net')

@@ -86,7 +86,9 @@ class SiteController extends Controller
 //        $result = $api->cancelOrder('056bb71e-40f5-49df-afcc-f37dce42e011');
         $bot = new BotEngine();
 //        $result = $bot->checkAlerts();
+//        $result = $bot->checkOpenOrders();
 //        $result = $bot->checkPendingOrders();
+//        $result = $bot->createPendingOrdersForClosedOrders();
         return $this->render('index', [
             'result' => $result
         ]);

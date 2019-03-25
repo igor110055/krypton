@@ -20,6 +20,8 @@ class CronController extends Controller
         $engine->prepareActualPrices();
         $engine->checkAlerts();
         $engine->checkPendingOrders();
+        $engine->checkOpenOrders();
+        $engine->createPendingOrdersForClosedOrders();
     }
 
     public function actionDownloadMarkets()
