@@ -152,12 +152,17 @@ class SiteController extends Controller
     public function actionAbout()
     {
         $api = new Bittrex;
-
-        $result = $api->getOpenOrders('BTC-REP');
+        $result = '';
+//        $result = $api->getOpenOrders('BTC-REP');
 //        $result = $api->getTicker('BTC-REP');
 
         return $this->render('about', [
-            'result' => json_decode($result, true)
+            'result' => $result
         ]);
+    }
+
+    public function actionOscylators()
+    {
+        return $this->render('oscylators');
     }
 }

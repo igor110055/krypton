@@ -35,8 +35,7 @@ $this->params['breadcrumbs'][] = $this->title;
             }],
             ['attribute' => 'value',
                 'value' => function($model) {
-                    $val = $model->price * $model->quantity;
-                    return round($val,3);
+                    return round($model->value,3);
             }],
             'condition',
             'type',

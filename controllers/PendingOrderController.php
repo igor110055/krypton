@@ -85,6 +85,7 @@ class PendingOrderController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $model->price = number_format($model->price, 8);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['index']);

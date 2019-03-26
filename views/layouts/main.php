@@ -42,7 +42,7 @@ AppAsset::register($this);
             ['label' => 'Alerts', 'url' => ['/alert/index']],
             ['label' => 'Pending orders', 'url' => ['/pending-order/index']],
             ['label' => 'About', 'url' => ['/site/about']],
-            ['label' => 'Contact', 'url' => ['/site/contact']],
+            ['label' => 'Oscylators', 'url' => ['/site/oscylators']],
             Yii::$app->user->isGuest ? (
                 ['label' => 'Login', 'url' => ['/site/login']]
             ) : (

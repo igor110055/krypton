@@ -12,6 +12,10 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
+    <?= $form->errorSummary($model); ?>
+
+    <?= $form->field($model, 'uuid')->textInput() ?>
+
     <?= $form->field($model, 'market')->dropdownList(
         $model->getMarketList(), ['prompt'=>'Select market']
     ) ?>
