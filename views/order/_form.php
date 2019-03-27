@@ -28,7 +28,12 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'start_earn')->textInput() ?>
 
-    <?= $form->field($model, 'status')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'status')->dropDownList([
+        $model::STATUS_OPEN => $model::STATUS_OPEN,
+        $model::STATUS_CLOSED => $model::STATUS_CLOSED,
+        $model::STATUS_PROCESSED => $model::STATUS_PROCESSED,
+        $model::STATUS_DONE => $model::STATUS_DONE,
+    ]) ?>
 
     <?= $form->field($model, 'crdate')->textInput() ?>
 

@@ -24,6 +24,11 @@ class Order extends \yii\db\ActiveRecord
     const STATUS_OPEN = 'open';
     const STATUS_CLOSED = 'closed';
     const STATUS_PROCESSED = 'processed';
+    const STATUS_DONE = 'done';
+
+    public $current_price = null;
+    public $price_diff = null;
+    public $current_value = null;
 
     /**
      * {@inheritdoc}

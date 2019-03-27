@@ -283,8 +283,11 @@ class Bittrex
 
     public function getActualPrices()
     {
-        $bittrexSummaries = $this->getMarketSummaries();
-        $prices = BittrexParser::getPricesFromSummaries($bittrexSummaries);
+        $marketSummaries = $this->getMarketSummaries();
+        if (!$marketSummaries['success']) {
+            return false;
+        }
+        $prices = BittrexParser::getPricesFromSummaries($marketSummaries);
 
         return $prices;
     }

@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\Api\Bittrex;
 use Yii;
 use app\models\Order;
 use yii\data\ActiveDataProvider;
@@ -38,6 +39,26 @@ class OrderController extends Controller
         $dataProvider = new ActiveDataProvider([
             'query' => Order::find(),
         ]);
+
+        $orderModels = $dataProvider->getModels();
+        if (count($orderModels) > 0) {
+            $api = new Bittrex();
+            $currentPrices = $api->getActualPrices();
+            foreach ($orderModels as $order) {
+                $order->price = number_format($order->price, 8);
+                $order->current_price = number_format($currentPrices[$order->market], 8);
+                $diff = $order->current_price - $order->price;
+                $order->price_diff = round($diff / $order->current_price * 100, 2);
+                $order->current_value = number_format($order->quantity * $order->current_price, 8);
+                if ($order->stop_loss > 0) {
+                    $order->stop_loss = number_format($order->stop_loss, 8);
+                }
+                if ($order->start_earn > 0) {
+                    $order->start_earn = number_format($order->start_earn, 8);
+                }
+            }
+            $dataProvider->setModels($orderModels);
+        }
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
@@ -85,6 +106,13 @@ class OrderController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $model->price = number_format($model->price, 8);
+        if ($model->stop_loss > 0) {
+            $model->stop_loss = number_format($model->stop_loss, 8);
+        }
+        if ($model->start_earn > 0) {
+            $model->start_earn = number_format($model->start_earn, 8);
+        }
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['index']);

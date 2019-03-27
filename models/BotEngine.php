@@ -113,11 +113,17 @@ class BotEngine
                 $result = $this->api->placeSellOrder($pendingOrder->market, $pendingOrder->quantity, $bestOffer);
                 if ($result['success']) {
                     $this->sendPlaceOrderMail($pendingOrder);
-                    $oppositeOrder = PendingOrder::find()->where(['uuid' => $pendingOrder->uuid])->one();
+                    $uuid = $pendingOrder->uuid;
+                    $pendingOrder->delete();
+                    $oppositeOrder = PendingOrder::find()->where(['uuid' => $uuid])->one();
                     if ($oppositeOrder) {
                         $oppositeOrder->delete();
                     }
-                    $pendingOrder->delete();
+                    $order = Order::find()->where(['uuid' => $uuid])->one();
+                    if ($order) {
+                        $order->status = Order::STATUS_DONE;
+                        $order->save();
+                    }
                 }
                 break;
         }
