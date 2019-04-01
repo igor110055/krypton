@@ -15,7 +15,7 @@ use Yii;
  * @property double $value
  * @property string $type
  * @property double $stop_loss
- * @property double $start_earn
+ * @property double $take_profit
  * @property string $status
  * @property string $crdate
  */
@@ -45,7 +45,7 @@ class Order extends \yii\db\ActiveRecord
     {
         return [
             [['uuid', 'market', 'quantity', 'price', 'type'], 'required'],
-            [['quantity', 'price', 'value', 'stop_loss', 'start_earn'], 'number'],
+            [['quantity', 'price', 'value', 'stop_loss', 'take_profit'], 'number'],
             [['crdate'], 'safe'],
             [['uuid', 'market', 'type', 'status'], 'string', 'max' => 255],
         ];
@@ -65,7 +65,7 @@ class Order extends \yii\db\ActiveRecord
             'value' => 'Value',
             'type' => 'Type',
             'stop_loss' => 'Stop Loss',
-            'start_earn' => 'Start Earn',
+            'take_profit' => 'Take Profit',
             'status' => 'Status',
             'crdate' => 'Crdate',
         ];

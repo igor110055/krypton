@@ -35,7 +35,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'price',
             'type',
             'stop_loss',
-            'start_earn'
+            'take_profit'
         ],
     ]) ?>
 

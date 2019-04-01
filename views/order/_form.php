@@ -26,7 +26,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'stop_loss')->textInput() ?>
 
-    <?= $form->field($model, 'start_earn')->textInput() ?>
+    <?= $form->field($model, 'take_profit')->textInput() ?>
 
     <?= $form->field($model, 'status')->dropDownList([
         $model::STATUS_OPEN => $model::STATUS_OPEN,

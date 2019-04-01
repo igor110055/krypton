@@ -53,8 +53,8 @@ class OrderController extends Controller
                 if ($order->stop_loss > 0) {
                     $order->stop_loss = number_format($order->stop_loss, 8);
                 }
-                if ($order->start_earn > 0) {
-                    $order->start_earn = number_format($order->start_earn, 8);
+                if ($order->take_profit > 0) {
+                    $order->take_profit = number_format($order->take_profit, 8);
                 }
             }
             $dataProvider->setModels($orderModels);
@@ -110,8 +110,8 @@ class OrderController extends Controller
         if ($model->stop_loss > 0) {
             $model->stop_loss = number_format($model->stop_loss, 8);
         }
-        if ($model->start_earn > 0) {
-            $model->start_earn = number_format($model->start_earn, 8);
+        if ($model->take_profit > 0) {
+            $model->take_profit = number_format($model->take_profit, 8);
         }
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {

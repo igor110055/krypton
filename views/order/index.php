@@ -32,9 +32,9 @@ $this->params['breadcrumbs'][] = $this->title;
             'current_value',
             'price_diff',
             'stop_loss',
-            'start_earn',
+            'take_profit',
             'status',
-            //'crdate',
+            'crdate',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

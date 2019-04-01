@@ -15,7 +15,7 @@ use app\utils\BittrexParser;
  * @property double $price
  * @property int $type
  * @property int $stop_loss
- * @property int $start_earn
+ * @property int $take_profit
  * @property double $last_bid
  */
 class PendingOrder extends \yii\db\ActiveRecord
@@ -39,7 +39,7 @@ class PendingOrder extends \yii\db\ActiveRecord
         return [
             [['market', 'quantity', 'price', 'type', 'condition'], 'required'],
             [['quantity', 'price', 'value'], 'number'],
-            [['stop_loss', 'start_earn'], 'number'],
+            [['stop_loss', 'take_profit'], 'number'],
             [['market', 'condition', 'type', 'uuid'], 'string', 'max' => 255],
         ];
     }
@@ -58,7 +58,7 @@ class PendingOrder extends \yii\db\ActiveRecord
             'type' => 'Type',
             'condition' => 'Condition',
             'stop_loss' => 'Stop Loss',
-            'start_earn' => 'Start Earn',
+            'take_profit' => 'Take Profit',
             'uuid' => 'UUID'
         ];
     }

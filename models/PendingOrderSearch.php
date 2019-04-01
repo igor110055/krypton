@@ -17,7 +17,7 @@ class PendingOrderSearch extends PendingOrder
     public function rules()
     {
         return [
-            [['id', 'type', 'stop_loss', 'start_earn'], 'integer'],
+            [['id', 'type', 'stop_loss', 'take_profit'], 'integer'],
             [['market', 'condition'], 'safe'],
             [['quantity', 'price'], 'number'],
         ];
@@ -64,7 +64,7 @@ class PendingOrderSearch extends PendingOrder
             'price' => $this->price,
             'type' => $this->type,
             'stop_loss' => $this->stop_loss,
-            'start_earn' => $this->start_earn,
+            'take_profit' => $this->take_profit,
             'uuid' => $this->uuid,
         ]);
 

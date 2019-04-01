@@ -100,7 +100,7 @@ class BotEngine
                     $order->value = $bestOffer * $pendingOrder->quantity;
                     $order->type = $pendingOrder->type;
                     $order->stop_loss = $pendingOrder->stop_loss;
-                    $order->start_earn = $pendingOrder->start_earn;
+                    $order->take_profit = $pendingOrder->take_profit;
                     $order->status = Order::STATUS_OPEN;
 
                     $order->save();
@@ -171,8 +171,8 @@ class BotEngine
             $orderEarn = new PendingOrder();
             $orderEarn->market = $order->market;
             $orderEarn->quantity = $order->quantity;
-            $orderEarn->price = $order->start_earn;
-            $orderEarn->value = $order->start_earn * $order->quantity;
+            $orderEarn->price = $order->take_profit;
+            $orderEarn->value = $order->take_profit * $order->quantity;
             $orderEarn->type = 'SELL';
             $orderEarn->condition = 'COND_MORE';
             $orderEarn->uuid = $order->uuid;

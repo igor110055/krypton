@@ -21,7 +21,7 @@ class m190303_162853_create_order_table extends Migration
             'value' => $this->float(),
             'type' => $this->string()->notNull(),
             'stop_loss' => $this->float(),
-            'start_earn' => $this->float(),
+            'take_profit' => $this->float(),
             'status' => $this->string(),
             'crdate' => $this->timestamp()
         ]);

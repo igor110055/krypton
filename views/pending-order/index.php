@@ -48,10 +48,10 @@ $this->params['breadcrumbs'][] = $this->title;
                     }
                     return $val;
                 }],
-            ['attribute' => 'start_earn',
+            ['attribute' => 'take_profit',
                 'value' => function($model) {
-                    if ($model->start_earn > 0) {
-                        $val = number_format($model->start_earn, 8);
+                    if ($model->take_profit > 0) {
+                        $val = number_format($model->take_profit, 8);
                     } else {
                         $val = null;
                     }

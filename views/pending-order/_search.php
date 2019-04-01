@@ -30,7 +30,7 @@ use yii\widgets\ActiveForm;
 
     <?php // echo $form->field($model, 'stop_loss') ?>
 
-    <?php // echo $form->field($model, 'start_earn') ?>
+    <?php // echo $form->field($model, 'take_profit') ?>
 
 
     <div class="form-group">
