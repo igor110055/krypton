@@ -73,7 +73,9 @@ class Order extends \yii\db\ActiveRecord
 
     public function beforeSave($insert)
     {
-        $this->crdate = date('Y-m-d H:i:s');
+        if (!$this->crdate) {
+            $this->crdate = date('Y-m-d H:i:s');
+        }
         return parent::beforeSave($insert);
     }
 }

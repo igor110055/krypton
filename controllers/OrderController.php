@@ -38,6 +38,9 @@ class OrderController extends Controller
     {
         $dataProvider = new ActiveDataProvider([
             'query' => Order::find(),
+            'sort' => [
+                'defaultOrder' => ['crdate' => SORT_DESC],
+            ],
         ]);
 
         $orderModels = $dataProvider->getModels();
