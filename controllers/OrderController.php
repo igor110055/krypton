@@ -6,6 +6,7 @@ use app\models\Api\Bittrex;
 use Yii;
 use app\models\Order;
 use yii\data\ActiveDataProvider;
+use yii\data\ArrayDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -36,35 +37,67 @@ class OrderController extends Controller
      */
     public function actionIndex()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => Order::find(),
-            'sort' => [
-                'defaultOrder' => ['crdate' => SORT_DESC],
-            ],
-        ]);
+        $orders = Order::find()->orderBy(['crdate' => SORT_DESC])->asArray()->all();
 
-        $orderModels = $dataProvider->getModels();
-        if (count($orderModels) > 0) {
+        if (count($orders) > 0) {
             $api = new Bittrex();
             $currentPrices = $api->getActualPrices();
-            foreach ($orderModels as $order) {
-                $order->price = number_format($order->price, 8);
-                $order->current_price = number_format($currentPrices[$order->market], 8);
-                $diff = $order->current_price - $order->price;
-                $order->price_diff = round($diff / $order->current_price * 100, 2);
-                $order->current_value = number_format($order->quantity * $order->current_price, 8);
-                if ($order->stop_loss > 0) {
-                    $order->stop_loss = number_format($order->stop_loss, 8);
+            $newOrders = [];
+            $processingOrders = [];
+            $historyOrders = [];
+
+            foreach ($orders as $order) {
+                $order['price'] = number_format($order['price'], 8);
+                $order['current_price'] = number_format($currentPrices[$order['market']], 8);
+                $diff = $order['current_price'] - $order['price'];
+                $order['price_diff'] = round($diff / $order['current_price'] * 100, 2);
+                $order['current_value'] = number_format($order['quantity'] * $order['current_price'], 8);
+                if ($order['stop_loss'] > 0) {
+                    $order['stop_loss'] = number_format($order['stop_loss'], 8);
                 }
-                if ($order->take_profit > 0) {
-                    $order->take_profit = number_format($order->take_profit, 8);
+                if ($order['take_profit'] > 0) {
+                    $order['take_profit'] = number_format($order['take_profit'], 8);
+                }
+                switch ($order['status']) {
+                    case Order::STATUS_CLOSED:
+                    case Order::STATUS_OPEN:
+                        $newOrders[] = $order;
+                        break;
+                    case Order::STATUS_PROCESSED:
+                        $processingOrders[] = $order;
+                        break;
+                    default:
+                        $historyOrders[] = $order;
+                        break;
                 }
             }
-            $dataProvider->setModels($orderModels);
+
+            $newOrdersProvider = new ArrayDataProvider([
+                'allModels' => $newOrders,
+                'pagination' => [
+                    'pageSize' => 50,
+                ],
+            ]);
+            $processingOrdersProvider = new ArrayDataProvider([
+                'allModels' => $processingOrders,
+                'pagination' => [
+                    'pageSize' => 50,
+                ],
+
+            ]);
+            $historyOrdersProvider = new ArrayDataProvider([
+                'allModels' => $historyOrders,
+                'pagination' => [
+                    'pageSize' => 50,
+                ],
+            ]);
         }
 
         return $this->render('index', [
-            'dataProvider' => $dataProvider,
+            'newOrdersProvider' => $newOrdersProvider,
+            'processingOrdersProvider' => $processingOrdersProvider,
+            'historyOrdersProvider' => $historyOrdersProvider,
+
         ]);
     }
 
