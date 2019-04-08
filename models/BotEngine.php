@@ -105,6 +105,8 @@ class BotEngine
 
                     $order->save();
                     $pendingOrder->delete();
+                } else {
+                    $this->errorMail($pendingOrder, $result['message']);
                 }
 
                 break;
@@ -124,6 +126,8 @@ class BotEngine
                         $order->status = Order::STATUS_DONE;
                         $order->save();
                     }
+                } else {
+                    $this->errorMail($pendingOrder, $result['message']);
                 }
                 break;
         }
@@ -265,5 +269,20 @@ class BotEngine
         }
 
         $this->marketLastBids = BittrexParser::getPricesFromSummaries($marketSummaries);
+    }
+
+    public function errorMail(PendingOrder $pendingOrder, $msg)
+    {
+        $subject = 'Error ' . $pendingOrder->type . ' ' . $pendingOrder->market;
+
+        $body = 'Pending order ID: ' . $pendingOrder->id . "\n";
+        $body .= $msg;
+
+        $mail = Yii::$app->mailer->compose();
+        $mail->setFrom('admin@wales.usermd.net')
+            ->setTo('leszek.walszewski@gmail.com')
+            ->setSubject($subject)
+            ->setTextBody($body)
+            ->send();
     }
 }
