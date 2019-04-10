@@ -3,7 +3,7 @@ namespace app\utils;
 
 use Yii;
 
-class BinanceParser
+class BinanceParser extends ExchangeParser
 {
     public static function parsePrices($prices)
     {
@@ -16,5 +16,37 @@ class BinanceParser
         }
 
         return $marketPrices;
+    }
+
+    public static function parseTicker(array $tickerData)
+    {
+        $ticker = [];
+
+        $timestamp = self::safe_integer($tickerData['closeTime']);
+        $datetime = date("Y-m-d H:i:s");
+
+        $ticker['exchange'] = 'BINANCE';
+        $ticker['symbol'] = $tickerData['symbol'];
+        $ticker['timestamp'] = $timestamp;
+        $ticker['datetime'] = $datetime;
+        $ticker['high'] = self::safe_float($tickerData['highPrice']);
+        $ticker['low'] = self::safe_float($tickerData['lowPrice']);
+        $ticker['bid'] = self::safe_float($tickerData['bidPrice']);
+        $ticker['ask'] = self::safe_float($tickerData['askPrice']);
+        $ticker['vwap'] = self::safe_float($tickerData['weightedAvgPrice']);
+        $ticker['open'] = self::safe_float($tickerData['openPrice']);
+        $ticker['close'] = self::safe_float($tickerData['prevClosePrice']);
+        $ticker['first'] = null;
+        $ticker['last'] = self::safe_float($tickerData['lastPrice']);
+        $ticker['change'] = self::safe_float($tickerData['priceChangePercent']);
+        $ticker['percentage'] = null;
+        $ticker['average'] = null;
+        $ticker['basevolume'] = self::safe_float($tickerData['volume']);
+        $ticker['quotevolume'] = self::safe_float($tickerData['quoteVolume']);
+        $ticker['created_at'] = $datetime;
+        $ticker['updated_at'] = $datetime;
+
+        return $ticker;
+
     }
 }

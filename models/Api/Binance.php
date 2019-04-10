@@ -25,6 +25,19 @@ class Binance
         return $response;
     }
 
+    public function getTicker24($symbol = null)
+    {
+        $endPoint = 'api/v1/ticker/24hr';
+
+        if ($symbol) {
+            $params = [
+                'symbol' => $symbol
+            ];
+        }
+
+        return $this->getResponse($endPoint, $params);
+    }
+
     protected function getResponse($endPoint, $params = null)
     {
         $url = $this->getApiUrl().$endPoint;
@@ -49,11 +62,4 @@ class Binance
         return $this->cachePath;
     }
 
-    public function getDataSource($key)
-    {
-        if (isset($this->dataSource[$key])) {
-            return $this->dataSource[$key];
-        }
-        return $this->dataSource;
-    }
 }

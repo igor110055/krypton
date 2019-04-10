@@ -10,6 +10,7 @@ use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
 use app\models\Api\Bittrex;
+use app\models\Api\Binance;
 use app\models\BotEngine;
 
 class SiteController extends Controller
@@ -89,6 +90,7 @@ class SiteController extends Controller
 //        $result = $bot->checkOpenOrders();
 //        $result = $bot->checkPendingOrders();
 //        $result = $bot->createPendingOrdersForClosedOrders();
+//        $api = new Binance();
         return $this->render('index', [
             'result' => $result
         ]);

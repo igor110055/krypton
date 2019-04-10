@@ -4,7 +4,7 @@ namespace app\utils;
 
 use Yii;
 
-class BittrexParser
+class BittrexParser extends ExchangeParser
 {
     public static function getMarketList($marketJson)
     {
