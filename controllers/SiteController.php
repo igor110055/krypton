@@ -90,7 +90,8 @@ class SiteController extends Controller
 //        $result = $bot->checkOpenOrders();
 //        $result = $bot->checkPendingOrders();
 //        $result = $bot->createPendingOrdersForClosedOrders();
-//        $api = new Binance();
+        $api = new Binance();
+        $result = $api->getTicker24();
         return $this->render('index', [
             'result' => $result
         ]);

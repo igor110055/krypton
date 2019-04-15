@@ -23,7 +23,7 @@ class EndPointCacher
 
     public function downloadMarkets()
     {
-        $markets = $this->api->getMarkets();
+        $markets = json_encode($this->api->getMarkets());
         $savePath = $this->api->getCachePath();
         $fileName = $this->api->getDataSource('markets');
 

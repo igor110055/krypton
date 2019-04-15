@@ -18,6 +18,22 @@ class BinanceParser extends ExchangeParser
         return $marketPrices;
     }
 
+    public static function sliceTicker(array $tickerData, array $markets)
+    {
+        $slicedTickers = [];
+        foreach ($tickerData as $ticker) {
+            if (strpos($ticker['symbol'], 'BTC', -3)){
+                $market = str_replace('BTC', '', $ticker['symbol']);
+                $fullMarket = 'BTC-'.$market;
+                if (in_array($fullMarket, $markets)) {
+                    $slicedTickers[$fullMarket] = $ticker;
+                }
+            }
+        }
+
+        return $slicedTickers;
+    }
+
     public static function parseTicker(array $tickerData)
     {
         $ticker = [];

@@ -14,15 +14,26 @@ use app\utils\BinanceParser;
 
 class CollectorController extends Controller
 {
+    public $marketsToCollect = [
+        'BTC-NEO',
+        'BTC-NAV',
+        'BTC-LSK',
+        'BTC-XRP',
+        'BTC-ADA',
+        'BTC-REP',
+        'BTC-TRX'
+    ];
     public function actionCollectTicker()
     {
         $api = new Binance();
-        $tickerSource = $api->getTicker24('NAVBTC');
-        $tickerData = BinanceParser::parseTicker($tickerSource);
-
-        $ticker = new Ticker();
-        $ticker->setAttributes($tickerData);
-        $ticker->save();
+        $tickerSource = $api->getTicker24();
+        $slicedTickers = BinanceParser::sliceTicker($tickerSource, $this->marketsToCollect);
+        foreach ($slicedTickers as $ticker) {
+            $tickerData = BinanceParser::parseTicker($ticker);
+            $ticker = new Ticker();
+            $ticker->setAttributes($tickerData);
+            $ticker->save();
+        }
     }
 
     public function actionCollectOhlcv()
