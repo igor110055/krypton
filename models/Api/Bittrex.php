@@ -292,6 +292,21 @@ class Bittrex
         return $prices;
     }
 
+    public function getMarketSymbols()
+    {
+        $bittrexMarkets = $this->getMarkets()['result'];
+        if (!$bittrexMarkets['success']) {
+            return false;
+        }
+        $marketSymbols = [];
+        foreach ($bittrexMarkets as $bitrexMarket) {
+            if (strstr($bitrexMarket['MarketName'], 'BTC-')) {
+                $marketSymbols[] = $bitrexMarket['MarketName'];
+            }
+        }
+        return $marketSymbols;
+
+    }
     protected function getMessageHash($message)
     {
         $hash = hash_hmac('sha512', $message, $this->getApiSecret());

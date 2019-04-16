@@ -1,6 +1,7 @@
 <?php
 namespace app\utils;
 
+use app\models\Api\Bittrex;
 use Yii;
 
 class BinanceParser extends ExchangeParser
@@ -25,6 +26,7 @@ class BinanceParser extends ExchangeParser
             if (strpos($ticker['symbol'], 'BTC', -3)){
                 $market = str_replace('BTC', '', $ticker['symbol']);
                 $fullMarket = 'BTC-'.$market;
+                $ticker['bittrexName'] = $fullMarket;
                 if (in_array($fullMarket, $markets)) {
                     $slicedTickers[$fullMarket] = $ticker;
                 }
@@ -42,7 +44,8 @@ class BinanceParser extends ExchangeParser
         $datetime = date("Y-m-d H:i:s");
 
         $ticker['exchange'] = 'BINANCE';
-        $ticker['symbol'] = $tickerData['symbol'];
+//        $ticker['symbol'] = $tickerData['symbol'];
+        $ticker['symbol'] = $tickerData['bittrexName'];
         $ticker['timestamp'] = $timestamp;
         $ticker['datetime'] = $datetime;
         $ticker['high'] = self::safe_float($tickerData['highPrice']);
