@@ -12,6 +12,7 @@ use app\models\ContactForm;
 use app\models\Api\Bittrex;
 use app\models\Api\Binance;
 use app\models\BotEngine;
+use app\models\Predictor\DataHandler;
 
 class SiteController extends Controller
 {
@@ -90,8 +91,10 @@ class SiteController extends Controller
 //        $result = $bot->checkOpenOrders();
 //        $result = $bot->checkPendingOrders();
 //        $result = $bot->createPendingOrdersForClosedOrders();
-        $api = new Binance();
-        $result = $api->getTicker24();
+//        $api = new Binance();
+//        $result = $api->getTicker24();
+        $handler = new DataHandler();
+        $handler->getRecentData('BTC-LTC', 200, false, 12, '1m', false);
         return $this->render('index', [
             'result' => $result
         ]);
