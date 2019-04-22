@@ -39,59 +39,57 @@ class OrderController extends Controller
     {
         $orders = Order::find()->orderBy(['crdate' => SORT_DESC])->asArray()->all();
 
-        if (count($orders) > 0) {
-            $api = new Bittrex();
-            $currentPrices = $api->getActualPrices();
-            $newOrders = [];
-            $processingOrders = [];
-            $historyOrders = [];
+        $api = new Bittrex();
+        $currentPrices = $api->getActualPrices();
+        $newOrders = [];
+        $processingOrders = [];
+        $historyOrders = [];
 
-            foreach ($orders as $order) {
-                $order['price'] = number_format($order['price'], 8);
-                $order['current_price'] = number_format($currentPrices[$order['market']], 8);
-                $diff = $order['current_price'] - $order['price'];
-                $order['price_diff'] = round($diff / $order['current_price'] * 100, 2);
-                $order['current_value'] = number_format($order['quantity'] * $order['current_price'], 8);
-                if ($order['stop_loss'] > 0) {
-                    $order['stop_loss'] = number_format($order['stop_loss'], 8);
-                }
-                if ($order['take_profit'] > 0) {
-                    $order['take_profit'] = number_format($order['take_profit'], 8);
-                }
-                switch ($order['status']) {
-                    case Order::STATUS_CLOSED:
-                    case Order::STATUS_OPEN:
-                        $newOrders[] = $order;
-                        break;
-                    case Order::STATUS_PROCESSED:
-                        $processingOrders[] = $order;
-                        break;
-                    default:
-                        $historyOrders[] = $order;
-                        break;
-                }
+        foreach ($orders as $order) {
+            $order['price'] = number_format($order['price'], 8);
+            $order['current_price'] = number_format($currentPrices[$order['market']], 8);
+            $diff = $order['current_price'] - $order['price'];
+            $order['price_diff'] = round($diff / $order['current_price'] * 100, 2);
+            $order['current_value'] = number_format($order['quantity'] * $order['current_price'], 8);
+            if ($order['stop_loss'] > 0) {
+                $order['stop_loss'] = number_format($order['stop_loss'], 8);
             }
-
-            $newOrdersProvider = new ArrayDataProvider([
-                'allModels' => $newOrders,
-                'pagination' => [
-                    'pageSize' => 50,
-                ],
-            ]);
-            $processingOrdersProvider = new ArrayDataProvider([
-                'allModels' => $processingOrders,
-                'pagination' => [
-                    'pageSize' => 50,
-                ],
-
-            ]);
-            $historyOrdersProvider = new ArrayDataProvider([
-                'allModels' => $historyOrders,
-                'pagination' => [
-                    'pageSize' => 50,
-                ],
-            ]);
+            if ($order['take_profit'] > 0) {
+                $order['take_profit'] = number_format($order['take_profit'], 8);
+            }
+            switch ($order['status']) {
+                case Order::STATUS_CLOSED:
+                case Order::STATUS_OPEN:
+                    $newOrders[] = $order;
+                    break;
+                case Order::STATUS_PROCESSED:
+                    $processingOrders[] = $order;
+                    break;
+                default:
+                    $historyOrders[] = $order;
+                    break;
+            }
         }
+
+        $newOrdersProvider = new ArrayDataProvider([
+            'allModels' => $newOrders,
+            'pagination' => [
+                'pageSize' => 50,
+            ],
+        ]);
+        $processingOrdersProvider = new ArrayDataProvider([
+            'allModels' => $processingOrders,
+            'pagination' => [
+                'pageSize' => 50,
+            ],
+
+        ]);
+        $historyOrdersProvider = new ArrayDataProvider([
+            'allModels' => $historyOrders,
+            'pagination' => [
+                'pageSize' => 50,
+            ],
+        ]);
 
         return $this->render('index', [
             'newOrdersProvider' => $newOrdersProvider,

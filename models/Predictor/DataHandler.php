@@ -98,13 +98,10 @@ class DataHandler
 
         $command = $connection->createCommand($sql);
         $results = $command->queryAll();
-//        var_dump($results);exit;
 
         if (!$returnRS) {
             $results = $this->organizePairData($results, $limit);
         }
-
-        var_dump($results);exit;
 
 //        \Cache::put($key, $ret, 2);
         return $results;
@@ -133,6 +130,6 @@ class DataHandler
                 $ret[$ex][$key] = array_slice($ret[$ex][$key], 0, $limit, true);
             }
         }
-        return $ret;
+        return $ret['BINANCE'];
     }
 }

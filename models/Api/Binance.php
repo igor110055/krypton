@@ -28,6 +28,7 @@ class Binance
     public function getTicker24($symbol = null)
     {
         $endPoint = 'api/v1/ticker/24hr';
+        $params = [];
 
         if ($symbol) {
             $params = [

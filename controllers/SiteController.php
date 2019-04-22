@@ -13,6 +13,7 @@ use app\models\Api\Bittrex;
 use app\models\Api\Binance;
 use app\models\BotEngine;
 use app\models\Predictor\DataHandler;
+use app\models\Predictor\Indicator;
 
 class SiteController extends Controller
 {
@@ -93,8 +94,11 @@ class SiteController extends Controller
 //        $result = $bot->createPendingOrdersForClosedOrders();
 //        $api = new Binance();
 //        $result = $api->getTicker24();
-        $handler = new DataHandler();
-        $handler->getRecentData('BTC-LTC', 200, false, 12, '1m', false);
+//        $handler = new DataHandler();
+//        $handler->getRecentData('BTC-LTC', 200, false, 12, '1m', false);
+        $indicator = new Indicator();
+        $adx = $indicator->adx('BTC-NAV');
+        $result = $adx;
         return $this->render('index', [
             'result' => $result
         ]);
