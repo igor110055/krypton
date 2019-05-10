@@ -41,6 +41,7 @@ class Bittrex
     public function getTicker($market)
     {
         $endPoint = 'public/getticker';
+        $params = null;
 
         if ($market) {
             $params = [
@@ -61,6 +62,7 @@ class Bittrex
     public function getMarketSummary($market)
     {
         $endPoint = 'public/getmarketsummary';
+        $params = null;
 
         if ($market) {
             $params = [
@@ -74,6 +76,7 @@ class Bittrex
     public function getOrderBook($market, $type = 'both')
     {
         $endPoint = 'public/getorderbook';
+        $params = null;
 
         if ($market && $type) {
             $params = [
@@ -88,6 +91,7 @@ class Bittrex
     public function getMarketHistory($market)
     {
         $endPoint = 'public/getmarkethistory';
+        $params = null;
 
         if ($market) {
             $params = [
@@ -101,6 +105,7 @@ class Bittrex
     public function getOpenOrders($market = null)
     {
         $endPoint = 'market/getopenorders';
+        $params = null;
 
         if ($market) {
             $params = [
@@ -114,6 +119,7 @@ class Bittrex
     public function placeBuyOrder($market, $quantity, $rate)
     {
         $endPoint = 'market/buylimit';
+        $params = null;
 
         if ($market && $quantity && $rate) {
             $params = [
@@ -130,6 +136,7 @@ class Bittrex
     public function placeSellOrder($market, $quantity, $rate)
     {
         $endPoint = 'market/selllimit';
+        $params = null;
 
         if ($market && $quantity && $rate) {
             $params = [
@@ -146,6 +153,7 @@ class Bittrex
     public function cancelOrder($uuid)
     {
         $endPoint = 'market/cancel';
+        $params = null;
 
         if ($uuid) {
             $params['uuid'] = $uuid;
@@ -165,6 +173,7 @@ class Bittrex
     public function getBalance($currency)
     {
         $endPoint = 'account/getbalance';
+        $params = null;
 
         if ($currency) {
             $params = [
@@ -178,6 +187,7 @@ class Bittrex
     public function getDepositAddress($currency)
     {
         $endPoint = 'account/getdepositaddress';
+        $params = null;
 
         if ($currency) {
             $params = [
@@ -191,6 +201,7 @@ class Bittrex
     public function withdraw($currency, $quantity, $address, $paymentId = null)
     {
         $endPoint = 'account/withdraw';
+        $params = null;
 
         if ($currency && $quantity && $address) {
             $params = [
@@ -211,6 +222,7 @@ class Bittrex
     public function getOrder($uuid)
     {
         $endPoint = 'account/getorder';
+        $params = null;
 
         if ($uuid) {
             $params['uuid'] = $uuid;
@@ -224,6 +236,7 @@ class Bittrex
     public function getOrders($market = null)
     {
         $endPoint = 'account/getorderhistory';
+        $params = null;
 
         if ($market) {
             $params['market'] = $market;

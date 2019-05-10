@@ -97,7 +97,7 @@ class SiteController extends Controller
 //        $handler = new DataHandler();
 //        $handler->getRecentData('BTC-LTC', 200, false, 12, '1m', false);
         $indicator = new Indicator();
-        $adx = $indicator->adx('BTC-NAV');
+        $adx = $indicator->adx('BTC-KMD');
         $result = $adx;
         return $this->render('index', [
             'result' => $result
