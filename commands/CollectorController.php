@@ -72,4 +72,12 @@ class CollectorController extends Controller
     {
         $api = new Binance();
     }
+
+    public function actionCleanDb()
+    {
+        $weekAgo = strtotime("-1 week");
+        $dateWeekAgo = date('Y-m-d', $weekAgo);
+
+        Ticker::deleteAll('created_at < :dateWeekAgo', ['dateWeekAgo' => $dateWeekAgo]);
+    }
 }
