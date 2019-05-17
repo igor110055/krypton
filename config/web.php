@@ -2,6 +2,7 @@
 
 $params = require(__DIR__ . '/params.php');
 $db = require(__DIR__ . '/db.php');
+$bot = require(__DIR__ . '/bot.php');
 
 $config = [
     'id' => 'basic',
@@ -50,7 +51,7 @@ $config = [
             ],
         ],
     ],
-    'params' => $params,
+    'params' => array_merge($params, $bot),
 ];
 
 if (YII_ENV_DEV) {

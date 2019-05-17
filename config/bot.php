@@ -1,0 +1,42 @@
+<?php
+
+return [
+    'markets' => [
+        'BTC-ETH',
+        'BTC-XRP',
+        'BTC-LTC',
+        'BTC-NEO',
+        'BTC-XLM',
+        'BTC-NAV',
+        'BTC-LSK',
+        'BTC-ADA',
+        'BTC-REP',
+        'BTC-TRX',
+        'BTC-XMR',
+        'BTC-DASH',
+        'BTC-ONT',
+        'BTC-XEM',
+        'BTC-ZEC',
+        'BTC-BAT',
+        'BTC-WAVES',
+        'BTC-OMG',
+        'BTC-QTUM',
+        'BTC-DCR',
+        'BTC-ZIL',
+        'BTC-BTS',
+        'BTC-IOST',
+        'BTC-XVG',
+        'BTC-STEEM',
+        'BTC-NPXS',
+        'BTC-BTT',
+        'BTC-SC',
+        'BTC-ENJ',
+        'BTC-KMD',
+        'BTC-STRAT',
+        'BTC-GNT',
+        'BTC-ARK',
+        'BTC-XZC',
+        'BTC-PIVX',
+        'BTC-RVN'
+    ]
+];

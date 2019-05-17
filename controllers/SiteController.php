@@ -14,6 +14,7 @@ use app\models\Api\Binance;
 use app\models\BotEngine;
 use app\models\Predictor\DataHandler;
 use app\models\Predictor\Indicator;
+use app\models\Predictor\Predictor;
 
 class SiteController extends Controller
 {
@@ -96,9 +97,11 @@ class SiteController extends Controller
 //        $result = $api->getTicker24();
 //        $handler = new DataHandler();
 //        $handler->getRecentData('BTC-LTC', 200, false, 12, '1m', false);
-        $indicator = new Indicator();
-        $adx = $indicator->adx('BTC-KMD');
-        $result = $adx;
+//        $indicator = new Indicator();
+//        $adx = $indicator->adx('BTC-KMD');
+//        $result = $adx;
+        $predictor = new Predictor();
+        $result = $predictor->checkCurrencies();
         return $this->render('index', [
             'result' => $result
         ]);
