@@ -99,6 +99,41 @@ class OrderController extends Controller
         ]);
     }
 
+    public function actionShowProcessing()
+    {
+        $query = Order::find()->where(['status' => Order::STATUS_PROCESSED])
+            ->orderBy(['crdate' => SORT_DESC]);
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+
+        $api = new Bittrex();
+        $currentPrices = $api->getActualPrices();
+
+        $orders = (array)$dataProvider->getModels();
+        foreach ($orders as $order) {
+            $order['price'] = number_format($order['price'], 8);
+            $order['current_price'] = number_format($currentPrices[$order['market']], 8);
+            $diff = $order['current_price'] - $order['price'];
+            $order['price_diff'] = round($diff / $order['current_price'] * 100, 2);
+            $order['current_value'] = number_format($order['quantity'] * $order['current_price'], 8);
+            if ($order['stop_loss'] > 0) {
+                $order['stop_loss'] = number_format($order['stop_loss'], 8);
+            }
+            if ($order['take_profit'] > 0) {
+                $order['take_profit'] = number_format($order['take_profit'], 8);
+            }
+        }
+        $dataProvider->setModels($orders);
+
+        return $this->render('show-processing', [
+            'dataProvider' => $dataProvider
+        ]);
+
+
+    }
+
     /**
      * Displays a single Order model.
      * @param integer $id
@@ -169,6 +204,17 @@ class OrderController extends Controller
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
+    }
+
+    public function actionSell($id)
+    {
+        $model = $this->findModel($id);
+
+        //get model by id
+
+        //do sell action by bot engine
+
+        //remove pending orders by uuid
     }
 
     /**

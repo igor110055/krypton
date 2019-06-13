@@ -101,7 +101,7 @@ class SiteController extends Controller
 //        $adx = $indicator->adx('BTC-KMD');
 //        $result = $adx;
         $predictor = new Predictor();
-        $result = $predictor->checkCurrencies();
+//        $result = $predictor->checkCurrencies();
         return $this->render('index', [
             'result' => $result
         ]);
