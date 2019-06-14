@@ -28,6 +28,7 @@ class Order extends \yii\db\ActiveRecord
 
     public $current_price = null;
     public $price_diff = null;
+    public $val_diff = null;
     public $current_value = null;
 
     /**

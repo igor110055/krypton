@@ -18,6 +18,7 @@ class m190303_162853_create_order_table extends Migration
             'market' => $this->string()->notNull(),
             'quantity' => $this->float()->notNull(),
             'price' => $this->float()->notNull(),
+            'sell_price' => $this->float()->notNull(),
             'value' => $this->float(),
             'type' => $this->string()->notNull(),
             'stop_loss' => $this->float(),
