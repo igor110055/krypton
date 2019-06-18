@@ -124,6 +124,8 @@ class BotEngine
                     $order = Order::find()->where(['uuid' => $uuid])->one();
                     if ($order) {
                         $order->status = Order::STATUS_DONE;
+                        $order->sell_price = $bestOffer;
+                        $order->sell_value = $pendingOrder->quantity * $bestOffer;
                         $order->save();
                     }
                 } else {
