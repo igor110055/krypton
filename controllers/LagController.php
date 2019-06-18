@@ -26,7 +26,7 @@ class LagController extends Controller
 
         $comparedPrices = [];
         foreach ($bittrexPrices as $market => $value) {
-            if (isset($binancePrices[$market])) {
+            if (isset($binancePrices[$market]) && $value > 0) {
                 $binanceValue = floatval($binancePrices[$market]);
                 $bittrexValue = floatval($value);
                 $diff = $binanceValue - $bittrexValue;
