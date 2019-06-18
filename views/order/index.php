@@ -26,6 +26,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'price',
             'value',
             'sell_price',
+            'sell_value',
             'val_diff',
             'price_diff',
             'status',
