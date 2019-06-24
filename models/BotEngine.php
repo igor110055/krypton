@@ -126,6 +126,7 @@ class BotEngine
                         $order->status = Order::STATUS_DONE;
                         $order->sell_price = $bestOffer;
                         $order->sell_value = $pendingOrder->quantity * $bestOffer;
+                        $order->sell_uuid = $result['result']['uuid'];
                         $order->save();
                     }
                 } else {
@@ -135,6 +136,35 @@ class BotEngine
         }
 
         $this->checkOpenOrders();
+    }
+
+    public function sellOrder(Order $order)
+    {
+        $return = [];
+        $actualTicker = $this->api->getTicker($order->market);
+        $bestOffer = $actualTicker['result']['Bid'];
+        $result = $this->api->placeSellOrder($order->market, $order->quantity, $bestOffer);
+        if ($result['success']) {
+            $uuid = $order->uuid;
+            $pendingOrders = PendingOrder::find()->where(['uuid' => $uuid])->all();
+            if (count($pendingOrders) > 0) {
+                foreach ($pendingOrders as $pendingOrder) {
+                    $pendingOrder->delete();
+                }
+            }
+            $order->status = Order::STATUS_DONE;
+            $order->sell_price = $bestOffer;
+            $order->sell_value = $pendingOrder->quantity * $bestOffer;
+            $order->sell_uuid = $result['result']['uuid'];
+            $order->save();
+            $return['success'] = true;
+            $return['msg'] = '';
+        } else {
+            $return['success'] = false;
+            $return['msg'] = $result['message'];
+        }
+
+        return $return;
     }
 
     public function checkOpenOrders($market = null)

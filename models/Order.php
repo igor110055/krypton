@@ -23,7 +23,7 @@ class Order extends \yii\db\ActiveRecord
 {
     const STATUS_OPEN = 'open';
     const STATUS_CLOSED = 'closed';
-    const STATUS_PROCESSED = 'processed';
+    const STATUS_PROCESSED = 'processing';
     const STATUS_DONE = 'done';
 
     public $current_price = null;
@@ -46,7 +46,7 @@ class Order extends \yii\db\ActiveRecord
     {
         return [
             [['uuid', 'market', 'quantity', 'price', 'type'], 'required'],
-            [['quantity', 'price', 'value', 'stop_loss', 'take_profit'], 'number'],
+            [['quantity', 'price', 'sell_price', 'value', 'sell_value', 'stop_loss', 'take_profit'], 'number'],
             [['crdate'], 'safe'],
             [['uuid', 'market', 'type', 'status'], 'string', 'max' => 255],
         ];

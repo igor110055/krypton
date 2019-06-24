@@ -15,6 +15,7 @@ class m190303_162853_create_order_table extends Migration
         $this->createTable('{{%order}}', [
             'id' => $this->primaryKey(),
             'uuid' => $this->string()->notNull(),
+            'sell_uuid' => $this->string(),
             'market' => $this->string()->notNull(),
             'quantity' => $this->float()->notNull(),
             'price' => $this->float()->notNull(),

@@ -19,8 +19,10 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'quantity')->textInput() ?>
 
     <?= $form->field($model, 'price')->textInput() ?>
+    <?= $form->field($model, 'sell_price')->textInput() ?>
 
     <?= $form->field($model, 'value')->textInput() ?>
+    <?= $form->field($model, 'sell_value')->textInput() ?>
 
     <?= $form->field($model, 'type')->textInput(['maxlength' => true]) ?>
 

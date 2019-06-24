@@ -39,9 +39,9 @@ AppAsset::register($this);
         'items' => [
             ['label' => 'Processing orders', 'url' => ['/order/show-processing']],
             ['label' => 'Orders', 'url' => ['/order/index']],
-            ['label' => 'Lags', 'url' => ['/lag/index']],
-            ['label' => 'Alerts', 'url' => ['/alert/index']],
             ['label' => 'Pending orders', 'url' => ['/pending-order/index']],
+            ['label' => 'Alerts', 'url' => ['/alert/index']],
+            ['label' => 'Lags', 'url' => ['/lag/index']],
             ['label' => 'About', 'url' => ['/site/about']],
             ['label' => 'Oscylators', 'url' => ['/site/oscylators']],
             Yii::$app->user->isGuest ? (

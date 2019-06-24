@@ -41,7 +41,7 @@ class PendingOrderSearch extends PendingOrder
      */
     public function search($params)
     {
-        $query = PendingOrder::find();
+        $query = PendingOrder::find()->orderBy(['type' => SORT_ASC]);
 
         // add conditions that should always apply here
 

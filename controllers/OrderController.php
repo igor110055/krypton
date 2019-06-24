@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\models\Api\Bittrex;
+use app\models\BotEngine;
 use Yii;
 use app\models\Order;
 use yii\data\ActiveDataProvider;
@@ -43,14 +44,6 @@ class OrderController extends Controller
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
-
-        $orders = (array)$dataProvider->getModels();
-        foreach ($orders as $order) {
-            $order['price'] = number_format($order['price'], 8);
-            $order['price_diff'] = 'zz';
-            $order['val_diff'] = 'zz';
-        }
-        $dataProvider->setModels($orders);
 
         return $this->render('index', [
             'dataProvider' => $dataProvider
@@ -166,13 +159,20 @@ class OrderController extends Controller
 
     public function actionSell($id)
     {
-        $model = $this->findModel($id);
+        $order = $this->findModel($id);
+        if (!$order) {
+            return false;
+        }
 
-        //get model by id
+        $bot = new BotEngine();
+        $sellResult = $bot->sellOrder($order);
+        if ($sellResult['success']) {
+            Yii::$app->session->setFlash('orderSoldResult', 'Order sold successfull');
+        } else {
+            Yii::$app->session->setFlash('orderSoldResult', 'Error:' . $sellResult['msg']);
+        }
 
-        //do sell action by bot engine
-
-        //remove pending orders by uuid
+        return $this->redirect(['show-processing']);
     }
 
     /**

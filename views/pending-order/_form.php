@@ -14,7 +14,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->errorSummary($model); ?>
 
-    <?= $form->field($model, 'uuid')->textInput() ?>
+    <?php // $form->field($model, 'uuid')->textInput() ?>
 
     <?= $form->field($model, 'market')->dropdownList(
         $model->getMarketList(), ['prompt'=>'Select market']
@@ -29,13 +29,13 @@ use yii\widgets\ActiveForm;
     <div class="btn btn-primary" id="calcValBtn">Calc value</div>
 
     <?= $form->field($model, 'type')->dropDownList([
-        'SELL' => 'SELL',
-        'BUY' => 'BUY'
+        'BUY' => 'BUY',
+        'SELL' => 'SELL'
     ]) ?>
 
     <?= $form->field($model, 'condition')->dropDownList([
-        'COND_MORE' => $model::COND_MORE,
-        'COND_LESS' => $model::COND_LESS
+        'COND_LESS' => $model::COND_LESS,
+        'COND_MORE' => $model::COND_MORE
     ]) ?>
 
     <?= $form->field($model, 'stop_loss')->textInput() ?>
@@ -63,20 +63,19 @@ $('#pendingorder-market').change(function (data) {
          '<tr><td>Last</td><td>' + data.result.Last + '</td></tr>' +
           '</table>';
         $('#actualPrice').html(html);
-        $('#pendingorder-price').val(data.result.Last);
+        $('#pendingorder-price').val(data.result.Bid);
+        $('#pendingorder-value').val(0.01);
+        calcQty();
+        var stop_loss = data.result.Bid - (data.result.Bid * 0.02);
+        var take_profit = data.result.Bid + (data.result.Bid * 0.05);
+        $('#pendingorder-stop_loss').val(parseFloat(stop_loss).toFixed(8));
+        $('#pendingorder-take_profit').val(parseFloat(take_profit).toFixed(8));
     });
 })
 
 $('#calcQtyBtn').click(function() {
-
-  var value = $('#pendingorder-value').val();
-  var price = $('#pendingorder-price').val();
-  
-  if (value && price) {
-      var qty = value / price;
-      $('#pendingorder-quantity').val(parseFloat(qty).toFixed(2));
-  }
-})
+    calcQty();
+});
 
 $('#calcValBtn').click(function() {
 
@@ -87,7 +86,17 @@ $('#calcValBtn').click(function() {
       var value = qty * price;
       $('#pendingorder-value').val(parseFloat(value).toFixed(8));
   }
-})
+});
+
+function calcQty() {
+  var value = $('#pendingorder-value').val();
+  var price = $('#pendingorder-price').val();
+  
+  if (value && price) {
+      var qty = value / price;
+      $('#pendingorder-quantity').val(parseFloat(qty).toFixed(2));
+  }
+}
 
 JS;
 $position = \yii\web\View::POS_READY;
