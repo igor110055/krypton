@@ -91,8 +91,9 @@ $this->params['breadcrumbs'][] = $this->title;
                     }
                     return $val;
                 }],
-            'status',
+//            'status',
             'crdate',
+            'sell_placed',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

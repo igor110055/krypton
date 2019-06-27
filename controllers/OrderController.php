@@ -39,7 +39,7 @@ class OrderController extends Controller
     public function actionIndex()
     {
         $query = Order::find()->where(['status' => Order::STATUS_DONE])
-            ->orderBy(['crdate' => SORT_DESC]);
+            ->orderBy(['sell_placed' => SORT_DESC, 'crdate' => SORT_DESC]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

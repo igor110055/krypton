@@ -58,12 +58,12 @@ $('#pendingorder-market').change(function (data) {
     var market = this.value;
     $.get( "/ajax/get-ticker", { market: market }, function( data ) {
         var html = '<table>' +
-         '<tr><td>Ask</td><td>' + data.result.Ask + '</td></tr>' +
-         '<tr><td>Bid</td><td>' + data.result.Bid + '</td></tr>' +
-         '<tr><td>Last</td><td>' + data.result.Last + '</td></tr>' +
+         '<tr><td>Ask</td><td>' + parseFloat(data.result.Ask).toFixed(8) + '</td></tr>' +
+         '<tr><td>Bid</td><td>' + parseFloat(data.result.Bid).toFixed(8) + '</td></tr>' +
+         '<tr><td>Last</td><td>' + parseFloat(data.result.Last).toFixed(8) + '</td></tr>' +
           '</table>';
         $('#actualPrice').html(html);
-        $('#pendingorder-price').val(data.result.Bid);
+        $('#pendingorder-price').val(parseFloat(data.result.Bid).toFixed(8));
         $('#pendingorder-value').val(0.01);
         calcQty();
         var stop_loss = data.result.Bid - (data.result.Bid * 0.02);

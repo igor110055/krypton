@@ -127,6 +127,7 @@ class BotEngine
                         $order->sell_price = $bestOffer;
                         $order->sell_value = $pendingOrder->quantity * $bestOffer;
                         $order->sell_uuid = $result['result']['uuid'];
+                        $order->sell_placed = date('Y-m-d H:i:s');
                         $order->save();
                     }
                 } else {
@@ -156,6 +157,7 @@ class BotEngine
             $order->sell_price = $bestOffer;
             $order->sell_value = $pendingOrder->quantity * $bestOffer;
             $order->sell_uuid = $result['result']['uuid'];
+            $order->sell_placed = date('Y-m-d H:i:s');
             $order->save();
             $return['success'] = true;
             $return['msg'] = '';

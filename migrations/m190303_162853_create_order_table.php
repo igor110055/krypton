@@ -26,7 +26,9 @@ class m190303_162853_create_order_table extends Migration
             'stop_loss' => $this->float(),
             'take_profit' => $this->float(),
             'status' => $this->string(),
-            'crdate' => $this->timestamp()
+            'crdate' => $this->timestamp(),
+            'sell_placed' => $this->timestamp(),
+            'sell_closed' => $this->timestamp()
         ]);
     }
 
