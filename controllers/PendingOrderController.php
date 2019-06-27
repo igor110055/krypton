@@ -37,6 +37,7 @@ class PendingOrderController extends Controller
     {
         $searchModel = new PendingOrderSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider->pagination = ['pageSize' => 50];
 
         return $this->render('index', [
             'searchModel' => $searchModel,

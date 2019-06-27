@@ -85,8 +85,10 @@ class BotEngine
 
         switch ($pendingOrder->type) {
             case 'BUY':
-                $bestOffer = $actualTicker['result']['Ask'];
-                $result = $this->api->placeBuyOrder($pendingOrder->market, $pendingOrder->quantity, $bestOffer);
+//                $btcBalance = $this->api->getBalance('BTC');
+//                $bestOffer = $actualTicker['result']['Ask'];
+//                $result = $this->api->placeBuyOrder($pendingOrder->market, $pendingOrder->quantity, $bestOffer);
+                $result = $this->api->placeBuyOrder($pendingOrder->market, $pendingOrder->quantity, $pendingOrder->price);
                 if ($result['success']) {
 
                     $this->sendPlaceOrderMail($pendingOrder);
@@ -96,8 +98,8 @@ class BotEngine
                     $order->uuid = $result['result']['uuid'];
                     $order->market = $pendingOrder->market;
                     $order->quantity = $pendingOrder->quantity;
-                    $order->price = $bestOffer;
-                    $order->value = $bestOffer * $pendingOrder->quantity;
+                    $order->price = $pendingOrder->price;
+                    $order->value = $pendingOrder->price * $pendingOrder->quantity;
                     $order->type = $pendingOrder->type;
                     $order->stop_loss = $pendingOrder->stop_loss;
                     $order->take_profit = $pendingOrder->take_profit;
@@ -135,7 +137,7 @@ class BotEngine
                 }
                 break;
         }
-
+        sleep(1);
         $this->checkOpenOrders();
     }
 
@@ -183,7 +185,7 @@ class BotEngine
         $openOrdersUuids = [];
 
         if ($result['success']) {
-            if(count($result['result']) > 1) {
+            if(count($result['result']) > 0) {
                 foreach ($result['result'] as $openOrder){
                     $openOrdersUuids[] = $openOrder['OrderUuid'];
                 }
@@ -206,25 +208,30 @@ class BotEngine
         ]);
 
         foreach ($orders as $order) {
-            $orderEarn = new PendingOrder();
-            $orderEarn->market = $order->market;
-            $orderEarn->quantity = $order->quantity;
-            $orderEarn->price = $order->take_profit;
-            $orderEarn->value = $order->take_profit * $order->quantity;
-            $orderEarn->type = 'SELL';
-            $orderEarn->condition = 'COND_MORE';
-            $orderEarn->uuid = $order->uuid;
-            $orderEarn->save();
 
-            $orderLoss = new PendingOrder();
-            $orderLoss->market = $order->market;
-            $orderLoss->quantity = $order->quantity;
-            $orderLoss->price = $order->stop_loss;
-            $orderLoss->value = $order->stop_loss * $order->quantity;
-            $orderLoss->type = 'SELL';
-            $orderLoss->condition = 'COND_LESS';
-            $orderLoss->uuid = $order->uuid;
-            $orderLoss->save();
+            if ($order->take_profit) {
+                $orderEarn = new PendingOrder();
+                $orderEarn->market = $order->market;
+                $orderEarn->quantity = $order->quantity;
+                $orderEarn->price = $order->take_profit;
+                $orderEarn->value = $order->take_profit * $order->quantity;
+                $orderEarn->type = 'SELL';
+                $orderEarn->condition = 'COND_MORE';
+                $orderEarn->uuid = $order->uuid;
+                $orderEarn->save();
+            }
+
+            if ($order->stop_loss) {
+                $orderLoss = new PendingOrder();
+                $orderLoss->market = $order->market;
+                $orderLoss->quantity = $order->quantity;
+                $orderLoss->price = $order->stop_loss;
+                $orderLoss->value = $order->stop_loss * $order->quantity;
+                $orderLoss->type = 'SELL';
+                $orderLoss->condition = 'COND_LESS';
+                $orderLoss->uuid = $order->uuid;
+                $orderLoss->save();
+            }
 
             $order->status = Order::STATUS_PROCESSED;
             $order->save();
