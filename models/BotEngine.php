@@ -12,6 +12,7 @@ class BotEngine
 {
     private $api;
     private $marketLastBids;
+    private $btcBalance;
 
     public function __construct()
     {
@@ -85,7 +86,11 @@ class BotEngine
 
         switch ($pendingOrder->type) {
             case 'BUY':
-//                $btcBalance = $this->api->getBalance('BTC');
+
+                if ((float)$this->btcBalance['result']['Available'] < (float)($pendingOrder->price * $pendingOrder->quantity)) {
+                    return;
+                }
+
 //                $bestOffer = $actualTicker['result']['Ask'];
 //                $result = $this->api->placeBuyOrder($pendingOrder->market, $pendingOrder->quantity, $bestOffer);
                 $result = $this->api->placeBuyOrder($pendingOrder->market, $pendingOrder->quantity, $pendingOrder->price);
@@ -304,12 +309,14 @@ class BotEngine
     public function prepareActualPrices()
     {
         $marketSummaries = $this->api->getMarketSummaries();
+        $btcBalance = $this->api->getBalance('BTC');
 
-        if (!$marketSummaries['success']) {
+        if (!$marketSummaries['success'] || !$btcBalance['success']) {
             return false;
         }
 
         $this->marketLastBids = BittrexParser::getPricesFromSummaries($marketSummaries);
+        $this->btcBalance = $btcBalance;
     }
 
     public function errorMail(PendingOrder $pendingOrder, $msg)
