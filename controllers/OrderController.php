@@ -81,10 +81,61 @@ class OrderController extends Controller
         return $this->render('show-processing', [
             'dataProvider' => $dataProvider
         ]);
-
-
     }
 
+    public function actionShowOpen()
+    {
+        $query = Order::find()->where(['status' => Order::STATUS_OPEN])
+            ->orderBy(['crdate' => SORT_DESC]);
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+
+        $api = new Bittrex();
+        $openOrdersExchange = $api->getOpenOrders();
+        $openOrdersExchangeData = [];
+        $openOrdersExchangeUuids = [];
+        foreach ($openOrdersExchange['result'] as $openOrder) {
+            $openOrdersExchangeUuids[] = $openOrder['OrderUuid'];
+            $openOrdersExchangeData[$openOrder['OrderUuid']] = $openOrder;
+        }
+
+        $currentPrices = $api->getActualPrices();
+
+        $orders = (array)$dataProvider->getModels();
+        $ordersUuids = [];
+//        var_dump($openOrdersExchangeData, $orders);exit;
+        foreach ($orders as $order) {
+            $ordersUuids[] = $order['uuid'];
+            $order['price'] = number_format($order['price'], 8);
+            $order['current_price'] = number_format($currentPrices[$order['market']], 8);
+            $diff = $order['current_price'] - $order['price'];
+            $order['price_diff'] = round($diff / $order['current_price'] * 100, 2);
+            $order['quantity_remaining'] = $openOrdersExchangeData[$order['uuid']]['QuantityRemaining'];
+            $order['open_date'] = $openOrdersExchangeData[$order['uuid']]['Opened'];
+        }
+        $dataProvider->setModels($orders);
+
+        $exchangeDiff = array_diff($openOrdersExchangeUuids, $ordersUuids);
+        $diffToShow = [];
+        foreach ($exchangeDiff as $diffUuid) {
+            $diffToShow[] = $openOrdersExchangeData[$diffUuid];
+        }
+//var_dump($diffToShow);exit;
+        $diffProvider = new ArrayDataProvider([
+                'allModels' => $diffToShow,
+                'key' => function ($model) {
+                    return $model['OrderUuid'];
+                }
+            ]
+        );
+
+        return $this->render('show-open', [
+            'dataProvider' => $dataProvider,
+            'diffProvider' => $diffProvider
+        ]);
+    }
     /**
      * Displays a single Order model.
      * @param integer $id

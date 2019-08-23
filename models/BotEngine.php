@@ -87,9 +87,9 @@ class BotEngine
         switch ($pendingOrder->type) {
             case 'BUY':
 
-                if ((float)$this->btcBalance['result']['Available'] < (float)($pendingOrder->price * $pendingOrder->quantity)) {
-                    return;
-                }
+//                if ((float)$this->btcBalance['result']['Available'] < (float)($pendingOrder->price * $pendingOrder->quantity)) {
+//                    return;
+//                }
 
 //                $bestOffer = $actualTicker['result']['Ask'];
 //                $result = $this->api->placeBuyOrder($pendingOrder->market, $pendingOrder->quantity, $bestOffer);
@@ -142,8 +142,8 @@ class BotEngine
                 }
                 break;
         }
-        sleep(1);
-        $this->checkOpenOrders();
+
+//        $this->checkOpenOrders();
     }
 
     public function sellOrder(Order $order)
@@ -178,6 +178,7 @@ class BotEngine
 
     public function checkOpenOrders($market = null)
     {
+        sleep(3);
         $orders = Order::findAll([
             'status' => Order::STATUS_OPEN
         ]);
@@ -195,6 +196,8 @@ class BotEngine
                     $openOrdersUuids[] = $openOrder['OrderUuid'];
                 }
             }
+        } else {
+            return false;
         }
 
         foreach ($orders as $order) {
@@ -309,14 +312,17 @@ class BotEngine
     public function prepareActualPrices()
     {
         $marketSummaries = $this->api->getMarketSummaries();
-        $btcBalance = $this->api->getBalance('BTC');
+//        $btcBalance = $this->api->getBalance('BTC');
 
-        if (!$marketSummaries['success'] || !$btcBalance['success']) {
+//        if (!$marketSummaries['success'] || !$btcBalance['success']) {
+//            return false;
+//        }
+        if (!$marketSummaries['success']) {
             return false;
         }
 
         $this->marketLastBids = BittrexParser::getPricesFromSummaries($marketSummaries);
-        $this->btcBalance = $btcBalance;
+//        $this->btcBalance = $btcBalance;
     }
 
     public function errorMail(PendingOrder $pendingOrder, $msg)

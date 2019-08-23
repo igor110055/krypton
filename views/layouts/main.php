@@ -37,6 +37,7 @@ AppAsset::register($this);
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
+            ['label' => 'Open orders', 'url' => ['/order/show-open']],
             ['label' => 'Processing orders', 'url' => ['/order/show-processing']],
             ['label' => 'Orders', 'url' => ['/order/index']],
             ['label' => 'Pending orders', 'url' => ['/pending-order/index']],

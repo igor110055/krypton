@@ -102,6 +102,7 @@ class SiteController extends Controller
 //        $result = $adx;
         $predictor = new Predictor();
 //        $result = $predictor->checkCurrencies();
+//        $bot->checkOpenOrders();
         return $this->render('index', [
             'result' => $result
         ]);

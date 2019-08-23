@@ -7,10 +7,10 @@ use yii\widgets\Pjax;
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Processing Orders';
+$this->title = 'Open Orders';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="order-show-processing">
+<div class="order-show-open">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
@@ -39,19 +39,21 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
             'id',
-            'uuid',
-//            'type',
+//            'uuid',
+            'type',
             'market',
             'quantity',
+            'quantity_remaining',
             'price',
             'current_price',
-            'value',
-            'current_value',
+//            'value',
+//            'current_value',
             'price_diff',
-            'stop_loss',
-            'take_profit',
+//            'stop_loss',
+//            'take_profit',
             'status',
             'crdate',
+            'open_date',
             [
                 'class' => 'yii\grid\ActionColumn',
                 'template'=>'{update} {delete} {sell}',
@@ -62,6 +64,27 @@ $this->params['breadcrumbs'][] = $this->title;
                 ]
             ],
         ],
+    ]);
+    Pjax::end();
+
+    Pjax::begin(['id' => 'diff_orders_grid']);
+    echo GridView::widget([
+        'dataProvider' => $diffProvider,
+        'tableOptions' => ['class' => 'table table-bordered'],
+        'columns' => [
+            ['class' => 'yii\grid\SerialColumn'],
+            'OrderUuid',
+            'Exchange',
+            'OrderType',
+            'Quantity',
+            'QuantityRemaining',
+            'Limit',
+            'CommissionPaid',
+            'Price',
+            'PricePerUnit',
+            'Opened',
+        ],
+
     ]);
     Pjax::end();
 
