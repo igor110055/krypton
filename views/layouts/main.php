@@ -45,6 +45,7 @@ AppAsset::register($this);
             ['label' => 'Lags', 'url' => ['/lag/index']],
             ['label' => 'About', 'url' => ['/site/about']],
             ['label' => 'Oscylators', 'url' => ['/site/oscylators']],
+            ['label' => 'Configuration', 'url' => ['/configuration/index']],
             Yii::$app->user->isGuest ? (
                 ['label' => 'Login', 'url' => ['/site/login']]
             ) : (

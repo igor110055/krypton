@@ -42,6 +42,11 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'take_profit')->textInput() ?>
 
+    <?= $form->field($model, 'transaction_type')->dropDownList([
+        $model::TRANSACTION_BEST => 'Best',
+        $model::TRANSACTION_STRICT => 'Strict'
+    ]) ?>
+
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
     </div>

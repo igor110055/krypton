@@ -105,8 +105,11 @@ class OrderController extends Controller
 
         $orders = (array)$dataProvider->getModels();
         $ordersUuids = [];
-//        var_dump($openOrdersExchangeData, $orders);exit;
+
         foreach ($orders as $order) {
+            if (!isset($openOrdersExchangeData[$order['uuid']])) {
+                continue;
+            }
             $ordersUuids[] = $order['uuid'];
             $order['price'] = number_format($order['price'], 8);
             $order['current_price'] = number_format($currentPrices[$order['market']], 8);
@@ -122,7 +125,7 @@ class OrderController extends Controller
         foreach ($exchangeDiff as $diffUuid) {
             $diffToShow[] = $openOrdersExchangeData[$diffUuid];
         }
-//var_dump($diffToShow);exit;
+
         $diffProvider = new ArrayDataProvider([
                 'allModels' => $diffToShow,
                 'key' => function ($model) {

@@ -58,6 +58,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     return $val;
                 }],
             'uuid',
+            'transaction_type',
 
             ['class' => 'yii\grid\ActionColumn'],
         ]

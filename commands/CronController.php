@@ -11,15 +11,20 @@ use yii\console\Controller;
 use app\models\BotEngine;
 use app\models\EndPointCacher;
 use app\models\Api\Bittrex;
+use app\models\Configuration;
 
 class CronController extends Controller
 {
     public function actionMinute()
     {
+        $configuration = new Configuration();
+        $checkPendingOrders = (int)$configuration->getValue('check_pending_orders');
         $engine = new BotEngine();
         $engine->prepareActualPrices();
         $engine->checkAlerts();
-        $engine->checkPendingOrders();
+        if ($checkPendingOrders) {
+            $engine->checkPendingOrders();
+        }
         $engine->checkOpenOrders();
         $engine->createPendingOrdersForClosedOrders();
     }

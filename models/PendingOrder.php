@@ -17,11 +17,15 @@ use app\utils\BittrexParser;
  * @property int $stop_loss
  * @property int $take_profit
  * @property double $last_bid
+ * @property string $transaction_type
  */
 class PendingOrder extends \yii\db\ActiveRecord
 {
     const COND_MORE = 'More than price';
     const COND_LESS = 'Less than price';
+
+    const TRANSACTION_STRICT = 'strict';
+    const TRANSACTION_BEST = 'best';
 
     /**
      * {@inheritdoc}
@@ -40,7 +44,7 @@ class PendingOrder extends \yii\db\ActiveRecord
             [['market', 'quantity', 'price', 'type', 'condition'], 'required'],
             [['quantity', 'price', 'value'], 'number'],
             [['stop_loss', 'take_profit'], 'number'],
-            [['market', 'condition', 'type', 'uuid'], 'string', 'max' => 255],
+            [['market', 'condition', 'type', 'uuid', 'transaction_type'], 'string', 'max' => 255],
         ];
     }
 
@@ -59,7 +63,8 @@ class PendingOrder extends \yii\db\ActiveRecord
             'condition' => 'Condition',
             'stop_loss' => 'Stop Loss',
             'take_profit' => 'Take Profit',
-            'uuid' => 'UUID'
+            'uuid' => 'UUID',
+            'transaction_type' => 'Transaction type'
         ];
     }
 

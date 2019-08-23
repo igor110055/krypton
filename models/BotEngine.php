@@ -91,9 +91,13 @@ class BotEngine
 //                    return;
 //                }
 
-//                $bestOffer = $actualTicker['result']['Ask'];
-//                $result = $this->api->placeBuyOrder($pendingOrder->market, $pendingOrder->quantity, $bestOffer);
-                $result = $this->api->placeBuyOrder($pendingOrder->market, $pendingOrder->quantity, $pendingOrder->price);
+                if ($pendingOrder->transaction_type == $pendingOrder::TRANSACTION_BEST) {
+                    $offerPrice = $bestOffer = $actualTicker['result']['Ask'];
+                } else {
+                    $offerPrice = $pendingOrder->price;
+                }
+
+                $result = $this->api->placeBuyOrder($pendingOrder->market, $pendingOrder->quantity, $offerPrice);
                 if ($result['success']) {
 
                     $this->sendPlaceOrderMail($pendingOrder);

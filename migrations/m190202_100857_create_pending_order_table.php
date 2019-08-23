@@ -25,7 +25,8 @@ class m190202_100857_create_pending_order_table extends Migration
             'take_profit' => $this->float(),
             'uuid' => $this->string(),
             'modified' => $this->timestamp(),
-            'crdate' => $this->timestamp()
+            'crdate' => $this->timestamp(),
+            'transaction_type' => $this->string()
         ]);
     }
 
