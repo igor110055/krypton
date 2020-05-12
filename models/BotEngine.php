@@ -63,19 +63,51 @@ class BotEngine
 
         foreach ($pendingOrders as $pendingOrder) {
 
-            $actualMarketPrice = $this->marketLastBids[$pendingOrder->market];
+            $currentMarketPrice = $this->marketLastBids[$pendingOrder->market];
 
             switch ($pendingOrder->condition) {
                 case 'COND_MORE':
-                    if ($actualMarketPrice >= $pendingOrder->price) {
+                    if ($currentMarketPrice >= $pendingOrder->price) {
                         $this->placeOrder($pendingOrder);
                     }
                     break;
                 case 'COND_LESS':
-                    if ($actualMarketPrice <= $pendingOrder->price) {
+                    if ($currentMarketPrice <= $pendingOrder->price) {
                         $this->placeOrder($pendingOrder);
                     }
+                    if ($pendingOrder && $pendingOrder->type == 'SELL') {
+                        $this->checkRisingStopLoss($pendingOrder, $currentMarketPrice);
+                    }
                     break;
+            }
+        }
+    }
+
+    private function checkRisingStopLoss(PendingOrder $pendingOrder, $currentMarketPrice)
+    {
+        $uuid = $pendingOrder->uuid;
+
+        /** @var Order $order */
+        $order = Order::find()->where(['uuid' => $uuid])->one();
+
+        if ($currentMarketPrice > $order->price) {
+            $diff = $currentMarketPrice - $order->price;
+            $percentDiff = round($diff / $currentMarketPrice * 100, 2);
+
+            $newStopLoss = $currentMarketPrice - $currentMarketPrice / 100;
+            $stopLossDiff = $newStopLoss - $order->stop_loss;
+            $stopLossPercentDiff = round($stopLossDiff / $order->stop_loss * 100, 2);
+
+            if ($percentDiff > 2 && $stopLossPercentDiff > 1) {
+
+                $pendingOrder->price = $newStopLoss;
+                $pendingOrder->value = $newStopLoss * $pendingOrder->quantity;
+                $pendingOrder->save();
+
+                $order->stop_loss = $newStopLoss;
+                $order->save();
+
+                $this->stopLossIncreasedMail($order);
             }
         }
     }
@@ -146,7 +178,6 @@ class BotEngine
                 }
                 break;
         }
-
 //        $this->checkOpenOrders();
     }
 
@@ -182,7 +213,6 @@ class BotEngine
 
     public function checkOpenOrders($market = null)
     {
-        sleep(3);
         $orders = Order::findAll([
             'status' => Order::STATUS_OPEN
         ]);
@@ -304,6 +334,20 @@ class BotEngine
         $subject = '[' . $order->market . '] ' . $order->type  . ': price: ' . number_format($order->price, 8) . ' | val: ' . $order->value;
 
         $body = 'Order closed.';
+
+        $mail = Yii::$app->mailer->compose();
+        $mail->setFrom('admin@wales.usermd.net')
+            ->setTo('leszek.walszewski@gmail.com')
+            ->setSubject($subject)
+            ->setTextBody($body)
+            ->send();
+    }
+
+    public function stopLossIncreasedMail(Order $order)
+    {
+        $subject = '[' . $order->market . '] Stop Loss increased. Val: ' . number_format($order->stop_loss, 8);
+
+        $body = 'Stop Loss increased.';
 
         $mail = Yii::$app->mailer->compose();
         $mail->setFrom('admin@wales.usermd.net')
