@@ -18,6 +18,7 @@ use Yii;
  * @property double $take_profit
  * @property string $status
  * @property string $crdate
+ * @property string $transaction_type
  */
 class Order extends \yii\db\ActiveRecord
 {
@@ -50,7 +51,7 @@ class Order extends \yii\db\ActiveRecord
             [['uuid', 'market', 'quantity', 'price', 'type'], 'required'],
             [['quantity', 'price', 'sell_price', 'value', 'sell_value', 'stop_loss', 'take_profit'], 'number'],
             [['crdate'], 'safe'],
-            [['uuid', 'market', 'type', 'status'], 'string', 'max' => 255],
+            [['uuid', 'market', 'type', 'status', 'transaction_type'], 'string', 'max' => 255],
         ];
     }
 
@@ -71,6 +72,7 @@ class Order extends \yii\db\ActiveRecord
             'take_profit' => 'Take Profit',
             'status' => 'Status',
             'crdate' => 'Crdate',
+            'transaction_type' => 'Transaction type',
         ];
     }
 

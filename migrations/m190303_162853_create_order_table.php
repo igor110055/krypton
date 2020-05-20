@@ -28,7 +28,8 @@ class m190303_162853_create_order_table extends Migration
             'status' => $this->string(),
             'crdate' => $this->timestamp(),
             'sell_placed' => $this->timestamp(),
-            'sell_closed' => $this->timestamp()
+            'sell_closed' => $this->timestamp(),
+            'transaction_type' => $this->string()
         ]);
     }
 

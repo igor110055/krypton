@@ -145,6 +145,7 @@ class BotEngine
                     $order->stop_loss = $pendingOrder->stop_loss;
                     $order->take_profit = $pendingOrder->take_profit;
                     $order->status = Order::STATUS_OPEN;
+                    $order->transaction_type = $pendingOrder->transaction_type;
 
                     $order->save();
                     $pendingOrder->delete();
@@ -260,6 +261,7 @@ class BotEngine
                 $orderEarn->type = 'SELL';
                 $orderEarn->condition = 'COND_MORE';
                 $orderEarn->uuid = $order->uuid;
+                $orderEarn->transaction_type = $order->transaction_type;
                 $orderEarn->save();
             }
 
@@ -272,6 +274,7 @@ class BotEngine
                 $orderLoss->type = 'SELL';
                 $orderLoss->condition = 'COND_LESS';
                 $orderLoss->uuid = $order->uuid;
+                $orderLoss->transaction_type = $order->transaction_type;
                 $orderLoss->save();
             }
 
