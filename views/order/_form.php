@@ -37,7 +37,10 @@ use yii\widgets\ActiveForm;
         $model::STATUS_DONE => $model::STATUS_DONE,
     ]) ?>
 
-    <?= $form->field($model, 'crdate')->textInput() ?>
+    <?= $form->field($model, 'transaction_type')->dropDownList([
+        $model::TRANSACTION_BEST => 'Best',
+        $model::TRANSACTION_STRICT => 'Strict'
+    ]) ?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

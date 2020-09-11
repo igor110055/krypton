@@ -98,7 +98,7 @@ class BotEngine
             $stopLossDiff = $newStopLoss - $order->stop_loss;
             $stopLossPercentDiff = round($stopLossDiff / $order->stop_loss * 100, 2);
 
-            if ($percentDiff > 2 && $stopLossPercentDiff > 1) {
+            if ($percentDiff > 2 && $stopLossPercentDiff > 2) {
 
                 $pendingOrder->price = $newStopLoss;
                 $pendingOrder->value = $newStopLoss * $pendingOrder->quantity;
@@ -186,7 +186,11 @@ class BotEngine
     {
         $return = [];
         $actualTicker = $this->api->getTicker($order->market);
-        $bestOffer = $actualTicker['result']['Bid'];
+        if ($order->transaction_type == $order::TRANSACTION_BEST) {
+            $bestOffer = $actualTicker['result']['Bid'];
+        } else {
+            $bestOffer = $actualTicker['result']['Last'];
+        }
         $result = $this->api->placeSellOrder($order->market, $order->quantity, $bestOffer);
         if ($result['success']) {
             $uuid = $order->uuid;
