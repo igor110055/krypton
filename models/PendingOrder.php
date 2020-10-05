@@ -10,6 +10,7 @@ use app\utils\BittrexParser;
  * This is the model class for table "pending_order".
  *
  * @property int $id
+ * @property string $exchange
  * @property string $market
  * @property double $quantity
  * @property double $price
@@ -41,10 +42,10 @@ class PendingOrder extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['market', 'quantity', 'price', 'type', 'condition'], 'required'],
+            [['exchange', 'market', 'quantity', 'price', 'type', 'condition'], 'required'],
             [['quantity', 'price', 'value'], 'number'],
             [['stop_loss', 'take_profit'], 'number'],
-            [['market', 'condition', 'type', 'uuid', 'transaction_type'], 'string', 'max' => 255],
+            [['market', 'exchange', 'condition', 'type', 'uuid', 'transaction_type'], 'string', 'max' => 255],
         ];
     }
 
@@ -55,6 +56,7 @@ class PendingOrder extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
+            'exchange' => 'Exchange',
             'market' => 'Market',
             'quantity' => 'Quantity',
             'price' => 'Price',

@@ -9,6 +9,7 @@ use Yii;
  *
  * @property int $id
  * @property string $uuid
+ * @property string $exchange
  * @property string $market
  * @property double $quantity
  * @property double $price
@@ -48,7 +49,7 @@ class Order extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['uuid', 'market', 'quantity', 'price', 'type'], 'required'],
+            [['uuid', 'exchange', 'market', 'quantity', 'price', 'type'], 'required'],
             [['quantity', 'price', 'sell_price', 'value', 'sell_value', 'stop_loss', 'take_profit'], 'number'],
             [['crdate'], 'safe'],
             [['uuid', 'market', 'type', 'status', 'transaction_type'], 'string', 'max' => 255],
@@ -63,6 +64,7 @@ class Order extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'uuid' => 'Uuid',
+            'exchange' => 'Exchange',
             'market' => 'Market',
             'quantity' => 'Quantity',
             'price' => 'Price',

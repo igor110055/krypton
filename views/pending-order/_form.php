@@ -14,7 +14,9 @@ use yii\widgets\ActiveForm;
 
     <?= $form->errorSummary($model); ?>
 
-    <?php // $form->field($model, 'uuid')->textInput() ?>
+    <?= $form->field($model, 'exchange')->dropdownList(
+        ['Bittrex' => 'Bittrex', 'Binance' => 'Binance'], ['prompt'=>'Select exchange']
+    ) ?>
 
     <?= $form->field($model, 'market')->dropdownList(
         $model->getMarketList(), ['prompt'=>'Select market']
@@ -46,6 +48,8 @@ use yii\widgets\ActiveForm;
         $model::TRANSACTION_BEST => 'Best',
         $model::TRANSACTION_STRICT => 'Strict'
     ]) ?>
+
+    <?= $form->field($model, 'uuid')->textInput() ?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

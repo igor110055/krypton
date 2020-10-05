@@ -1,10 +1,11 @@
 <?php
 namespace app\models\Api;
 
+use app\interfaces\ExchangeInterface;
 use Yii;
 use linslin\yii2\curl;
 
-class Binance
+class Binance implements ExchangeInterface
 {
     private $apiUrl = 'https://api.binance.com/';
     private $cachePath = 'datasource/api/binance/';
@@ -37,6 +38,11 @@ class Binance
         }
 
         return $this->getResponse($endPoint, $params);
+    }
+
+    public function getMarketsFormatted(): array
+    {
+        // TODO: Implement getMarketsFormatted() method.
     }
 
     protected function getResponse($endPoint, $params = null)
