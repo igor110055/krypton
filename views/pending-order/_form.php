@@ -63,6 +63,13 @@ use yii\widgets\ActiveForm;
 <?php
 $script = <<< JS
 
+$('#pendingorder-exchange').change(function (data) {
+    var exchange = this.value;
+    $.get( "/ajax/get-markets", { exchange: exchange }, function( data ) {
+        
+    });
+});
+
 $('#pendingorder-market').change(function (data) {
     var market = this.value;
     $.get( "/ajax/get-ticker", { market: market }, function( data ) {

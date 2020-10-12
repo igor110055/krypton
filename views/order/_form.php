@@ -14,6 +14,10 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'uuid')->textInput(['maxlength' => true]) ?>
 
+    <?= $form->field($model, 'exchange')->dropdownList(
+        ['Bittrex' => 'Bittrex', 'Binance' => 'Binance'], ['prompt'=>'Select exchange']
+    ) ?>
+
     <?= $form->field($model, 'market')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'quantity')->textInput() ?>

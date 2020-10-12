@@ -28,6 +28,9 @@ class Order extends \yii\db\ActiveRecord
     const STATUS_PROCESSED = 'processing';
     const STATUS_DONE = 'done';
 
+    const TRANSACTION_STRICT = 'strict';
+    const TRANSACTION_BEST = 'best';
+
     public $current_price = null;
     public $price_diff = null;
     public $val_diff = null;

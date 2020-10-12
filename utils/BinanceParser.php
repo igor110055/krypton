@@ -36,6 +36,18 @@ class BinanceParser extends ExchangeParser
         return $slicedTickers;
     }
 
+    public static function formatTickerToMarketList(array $tickerData): array
+    {
+        $slicedTickers = [];
+        foreach ($tickerData as $ticker) {
+            if (strpos($ticker['symbol'], 'USDT', -4)){
+                $slicedTickers[] = $ticker['symbol'];
+            }
+        }
+
+        return $slicedTickers;
+    }
+
     public static function parseTicker(array $tickerData)
     {
         $ticker = [];

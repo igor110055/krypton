@@ -2,6 +2,7 @@
 namespace app\models\Api;
 
 use app\interfaces\ExchangeInterface;
+use app\utils\BinanceParser;
 use Yii;
 use linslin\yii2\curl;
 
@@ -42,7 +43,10 @@ class Binance implements ExchangeInterface
 
     public function getMarketsFormatted(): array
     {
-        // TODO: Implement getMarketsFormatted() method.
+        $tickers = $this->getTicker24();
+        $markets = BinanceParser::formatTickerToMarketList($tickers);
+
+        return $markets;
     }
 
     protected function getResponse($endPoint, $params = null)
