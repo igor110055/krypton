@@ -137,6 +137,7 @@ class BotEngine
                     $order = new Order();
 
                     $order->uuid = $result['result']['uuid'];
+                    $order->exchange = $pendingOrder->exchange;
                     $order->market = $pendingOrder->market;
                     $order->quantity = $pendingOrder->quantity;
                     $order->price = $pendingOrder->price;
@@ -258,6 +259,7 @@ class BotEngine
 
             if ($order->take_profit) {
                 $orderEarn = new PendingOrder();
+                $orderEarn->exchange = $order->exchange;
                 $orderEarn->market = $order->market;
                 $orderEarn->quantity = $order->quantity;
                 $orderEarn->price = $order->take_profit;
@@ -271,6 +273,7 @@ class BotEngine
 
             if ($order->stop_loss) {
                 $orderLoss = new PendingOrder();
+                $orderLoss->exchange = $order->exchange;
                 $orderLoss->market = $order->market;
                 $orderLoss->quantity = $order->quantity;
                 $orderLoss->price = $order->stop_loss;
