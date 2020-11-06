@@ -1,11 +1,12 @@
 <?php
 namespace app\models\Api;
 
+use app\interfaces\ExchangeInterface;
 use app\utils\BittrexParser;
 use Yii;
 use linslin\yii2\curl;
 
-class Bittrex
+class Bittrex implements ExchangeInterface
 {
     private $apiUrl = 'https://api.bittrex.com/api/v1.1/';
     private $apiSecret;
@@ -50,6 +51,13 @@ class Bittrex
         }
 
         return $this->getResponse($endPoint, $params);
+    }
+
+    public function getTickerFormatted(string $market): array
+    {
+        $ticker = $this->getTicker($market);
+
+        return $ticker['result'];
     }
 
     public function getMarketSummaries()
@@ -348,6 +356,14 @@ class Bittrex
             return $this->dataSource[$key];
         }
         return $this->dataSource;
+    }
+
+    public function getMarketsFormatted(): array
+    {
+        $marketJson = $this->getMarkets();
+        $marketList = BittrexParser::getMarketList($marketJson);
+
+        return $marketList;
     }
 
 }

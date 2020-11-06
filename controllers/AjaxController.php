@@ -1,6 +1,7 @@
 <?php
 namespace app\controllers;
 
+use app\interfaces\ExchangeInterface;
 use Yii;
 use yii\web\Controller;
 use yii\web\Response;
@@ -14,29 +15,26 @@ class AjaxController extends Controller
             Yii::$app->response->format = Response::FORMAT_JSON;
 
             $data = Yii::$app->request->get();
+            $api = Yii::createObject(['class' => 'app\models\Api\\' . $data['exchange']]);
 
-            $api = new Bittrex();
-            $makretData = $api->getTicker($data['market']);
+            /* @var ExchangeInterface $api */
+            $makretData = $api->getTickerFormatted($data['market']);
 
-            $res = $makretData;
-
-            return $res;
+            return $makretData;
         }
     }
 
     public function actionGetMarkets()
     {
-//        if (Yii::$app->request->isAjax) {
+        if (Yii::$app->request->isAjax) {
             Yii::$app->response->format = Response::FORMAT_JSON;
 
             $data = Yii::$app->request->get();
-            /*
-             * var ExchangeInterface
-             */
+
+            /* @var ExchangeInterface $api */
             $api = Yii::createObject(['class' => 'app\models\Api\\' . $data['exchange']]);
 
             return $api->getMarketsFormatted();
-
-//        }
+        }
     }
 }

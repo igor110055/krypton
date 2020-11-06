@@ -41,10 +41,11 @@ class BinanceParser extends ExchangeParser
         $slicedTickers = [];
         foreach ($tickerData as $ticker) {
             if (strpos($ticker['symbol'], 'USDT', -4)){
-                $slicedTickers[] = $ticker['symbol'];
+                $slicedTickers[$ticker['symbol']] = $ticker['symbol'];
             }
         }
 
+        asort($slicedTickers);
         return $slicedTickers;
     }
 
@@ -79,5 +80,14 @@ class BinanceParser extends ExchangeParser
 
         return $ticker;
 
+    }
+
+    public static function parseTickerForPendingOrder(array $ticker): array
+    {
+        $parsedTicker['Last'] = $ticker['lastPrice'];
+        $parsedTicker['Ask'] = $ticker['askPrice'];
+        $parsedTicker['Bid'] = $ticker['bidPrice'];
+
+        return $parsedTicker;
     }
 }

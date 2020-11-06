@@ -19,7 +19,7 @@ use yii\widgets\ActiveForm;
     ) ?>
 
     <?= $form->field($model, 'market')->dropdownList(
-        $model->getMarketList(), ['prompt'=>'Select market']
+        [], ['prompt'=>'Select market']
     ) ?>
     <div id="actualPrice"></div>
 
@@ -65,25 +65,30 @@ $script = <<< JS
 
 $('#pendingorder-exchange').change(function (data) {
     var exchange = this.value;
+    var html = '<option>Select market</option>';
     $.get( "/ajax/get-markets", { exchange: exchange }, function( data ) {
-        
+        $.each(data, function(index, value) {
+            html = html + '<option value="' + index + '">' + value + '</option>';
+        });
+        $('#pendingorder-market').html(html);
     });
 });
 
 $('#pendingorder-market').change(function (data) {
     var market = this.value;
-    $.get( "/ajax/get-ticker", { market: market }, function( data ) {
+    var exchange = $('#pendingorder-exchange').val();
+    $.get( "/ajax/get-ticker", { exchange: exchange, market: market }, function( data ) {
         var html = '<table>' +
-         '<tr><td>Ask</td><td>' + parseFloat(data.result.Ask).toFixed(8) + '</td></tr>' +
-         '<tr><td>Bid</td><td>' + parseFloat(data.result.Bid).toFixed(8) + '</td></tr>' +
-         '<tr><td>Last</td><td>' + parseFloat(data.result.Last).toFixed(8) + '</td></tr>' +
+         '<tr><td>Ask</td><td>' + parseFloat(data.Ask).toFixed(8) + '</td></tr>' +
+         '<tr><td>Bid</td><td>' + parseFloat(data.Bid).toFixed(8) + '</td></tr>' +
+         '<tr><td>Last</td><td>' + parseFloat(data.Last).toFixed(8) + '</td></tr>' +
           '</table>';
         $('#actualPrice').html(html);
-        $('#pendingorder-price').val(parseFloat(data.result.Bid).toFixed(8));
+        $('#pendingorder-price').val(parseFloat(data.Bid).toFixed(8));
         $('#pendingorder-value').val(0.01);
         calcQty();
-        var stop_loss = data.result.Bid - (data.result.Bid * 0.02);
-        var take_profit = data.result.Bid + (data.result.Bid * 0.02);
+        var stop_loss = data.Bid - (data.Bid * 0.02);
+        var take_profit = data.Bid + (data.Bid * 0.02);
         $('#pendingorder-stop_loss').val(parseFloat(stop_loss).toFixed(8));
         $('#pendingorder-take_profit').val(parseFloat(take_profit).toFixed(8));
     });

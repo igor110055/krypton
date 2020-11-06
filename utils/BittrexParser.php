@@ -6,10 +6,8 @@ use Yii;
 
 class BittrexParser extends ExchangeParser
 {
-    public static function getMarketList($marketJson)
+    public static function getMarketList($marketData)
     {
-        $marketData = json_decode($marketJson, true);
-
         $marketList = [];
         foreach ($marketData['result'] as $market) {
             if ($market['BaseCurrency'] == 'BTC'){

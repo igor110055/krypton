@@ -73,4 +73,12 @@ class Binance implements ExchangeInterface
         return $this->cachePath;
     }
 
+    public function getTickerFormatted(string $market): array
+    {
+        $ticker = $this->getTicker24($market);
+
+        return BinanceParser::parseTickerForPendingOrder($ticker);
+
+    }
+
 }
