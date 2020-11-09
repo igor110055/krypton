@@ -67,42 +67,11 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        $api = new Bittrex;
         $result = '';
-//        $result = $api->getMarkets();
-//        $result = $api->getOpenOrders();
-//        $result = $api->getCurrencies();
-//        $result = $api->getTicker('BTC-TRX');
-//        $result = $api->getMarketSummaries();
-//        $result = $api->getMarketSummary('BTC-TRX');
-//        $result = $api->getOrderBook('BTC-TRX');
-//        $result = $api->getMarketHistory('BTC-TRX');
-//        $result = $api->getBalances();
-//        $result = $api->getBalance('TRX');
-//        $result = $api->getDepositAddress('BTC');
-//        $result = $api->getOrder('613626e2-ee4e-419f-9502-9246642340be');
-//        $result = $api->getOrders();
-//        $result = $api->getOrders('BTC-TRX');
-//        $result = $api->getWithdrawalHistory();
-//        $result = $api->getDepositHistory();
-//        $result = $api->placeSellOrder('BTC-REP',4.49110895, 0.0042);
-//        $result = $api->placeBuyOrder('BTC-REP',4.49110895, 0.0042);
-//        $result = $api->cancelOrder('056bb71e-40f5-49df-afcc-f37dce42e011');
         $bot = new BotEngine();
-//        $result = $bot->checkAlerts();
-//        $result = $bot->checkOpenOrders();
-//        $result = $bot->checkPendingOrders();
-//        $result = $bot->createPendingOrdersForClosedOrders();
-//        $api = new Binance();
-//        $result = $api->getTicker24();
-//        $handler = new DataHandler();
-//        $handler->getRecentData('BTC-LTC', 200, false, 12, '1m', false);
-//        $indicator = new Indicator();
-//        $adx = $indicator->adx('BTC-KMD');
-//        $result = $adx;
-        $predictor = new Predictor();
-//        $result = $predictor->checkCurrencies();
-//        $bot->checkOpenOrders();
+//        $result = $bot->getExchangeClient('Binance')->getPrices();
+        $bot->prepareActualPrices();
+        $result = $bot->getMarketLastBids();
         return $this->render('index', [
             'result' => $result
         ]);

@@ -6,13 +6,25 @@ use Yii;
 
 class BinanceParser extends ExchangeParser
 {
-    public static function parsePrices($prices)
+    public static function parsePricesForLag($prices)
     {
         foreach ($prices as $marketPrice) {
             if (strpos($marketPrice['symbol'], 'BTC', -3)){
                 $market = str_replace('BTC', '', $marketPrice['symbol']);
                 $fullMarket = 'BTC-'.$market;
                 $marketPrices[$fullMarket] = $marketPrice['price'];
+            }
+        }
+
+        return $marketPrices;
+    }
+
+    public static function parsePrices(array $prices): array
+    {
+        $marketPrices = [];
+        foreach ($prices as $marketPrice) {
+            if (strpos($marketPrice['symbol'], 'BTC', -3) || strpos($marketPrice['symbol'], 'USDT', -4)){
+                $marketPrices[$marketPrice['symbol']] = $marketPrice['price'];
             }
         }
 

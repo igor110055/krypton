@@ -49,6 +49,14 @@ class Binance implements ExchangeInterface
         return $markets;
     }
 
+    public function getPricesFormatted(): array
+    {
+        $prices = $this->getPrices();
+        $pricesFormatted = BinanceParser::parsePrices($prices);
+
+        return $pricesFormatted;
+    }
+
     protected function getResponse($endPoint, $params = null)
     {
         $url = $this->getApiUrl().$endPoint;

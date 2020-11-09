@@ -22,7 +22,7 @@ class LagController extends Controller
         $binanceSummaries = $binanceApi->getPrices();
 
         $bittrexPrices = BittrexParser::getPricesFromSummaries($bittrexSummaries);
-        $binancePrices = BinanceParser::parsePrices($binanceSummaries);
+        $binancePrices = BinanceParser::parsePricesForLag($binanceSummaries);
 
         $comparedPrices = [];
         foreach ($bittrexPrices as $market => $value) {

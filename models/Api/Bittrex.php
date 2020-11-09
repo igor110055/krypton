@@ -366,4 +366,13 @@ class Bittrex implements ExchangeInterface
         return $marketList;
     }
 
+    public function getPricesFormatted(): array
+    {
+        $marketSummaries = $this->getMarketSummaries();
+
+        $pricesFormatted = BittrexParser::getPricesFromSummaries($marketSummaries);
+
+        return $pricesFormatted;
+    }
+
 }

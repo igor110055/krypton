@@ -1,6 +1,8 @@
 <?php
 namespace app\models;
 
+use app\interfaces\ExchangeInterface;
+use app\models\Api\Binance;
 use app\utils\BittrexParser;
 use Yii;
 use app\models\Alert;
@@ -10,13 +12,17 @@ use app\models\Order;
 
 class BotEngine
 {
+    public $exchanges = ['Bittrex', 'Binance'];
+
     private $api;
     private $marketLastBids;
-    private $btcBalance;
 
     public function __construct()
     {
         $this->api = new Bittrex();
+
+        $this->Binance = new Binance();
+        $this->Bittrex = new Bittrex();
     }
 
     public function checkAlerts()
@@ -32,7 +38,7 @@ class BotEngine
         foreach ($alerts as $alert) {
 
             $alertData = $alert->getAttributes();
-            $actualMarketPrice = $this->marketLastBids[$alertData['market']];
+            $actualMarketPrice = $this->marketLastBids['Bittrex'][$alertData['market']];
 
             switch ($alertData['condition']) {
                 case 'COND_MORE':
@@ -63,7 +69,7 @@ class BotEngine
 
         foreach ($pendingOrders as $pendingOrder) {
 
-            $currentMarketPrice = $this->marketLastBids[$pendingOrder->market];
+            $currentMarketPrice = $this->marketLastBids[$pendingOrder->exchange][$pendingOrder->market];
 
             switch ($pendingOrder->condition) {
                 case 'COND_MORE':
@@ -81,6 +87,11 @@ class BotEngine
                     break;
             }
         }
+    }
+
+    public function getExchangeClient(string $exchange): ExchangeInterface
+    {
+        return $this->$exchange;
     }
 
     private function checkRisingStopLoss(PendingOrder $pendingOrder, $currentMarketPrice)
@@ -370,17 +381,12 @@ class BotEngine
     public function prepareActualPrices()
     {
         $marketSummaries = $this->api->getMarketSummaries();
-//        $btcBalance = $this->api->getBalance('BTC');
-
-//        if (!$marketSummaries['success'] || !$btcBalance['success']) {
-//            return false;
-//        }
         if (!$marketSummaries['success']) {
             return false;
         }
 
-        $this->marketLastBids = BittrexParser::getPricesFromSummaries($marketSummaries);
-//        $this->btcBalance = $btcBalance;
+        $this->marketLastBids['Bittrex'] = BittrexParser::getPricesFromSummaries($marketSummaries);
+        $this->marketLastBids['Binance'] = $this->Binance->getPricesFormatted();
     }
 
     public function errorMail(PendingOrder $pendingOrder, $msg)
@@ -396,5 +402,10 @@ class BotEngine
             ->setSubject($subject)
             ->setTextBody($body)
             ->send();
+    }
+
+    public function getMarketLastBids()
+    {
+        return $this->marketLastBids;
     }
 }
