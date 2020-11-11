@@ -375,4 +375,17 @@ class Bittrex implements ExchangeInterface
         return $pricesFormatted;
     }
 
+    public function getCurrentPrice(string $market): array
+    {
+        $ticker = $this->getTicker($market);
+
+        $result = [
+            'ask' => $ticker['result']['Ask'],
+            'bid' => $ticker['result']['Bid'],
+            'last' => $ticker['result']['Last'],
+        ];
+
+        return $result;
+    }
+
 }

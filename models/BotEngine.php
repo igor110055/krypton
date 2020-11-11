@@ -126,13 +126,10 @@ class BotEngine
     public function placeOrder(PendingOrder $pendingOrder)
     {
         $actualTicker = $this->api->getTicker($pendingOrder->market);
+//        $actualTicker = $this->getExchangeClient($pendingOrder->exchange)->getCurrentPrice($pendingOrder->market);
 
         switch ($pendingOrder->type) {
             case 'BUY':
-
-//                if ((float)$this->btcBalance['result']['Available'] < (float)($pendingOrder->price * $pendingOrder->quantity)) {
-//                    return;
-//                }
 
                 if ($pendingOrder->transaction_type == $pendingOrder::TRANSACTION_BEST) {
                     $offerPrice = $bestOffer = $actualTicker['result']['Ask'];

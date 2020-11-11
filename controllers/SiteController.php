@@ -68,10 +68,17 @@ class SiteController extends Controller
     public function actionIndex()
     {
         $result = '';
-        $bot = new BotEngine();
+//        $bot = new BotEngine();
 //        $result = $bot->getExchangeClient('Binance')->getPrices();
-        $bot->prepareActualPrices();
-        $result = $bot->getMarketLastBids();
+//        $bot->prepareActualPrices();
+//        $result = $bot->getMarketLastBids();
+        $client = new Binance();
+//        $result = $client->getAllOrders('BTCUSDT');
+//        $result = $client->getMyTrades('BTCUSDT');
+        $result = $client->checkOrder('ETHUSDT', '2009924003');
+//        $result = $client->getAccountInfo();
+//        $result = $client->buyOrder('ETHUSDT', 0.04, 450);
+//        $result = $client->getOpenOrders();
         return $this->render('index', [
             'result' => $result
         ]);

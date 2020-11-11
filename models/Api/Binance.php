@@ -10,11 +10,15 @@ class Binance implements ExchangeInterface
 {
     private $apiUrl = 'https://api.binance.com/';
     private $cachePath = 'datasource/api/binance/';
+    private $apiSecret;
+    private $apiKey;
 
     private $curl;
 
     public function __construct()
     {
+        $this->apiKey = Yii::$app->params['binance']['apiKey'];
+        $this->apiSecret = Yii::$app->params['binance']['secret'];
         $this->curl = new curl\Curl();
     }
 
@@ -41,6 +45,87 @@ class Binance implements ExchangeInterface
         return $this->getResponse($endPoint, $params);
     }
 
+    public function getAllOrders($symbol = null): array
+    {
+        $endPoint = 'api/v3/allOrders';
+        $params = [];
+
+        if ($symbol) {
+            $params = [
+                'symbol' => $symbol
+            ];
+        }
+
+        return $this->getWithAuth($endPoint, $params);
+    }
+
+    public function getOpenOrders(): array
+    {
+        $endPoint = 'api/v3/openOrders';
+
+        return $this->getWithAuth($endPoint);
+    }
+
+    public function getMyTrades($symbol = null): array
+    {
+        $endPoint = 'api/v3/myTrades';
+        $params = [];
+
+        if ($symbol) {
+            $params = [
+                'symbol' => $symbol
+            ];
+        }
+
+        return $this->getWithAuth($endPoint, $params);
+    }
+
+    public function buyOrder(string $symbol, float $quantity, float $price): array
+    {
+        $endPoint = 'api/v3/order';
+
+        $params['symbol'] = $symbol;
+        $params['side'] = 'BUY';
+        $params['type'] = 'LIMIT';
+        $params['quantity'] = $quantity;
+        $params['price'] = $price;
+        $params['timeInForce'] = 'GTC';
+
+        return $this->postWithAuth($endPoint, $params);
+
+    }
+
+    public function sellOrder(string $symbol, float $quantity, float $price): array
+    {
+        $endPoint = 'api/v3/order';
+
+        $params['symbol'] = $symbol;
+        $params['side'] = 'SELL';
+        $params['type'] = 'LIMIT';
+        $params['quantity'] = $quantity;
+        $params['price'] = $price;
+        $params['timeInForce'] = 'GTC';
+
+        return $this->postWithAuth($endPoint, $params);
+
+    }
+
+    public function checkOrder(string $symbol, string $orderId): array
+    {
+        $endPoint = 'api/v3/order';
+        $params['symbol'] = $symbol;
+        $params['orderId'] = $orderId;
+
+        return $this->getWithAuth($endPoint, $params);
+    }
+
+    public function getAccountInfo()
+    {
+        $endPoint = 'api/v3/account';
+
+        return $this->getWithAuth($endPoint);
+    }
+
     public function getMarketsFormatted(): array
     {
         $tickers = $this->getTicker24();
@@ -57,7 +142,20 @@ class Binance implements ExchangeInterface
         return $pricesFormatted;
     }
 
-    protected function getResponse($endPoint, $params = null)
+    public function getTickerFormatted(string $market): array
+    {
+        $ticker = $this->getTicker24($market);
+
+        return BinanceParser::parseTickerForPendingOrder($ticker);
+
+    }
+
+    public function getCachePath()
+    {
+        return $this->cachePath;
+    }
+
+    private function getResponse($endPoint, $params = null): array
     {
         $url = $this->getApiUrl().$endPoint;
 
@@ -71,22 +169,63 @@ class Binance implements ExchangeInterface
 
     }
 
-    protected function getApiUrl()
+    private function getWithAuth(string $endpoint, array $params = [])
+    {
+        $url = $this->getApiUrl() . $endpoint;
+
+        $params['timestamp'] = round(microtime(true) * 1000);
+        $string = $this->buildQueryString($params);
+        $params['signature'] = $this->generateSign($string);
+        $url .= '?' . http_build_query($params);
+
+        $this->curl->setHeaders(['X-MBX-APIKEY' => $this->apiKey]);
+
+        $response = $this->curl->get($url);
+
+        return json_decode($response, true);
+    }
+
+    private function postWithAuth(string $endpoint, array $params = []): array
+    {
+        $url = $this->getApiUrl() . $endpoint;
+
+        $params['timestamp'] = round(microtime(true) * 1000);
+        $string = $this->buildQueryString($params);
+        $params['signature'] = $this->generateSign($string);
+        $url .= '?' . http_build_query($params);
+
+        $this->curl->setHeaders(['X-MBX-APIKEY' => $this->apiKey]);
+
+        $response = $this->curl->post($url);
+
+        return json_decode($response, true);
+    }
+
+    private function buildQueryString(array $params)
+    {
+        $query_array = [];
+        foreach ($params as $key => $value) {
+            if (is_array($value)) {
+                $query_array = array_merge($query_array, array_map(function ($v) use ($key) {
+                    return urlencode($key) . '=' . urlencode($v);
+                }, $value));
+            } else {
+                $query_array[] = urlencode($key) . '=' . urlencode($value);
+            }
+        }
+        return implode('&', $query_array);
+    }
+
+    private function getApiUrl()
     {
         return $this->apiUrl;
     }
 
-    public function getCachePath()
+
+
+    private function generateSign(string $queryString)
     {
-        return $this->cachePath;
-    }
-
-    public function getTickerFormatted(string $market): array
-    {
-        $ticker = $this->getTicker24($market);
-
-        return BinanceParser::parseTickerForPendingOrder($ticker);
-
+        return hash_hmac('sha256', $queryString, $this->apiSecret);
     }
 
 }
