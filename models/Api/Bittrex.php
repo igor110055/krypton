@@ -137,8 +137,18 @@ class Bittrex implements ExchangeInterface
             ];
         }
 
-        $response = $this->getResponse($endPoint, $params, true);
-        return $response;
+        $result = $this->getResponse($endPoint, $params, true);
+
+        if ($result['success']) {
+            return [
+                'success' => true,
+                'orderId' => $result['result']['uuid']
+            ];
+        } else {
+            return [
+                'success' => false,
+            ];
+        }
     }
 
     public function placeSellOrder($market, $quantity, $rate)
@@ -154,8 +164,17 @@ class Bittrex implements ExchangeInterface
             ];
         }
 
-        $response = $this->getResponse($endPoint, $params, true);
-        return $response;
+        $result = $this->getResponse($endPoint, $params, true);
+        if ($result['success']) {
+            return [
+                'success' => true,
+                'orderId' => $result['result']['uuid']
+            ];
+        } else {
+            return [
+                'success' => false,
+            ];
+        }
     }
 
     public function cancelOrder($uuid)

@@ -80,7 +80,7 @@ class Binance implements ExchangeInterface
         return $this->getWithAuth($endPoint, $params);
     }
 
-    public function buyOrder(string $symbol, float $quantity, float $price): array
+    public function placeBuyOrder(string $symbol, float $quantity, float $price): array
     {
         $endPoint = 'api/v3/order';
 
@@ -91,11 +91,21 @@ class Binance implements ExchangeInterface
         $params['price'] = $price;
         $params['timeInForce'] = 'GTC';
 
-        return $this->postWithAuth($endPoint, $params);
+        $result = $this->postWithAuth($endPoint, $params);
 
+        if ($result['orderId']) {
+            return [
+                'success' => true,
+                'orderId' => $result['orderId']
+            ];
+        } else {
+            return [
+                'success' => false,
+            ];
+        }
     }
 
-    public function sellOrder(string $symbol, float $quantity, float $price): array
+    public function placeSellOrder(string $symbol, float $quantity, float $price): array
     {
         $endPoint = 'api/v3/order';
 
@@ -106,8 +116,18 @@ class Binance implements ExchangeInterface
         $params['price'] = $price;
         $params['timeInForce'] = 'GTC';
 
-        return $this->postWithAuth($endPoint, $params);
+        $result = $this->postWithAuth($endPoint, $params);
 
+        if ($result['orderId']) {
+            return [
+                'success' => true,
+                'orderId' => $result['orderId']
+            ];
+        } else {
+            return [
+                'success' => false,
+            ];
+        }
     }
 
     public function checkOrder(string $symbol, string $orderId): array

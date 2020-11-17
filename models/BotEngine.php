@@ -125,26 +125,26 @@ class BotEngine
 
     public function placeOrder(PendingOrder $pendingOrder)
     {
-        $actualTicker = $this->api->getTicker($pendingOrder->market);
-//        $actualTicker = $this->getExchangeClient($pendingOrder->exchange)->getCurrentPrice($pendingOrder->market);
+        $api = $this->getExchangeClient($pendingOrder->exchange);
+        $actualTicker = $api->getCurrentPrice($pendingOrder->market);
 
         switch ($pendingOrder->type) {
             case 'BUY':
 
                 if ($pendingOrder->transaction_type == $pendingOrder::TRANSACTION_BEST) {
-                    $offerPrice = $bestOffer = $actualTicker['result']['Ask'];
+                    $offerPrice = $bestOffer = $actualTicker['ask'];
                 } else {
                     $offerPrice = $pendingOrder->price;
                 }
 
-                $result = $this->api->placeBuyOrder($pendingOrder->market, $pendingOrder->quantity, $offerPrice);
-                if ($result['success']) {
+                $result = $api->placeBuyOrder($pendingOrder->market, $pendingOrder->quantity, $offerPrice);
+                if ($result['success'] && $result['orderId']) {
 
                     $this->sendPlaceOrderMail($pendingOrder);
 
                     $order = new Order();
 
-                    $order->uuid = $result['result']['uuid'];
+                    $order->uuid = $result['orderId'];
                     $order->exchange = $pendingOrder->exchange;
                     $order->market = $pendingOrder->market;
                     $order->quantity = $pendingOrder->quantity;
@@ -159,13 +159,13 @@ class BotEngine
                     $order->save();
                     $pendingOrder->delete();
                 } else {
-                    $this->errorMail($pendingOrder, $result['message']);
+                    $this->errorMail($pendingOrder, 'Error with pending order: ' . $pendingOrder->id);
                 }
 
                 break;
             case 'SELL':
-                $bestOffer = $actualTicker['result']['Bid'];
-                $result = $this->api->placeSellOrder($pendingOrder->market, $pendingOrder->quantity, $bestOffer);
+                $bestOffer = $actualTicker['bid'];
+                $result = $api->placeSellOrder($pendingOrder->market, $pendingOrder->quantity, $bestOffer);
                 if ($result['success']) {
                     $this->sendPlaceOrderMail($pendingOrder);
                     $uuid = $pendingOrder->uuid;
@@ -184,11 +184,10 @@ class BotEngine
                         $order->save();
                     }
                 } else {
-                    $this->errorMail($pendingOrder, $result['message']);
+                    $this->errorMail($pendingOrder, 'Error with pending order: ' . $pendingOrder->id);
                 }
                 break;
         }
-//        $this->checkOpenOrders();
     }
 
     public function sellOrder(Order $order)
