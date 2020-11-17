@@ -18,7 +18,7 @@ class PendingOrderSearch extends PendingOrder
     {
         return [
             [['id', 'type', 'stop_loss', 'take_profit'], 'integer'],
-            [['market', 'condition'], 'safe'],
+            [['exchange', 'market', 'condition'], 'safe'],
             [['quantity', 'price'], 'number'],
         ];
     }
@@ -68,6 +68,7 @@ class PendingOrderSearch extends PendingOrder
             'uuid' => $this->uuid,
         ]);
 
+        $query->andFilterWhere(['like', 'exchange', $this->exchange]);
         $query->andFilterWhere(['like', 'market', $this->market]);
 
         return $dataProvider;

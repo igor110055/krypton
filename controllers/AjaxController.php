@@ -5,8 +5,6 @@ use app\interfaces\ExchangeInterface;
 use Yii;
 use yii\web\Controller;
 use yii\web\Response;
-use app\models\Api\Bittrex;
-use app\models\Api\Binance;
 
 class AjaxController extends Controller
 {

@@ -150,6 +150,19 @@ class Binance implements ExchangeInterface
 
     }
 
+    public function getCurrentPrice(string $market): array
+    {
+        $ticker = $this->getTicker24($market);
+
+        $result = [
+            'ask' => $ticker['askPrice'],
+            'bid' => $ticker['bidPrice'],
+            'last' => $ticker['lastPrice'],
+        ];
+
+        return $result;
+    }
+
     public function getCachePath()
     {
         return $this->cachePath;

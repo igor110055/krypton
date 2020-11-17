@@ -19,7 +19,7 @@ use yii\widgets\ActiveForm;
     ) ?>
 
     <?= $form->field($model, 'market')->dropdownList(
-        [], ['prompt'=>'Select market']
+        $model->getMarketList(), ['prompt'=>'Select market']
     ) ?>
     <div id="actualPrice"></div>
 

@@ -78,11 +78,12 @@ class PendingOrder extends \yii\db\ActiveRecord
 
     public function getMarketList()
     {
-        $bittrexApi = new Bittrex();
-        $bittrexCacher = new EndPointCacher($bittrexApi);
+        $marketList = [];
 
-        $marketJson = $bittrexCacher->getMartkets();
-        $marketList = BittrexParser::getMarketList($marketJson);
+        if ($this->exchange) {
+            $api = Yii::createObject(['class' => 'app\models\Api\\' . $this->exchange]);
+            $marketList = $api->getMarketsFormatted();
+        }
 
         return $marketList;
     }
