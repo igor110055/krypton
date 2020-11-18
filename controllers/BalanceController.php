@@ -14,24 +14,40 @@ class BalanceController extends \yii\web\Controller
         $balance = $api->getBalances()['result'];
         $prices = $api->getActualPrices();
 
-        foreach ($balance as &$crypto) {
+        $summary = [];
+        $sumValue = 0;
+
+        foreach ($balance as $crypto) {
+
             if ($crypto['Currency'] != 'BTC' && isset($prices['BTC-' . $crypto['Currency']])) {
-                $crypto['Value'] = $crypto['Balance'] * $prices['BTC-' . $crypto['Currency']];
+                $value = $crypto['Balance'] * $prices['BTC-' . $crypto['Currency']];
+                if ($value > 0.0001) {
+                    $summary[$crypto['Currency']]['Currency'] = $crypto['Currency'];
+                    $summary[$crypto['Currency']]['Balance'] = $crypto['Balance'];
+                    $summary[$crypto['Currency']]['Price'] = $prices['BTC-' . $crypto['Currency']];
+                    $summary[$crypto['Currency']]['Value'] = $value;
+                    $sumValue += $value;
+                }
             }
             if ($crypto['Currency'] == 'BTC') {
-                $crypto['Value'] =  $crypto['Balance'];
+                $summary['BTC']['Currency'] = 'BTC';
+                $summary['BTC']['Balance'] = $crypto['Balance'];
+                $summary['BTC']['Price'] = 0;
+                $summary['BTC']['Value'] = $crypto['Balance'];
+                $sumValue += $crypto['Balance'];
             }
         }
 
         $balanceProvider = new ArrayDataProvider([
-            'allModels' => $balance,
+            'allModels' => $summary,
             'sort' => [
-                'attributes' => ['Currency','Value'],
+                'attributes' => ['Value', 'Currency'],
             ],
         ]);
 
         return $this->render('index', [
-            'balanceProvider' => $balanceProvider
+            'balanceProvider' => $balanceProvider,
+            'sumValue' => $sumValue
         ]);
     }
 
