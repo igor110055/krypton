@@ -23,10 +23,8 @@ $this->params['breadcrumbs'][] = $this->title;
             if ($model->sell_price > 0) {
                 $diff = $model->sell_price - $model->price;
                 if ($diff < 0) {
-//                    return ['class' => 'bg-danger'];
                     return ['class' => 'text-danger'];
                 } else {
-//                    return ['class' => 'bg-success'];
                     return ['class' => 'text-success'];
                 }
             }

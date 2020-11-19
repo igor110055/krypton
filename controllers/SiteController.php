@@ -75,8 +75,8 @@ class SiteController extends Controller
         $client = new Binance();
 //        $result = $client->getAllOrders('BTCUSDT');
 //        $result = $client->getMyTrades('BTCUSDT');
-        $result = $client->checkOrder('ETHUSDT', '2009924003');
-//        $result = $client->getAccountInfo();
+//        $result = $client->checkOrder('ETHUSDT', '2009924003');
+        $result = $client->getAccountInfo();
 //        $result = $client->buyOrder('ETHUSDT', 0.04, 450);
 //        $result = $client->getOpenOrders();
         return $this->render('index', [

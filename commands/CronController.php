@@ -20,7 +20,7 @@ class CronController extends Controller
         $configuration = new Configuration();
         $checkPendingOrders = (int)$configuration->getValue('check_pending_orders');
         $engine = new BotEngine();
-        $engine->prepareActualPrices();
+        $engine->prepareCurrentPrices();
         $engine->checkAlerts();
         if ($checkPendingOrders) {
             $engine->checkPendingOrders();

@@ -374,9 +374,9 @@ class BotEngine
             ->send();
     }
 
-    public function prepareActualPrices()
+    public function prepareCurrentPrices()
     {
-        $marketSummaries = $this->api->getMarketSummaries();
+        $marketSummaries = $this->Bittrex->getMarketSummaries();
         if (!$marketSummaries['success']) {
             return false;
         }
