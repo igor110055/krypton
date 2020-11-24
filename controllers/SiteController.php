@@ -77,7 +77,7 @@ class SiteController extends Controller
 //        $result = $client->getMyTrades('BTCUSDT');
 //        $result = $client->checkOrder('ETHUSDT', '2009924003');
         $result = $client->getAccountInfo();
-//        $result = $client->buyOrder('ETHUSDT', 0.04, 450);
+//        $result = $client->placeBuyOrder('RENUSDT', 117.4, 0.34859);
 //        $result = $client->getOpenOrders();
         return $this->render('index', [
             'result' => $result

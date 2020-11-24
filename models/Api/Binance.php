@@ -31,6 +31,15 @@ class Binance implements ExchangeInterface
         return $response;
     }
 
+    public function getExchangeInfo(): array
+    {
+        $endPoint = 'api/v3/exchangeInfo';
+
+        $response = $this->getResponse($endPoint);
+
+        return $response;
+    }
+
     public function getTicker24($symbol = null)
     {
         $endPoint = 'api/v1/ticker/24hr';

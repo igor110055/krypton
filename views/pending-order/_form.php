@@ -114,8 +114,18 @@ function calcQty() {
   var price = $('#pendingorder-price').val();
   
   if (value && price) {
+      var precision = 2;
       var qty = value / price;
-      $('#pendingorder-quantity').val(parseFloat(qty).toFixed(2));
+      
+      var exchange = $('#pendingorder-exchange').val();
+      if (exchange === 'Binance') {
+        var market = $('#pendingorder-market').val();
+        $.get("/ajax/get-precision", { market: market }, function(data) {
+            $('#pendingorder-quantity').val(parseFloat(qty).toFixed(data));
+        });
+      } else {
+          $('#pendingorder-quantity').val(parseFloat(qty).toFixed(precision));
+      }
   }
 }
 
