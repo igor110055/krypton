@@ -17,6 +17,17 @@ use yii\filters\VerbFilter;
  */
 class OrderController extends Controller
 {
+    private $currentPrices = [];
+    private $botEngine;
+
+    public function __construct($id, $module, $config = [])
+    {
+        $this->botEngine = new BotEngine();
+        $this->botEngine->prepareCurrentPrices();
+        $this->currentPrices = $this->botEngine->getMarketLastBids();
+
+        parent::__construct($id, $module, $config);
+    }
     /**
      * {@inheritdoc}
      */
@@ -59,13 +70,10 @@ class OrderController extends Controller
             'query' => $query,
         ]);
 
-        $api = new Bittrex();
-        $currentPrices = $api->getActualPrices();
-
         $orders = (array)$dataProvider->getModels();
         foreach ($orders as $order) {
             $order['price'] = number_format($order['price'], 8);
-            $order['current_price'] = number_format($currentPrices[$order['market']], 8);
+            $order['current_price'] = number_format($this->currentPrices[$order['exchange']][$order['market']], 8);
             $diff = $order['current_price'] - $order['price'];
             $order['price_diff'] = round($diff / $order['current_price'] * 100, 2);
             $order['current_value'] = number_format($order['quantity'] * $order['current_price'], 8);
@@ -101,8 +109,6 @@ class OrderController extends Controller
             $openOrdersExchangeData[$openOrder['OrderUuid']] = $openOrder;
         }
 
-        $currentPrices = $api->getActualPrices();
-
         $orders = (array)$dataProvider->getModels();
         $ordersUuids = [];
 
@@ -112,7 +118,7 @@ class OrderController extends Controller
             }
             $ordersUuids[] = $order['uuid'];
             $order['price'] = number_format($order['price'], 8);
-            $order['current_price'] = number_format($currentPrices[$order['market']], 8);
+            $order['current_price'] = number_format($this->currentPrices[$order['market']], 8);
             $diff = $order['current_price'] - $order['price'];
             $order['price_diff'] = round($diff / $order['current_price'] * 100, 2);
             $order['quantity_remaining'] = $openOrdersExchangeData[$order['uuid']]['QuantityRemaining'];

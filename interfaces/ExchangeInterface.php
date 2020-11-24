@@ -9,5 +9,6 @@ interface ExchangeInterface
     public function getTickerFormatted(string $market): array;
     public function getPricesFormatted(): array;
     public function getCurrentPrice(string $market): array;
+    public function getOpenOrders(?string $market): array;
 
 }

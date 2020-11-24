@@ -21,7 +21,6 @@ class BalanceController extends \yii\web\Controller
         $this->botEngine = new BotEngine();
         $this->botEngine->prepareCurrentPrices();
         $this->currentPrices = $this->botEngine->getMarketLastBids();
-//        echo '<pre>';print_r($this->currentPrices);exit;
 
         parent::__construct($id, $module, $config);
     }

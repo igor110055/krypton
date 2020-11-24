@@ -144,7 +144,7 @@ class BotEngine
 
                     $order = new Order();
 
-                    $order->uuid = $result['orderId'];
+                    $order->uuid = (string)$result['orderId'];
                     $order->exchange = $pendingOrder->exchange;
                     $order->market = $pendingOrder->market;
                     $order->quantity = $pendingOrder->quantity;
@@ -225,7 +225,7 @@ class BotEngine
         return $return;
     }
 
-    public function checkOpenOrders($market = null)
+    public function checkOpenOrders()
     {
         $orders = Order::findAll([
             'status' => Order::STATUS_OPEN
@@ -235,17 +235,21 @@ class BotEngine
             return false;
         }
 
-        $result = $this->api->getOpenOrders($market);
         $openOrdersUuids = [];
 
-        if ($result['success']) {
-            if(count($result['result']) > 0) {
-                foreach ($result['result'] as $openOrder){
+        $bittrexOpenOrdersResult = $this->getExchangeClient('Bittrex')->getOpenOrders();
+        if($bittrexOpenOrdersResult['success']) {
+            if(count($bittrexOpenOrdersResult['result']) > 0) {
+                foreach ($bittrexOpenOrdersResult['result'] as $openOrder){
                     $openOrdersUuids[] = $openOrder['OrderUuid'];
                 }
             }
-        } else {
-            return false;
+        }
+        $binanceOpenOrders = $this->getExchangeClient('Binance')->getOpenOrders();
+        if($binanceOpenOrders && count($binanceOpenOrders) > 0) {
+            foreach($binanceOpenOrders as $openOrder) {
+                $openOrdersUuids[] = (string)$openOrder['orderId'];
+            }
         }
 
         foreach ($orders as $order) {

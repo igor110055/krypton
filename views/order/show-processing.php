@@ -41,6 +41,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
 //            'uuid',
 //            'type',
+            'exchange',
             'market',
             'quantity',
             'price',

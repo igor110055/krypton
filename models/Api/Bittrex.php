@@ -110,7 +110,7 @@ class Bittrex implements ExchangeInterface
         return $this->getResponse($endPoint, $params);
     }
 
-    public function getOpenOrders($market = null)
+    public function getOpenOrders(string $market = null): array
     {
         $endPoint = 'market/getopenorders';
         $params = null;
