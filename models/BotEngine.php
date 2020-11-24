@@ -192,14 +192,15 @@ class BotEngine
 
     public function sellOrder(Order $order)
     {
+        $api = $this->getExchangeClient($order->exchange);
         $return = [];
-        $actualTicker = $this->api->getTicker($order->market);
+        $currentTicker = $api->getTickerFormatted($order->market);
         if ($order->transaction_type == $order::TRANSACTION_BEST) {
-            $bestOffer = $actualTicker['result']['Bid'];
+            $bestOffer = $currentTicker['Bid'];
         } else {
-            $bestOffer = $actualTicker['result']['Last'];
+            $bestOffer = $currentTicker['Last'];
         }
-        $result = $this->api->placeSellOrder($order->market, $order->quantity, $bestOffer);
+        $result = $api->placeSellOrder($order->market, $order->quantity, $bestOffer);
         if ($result['success']) {
             $uuid = $order->uuid;
             $pendingOrders = PendingOrder::find()->where(['uuid' => $uuid])->all();
