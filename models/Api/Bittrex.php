@@ -407,4 +407,9 @@ class Bittrex implements ExchangeInterface
         return $result;
     }
 
+    public function getBtcUsdPrice(): array
+    {
+        return $this->getTicker('USD-BTC');
+    }
+
 }
