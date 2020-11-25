@@ -5,11 +5,13 @@ namespace app\controllers;
 use app\models\Api\Binance;
 use app\models\Api\Bittrex;
 use app\models\BotEngine;
+use app\models\Configuration;
 use app\utils\Currency;
 use yii\data\ArrayDataProvider;
 
 class BalanceController extends \yii\web\Controller
 {
+    private $configuration;
     private $currentPrices = [];
     private $botEngine;
     private $Bittrex;
@@ -17,6 +19,7 @@ class BalanceController extends \yii\web\Controller
 
     public function __construct($id, $module, $config = [])
     {
+        $this->configuration = new Configuration();
         $this->Bittrex = new Bittrex();
         $this->Binance = new Binance();
         $this->botEngine = new BotEngine();
@@ -57,7 +60,8 @@ class BalanceController extends \yii\web\Controller
             'bittrexSumValue' => $bittrexSummary['bittrexSumValue'],
             'binanceSumValue' => $binanceSummary['binanceSumValue'],
             'btcPrice' => $btcPrice['result'],
-            'plnPrice' => $plnPrice
+            'plnPrice' => $plnPrice,
+            'configuration' => $this->configuration,
         ]);
     }
 
