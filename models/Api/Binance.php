@@ -100,9 +100,7 @@ class Binance implements ExchangeInterface
         $params['price'] = $price;
         $params['timeInForce'] = 'GTC';
 
-//        var_dump($params);exit;
         $result = $this->postWithAuth($endPoint, $params);
-//        var_dump($result);exit;
 
         if ($result['orderId']) {
             return [

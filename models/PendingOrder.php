@@ -60,7 +60,7 @@ class PendingOrder extends \yii\db\ActiveRecord
             'market' => 'Market',
             'quantity' => 'Quantity',
             'price' => 'Price',
-            'value' => 'Value (BTC)',
+            'value' => 'Value',
             'type' => 'Type',
             'condition' => 'Condition',
             'stop_loss' => 'Stop Loss',

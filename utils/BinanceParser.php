@@ -52,7 +52,7 @@ class BinanceParser extends ExchangeParser
     {
         $slicedTickers = [];
         foreach ($tickerData as $ticker) {
-            if (strpos($ticker['symbol'], 'USDT', -4)){
+            if (strpos($ticker['symbol'], 'USDT', -4) || strpos($ticker['symbol'], 'BTC', -3)){
                 $slicedTickers[$ticker['symbol']] = $ticker['symbol'];
             }
         }
