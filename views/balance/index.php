@@ -5,8 +5,8 @@ use yii\data\ArrayDataProvider;
 use yii\grid\GridView;
 
 /* @var $this yii\web\View */
-/* @var $binanceBalanceProvider yii\data\ArrayDataProvider */
-/* @var $bittrexBalanceProvider yii\data\ArrayDataProvider */
+/* @var $binanceBalanceProvider ArrayDataProvider */
+/* @var $bittrexBalanceProvider ArrayDataProvider */
 /* @var $bittrexSumValue float */
 /* @var $binanceSumValue float */
 /* @var $btcPrice array */

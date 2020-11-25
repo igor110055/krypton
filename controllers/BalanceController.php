@@ -6,6 +6,8 @@ use app\models\Api\Binance;
 use app\models\Api\Bittrex;
 use app\models\BotEngine;
 use app\models\Configuration;
+use app\utils\BinanceParser;
+use app\utils\BittrexParser;
 use app\utils\Currency;
 use yii\data\ArrayDataProvider;
 
@@ -32,10 +34,10 @@ class BalanceController extends \yii\web\Controller
     public function actionIndex()
     {
         $bittrexBalance = $this->Bittrex->getBalances()['result'];
-        $bittrexSummary = $this->getBittrexSummary($bittrexBalance);
+        $bittrexSummary = BittrexParser::getBittrexSummary($bittrexBalance, $this->currentPrices);
 
         $binanceBalance = $this->Binance->getAccountInfo();
-        $binanceSummary = $this->getBinanceSummary($binanceBalance);
+        $binanceSummary = BinanceParser::getBinanceSummary($binanceBalance, $this->currentPrices);
 
         $bittrexBalanceProvider = new ArrayDataProvider([
             'allModels' => $bittrexSummary['bittrexSummary'],
@@ -64,80 +66,4 @@ class BalanceController extends \yii\web\Controller
             'configuration' => $this->configuration,
         ]);
     }
-
-    private function getBittrexSummary(array $bittrexBalance): array
-    {
-        $bittrexSummary = [];
-        $bittrexSumValue = 0;
-
-        foreach ($bittrexBalance as $crypto) {
-
-            if ($crypto['Currency'] != 'BTC' && isset($this->currentPrices['Bittrex']['BTC-' . $crypto['Currency']])) {
-                $value = $crypto['Balance'] * $this->currentPrices['Bittrex']['BTC-' . $crypto['Currency']];
-                if ($value > 0.0001) {
-                    $bittrexSummary[$crypto['Currency']]['Currency'] = $crypto['Currency'];
-                    $bittrexSummary[$crypto['Currency']]['Balance'] = $crypto['Balance'];
-                    $bittrexSummary[$crypto['Currency']]['Price'] = $this->currentPrices['Bittrex']['BTC-' . $crypto['Currency']];
-                    $bittrexSummary[$crypto['Currency']]['Value'] = $value;
-                    $bittrexSumValue += $value;
-                }
-            }
-            if ($crypto['Currency'] == 'BTC') {
-                $bittrexSummary['BTC']['Currency'] = 'BTC';
-                $bittrexSummary['BTC']['Balance'] = $crypto['Balance'];
-                $bittrexSummary['BTC']['Price'] = 0;
-                $bittrexSummary['BTC']['Value'] = $crypto['Balance'];
-                $bittrexSumValue += $crypto['Balance'];
-            }
-        }
-
-        return [
-            'bittrexSummary' => $bittrexSummary,
-            'bittrexSumValue' => $bittrexSumValue
-        ];
-    }
-
-    public function getBinanceSummary(array $binanceBalance): array
-    {
-        $binanceSum = 0;
-
-        foreach ($binanceBalance['balances'] as $asset) {
-            if ($asset['free'] + $asset['locked'] > 0) {
-                if ($asset['asset'] != 'BTC' && $asset['asset'] != 'USDT' && $asset['asset'] != 'BUSD') {
-                    $binanceSummary[$asset['asset']]['Currency'] = $asset['asset'];
-                    $binanceSummary[$asset['asset']]['Balance'] = $asset['free'] + $asset['locked'];
-                    $binanceSummary[$asset['asset']]['Price'] = $this->currentPrices['Binance'][$asset['asset'] . 'BTC'];
-                    $binanceSummary[$asset['asset']]['Value'] = number_format($binanceSummary[$asset['asset']]['Balance'] * $binanceSummary[$asset['asset']]['Price'], 8);
-                    $binanceSum += $binanceSummary[$asset['asset']]['Value'];
-                }
-                if ($asset['asset'] == 'BTC') {
-                    $binanceSummary['BTC']['Currency'] ='BTC';
-                    $binanceSummary['BTC']['Balance'] = $asset['free'] + $asset['locked'];
-                    $binanceSummary['BTC']['Price'] = 0;
-                    $binanceSummary['BTC']['Value'] = $binanceSummary['BTC']['Balance'];
-                    $binanceSum += $binanceSummary[$asset['asset']]['Value'];
-                }
-                if ($asset['asset'] == 'USDT') {
-                    $binanceSummary['USDT']['Currency'] ='USDT';
-                    $binanceSummary['USDT']['Balance'] = $asset['free'] + $asset['locked'];
-                    $binanceSummary['USDT']['Price'] = $this->currentPrices['Bittrex']['BTC-TUSD'];;
-                    $binanceSummary['USDT']['Value'] = number_format($binanceSummary[$asset['asset']]['Balance'] * $binanceSummary[$asset['asset']]['Price'], 8);;
-                    $binanceSum += $binanceSummary[$asset['asset']]['Value'];
-                }
-                if ($asset['asset'] == 'BUSD') {
-                    $binanceSummary['BUSD']['Currency'] ='BUSD';
-                    $binanceSummary['BUSD']['Balance'] = $asset['free'] + $asset['locked'];
-                    $binanceSummary['BUSD']['Price'] = $this->currentPrices['Bittrex']['BTC-TUSD'];;
-                    $binanceSummary['BUSD']['Value'] = number_format($binanceSummary[$asset['asset']]['Balance'] * $binanceSummary[$asset['asset']]['Price'], 8);;
-                    $binanceSum += $binanceSummary[$asset['asset']]['Value'];
-                }
-            }
-        }
-
-        return [
-            'binanceSummary' => $binanceSummary,
-            'binanceSumValue' => $binanceSum
-        ];
-    }
-
 }

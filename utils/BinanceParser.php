@@ -102,4 +102,47 @@ class BinanceParser extends ExchangeParser
 
         return $parsedTicker;
     }
+
+    public static function getBinanceSummary(array $binanceBalance, array $currentPrices): array
+    {
+        $binanceSum = 0;
+
+        foreach ($binanceBalance['balances'] as $asset) {
+            if ($asset['free'] + $asset['locked'] > 0) {
+                if ($asset['asset'] != 'BTC' && $asset['asset'] != 'USDT' && $asset['asset'] != 'BUSD') {
+                    $binanceSummary[$asset['asset']]['Currency'] = $asset['asset'];
+                    $binanceSummary[$asset['asset']]['Balance'] = $asset['free'] + $asset['locked'];
+                    $binanceSummary[$asset['asset']]['Price'] = $currentPrices['Binance'][$asset['asset'] . 'BTC'];
+                    $binanceSummary[$asset['asset']]['Value'] = number_format($binanceSummary[$asset['asset']]['Balance'] * $binanceSummary[$asset['asset']]['Price'], 8);
+                    $binanceSum += $binanceSummary[$asset['asset']]['Value'];
+                }
+                if ($asset['asset'] == 'BTC') {
+                    $binanceSummary['BTC']['Currency'] ='BTC';
+                    $binanceSummary['BTC']['Balance'] = $asset['free'] + $asset['locked'];
+                    $binanceSummary['BTC']['Price'] = 0;
+                    $binanceSummary['BTC']['Value'] = $binanceSummary['BTC']['Balance'];
+                    $binanceSum += $binanceSummary[$asset['asset']]['Value'];
+                }
+                if ($asset['asset'] == 'USDT') {
+                    $binanceSummary['USDT']['Currency'] ='USDT';
+                    $binanceSummary['USDT']['Balance'] = $asset['free'] + $asset['locked'];
+                    $binanceSummary['USDT']['Price'] = $currentPrices['Bittrex']['BTC-TUSD'];;
+                    $binanceSummary['USDT']['Value'] = number_format($binanceSummary[$asset['asset']]['Balance'] * $binanceSummary[$asset['asset']]['Price'], 8);;
+                    $binanceSum += $binanceSummary[$asset['asset']]['Value'];
+                }
+                if ($asset['asset'] == 'BUSD') {
+                    $binanceSummary['BUSD']['Currency'] ='BUSD';
+                    $binanceSummary['BUSD']['Balance'] = $asset['free'] + $asset['locked'];
+                    $binanceSummary['BUSD']['Price'] = $currentPrices['Bittrex']['BTC-TUSD'];;
+                    $binanceSummary['BUSD']['Value'] = number_format($binanceSummary[$asset['asset']]['Balance'] * $binanceSummary[$asset['asset']]['Price'], 8);;
+                    $binanceSum += $binanceSummary[$asset['asset']]['Value'];
+                }
+            }
+        }
+
+        return [
+            'binanceSummary' => $binanceSummary,
+            'binanceSumValue' => $binanceSum
+        ];
+    }
 }
