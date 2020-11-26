@@ -10,5 +10,6 @@ interface ExchangeInterface
     public function getPricesFormatted(): array;
     public function getCurrentPrice(string $market): array;
     public function getOpenOrders(?string $market): array;
+    public function getBalanceSummary(): array;
 
 }

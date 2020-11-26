@@ -412,4 +412,16 @@ class Bittrex implements ExchangeInterface
         return $this->getTicker('USD-BTC');
     }
 
+    public function getBalanceSummary(): array
+    {
+        $marketSummaries = $this->getMarketSummaries();
+        $currentPrices = BittrexParser::getPricesFromSummaries($marketSummaries);
+
+        $balance = $this->getBalances()['result'];
+
+        $summary = BittrexParser::getSummary($balance, $currentPrices);
+
+        return $summary;
+    }
+
 }

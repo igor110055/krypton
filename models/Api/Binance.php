@@ -197,6 +197,15 @@ class Binance implements ExchangeInterface
         return $this->cachePath;
     }
 
+    public function getBalanceSummary(): array
+    {
+        $balance = $this->getAccountInfo();
+        $currentPrices = $this->getPricesFormatted();
+        $summary = BinanceParser::getSummary($balance, $currentPrices);
+
+        return $summary;
+    }
+
     private function getResponse($endPoint, $params = null): array
     {
         $url = $this->getApiUrl().$endPoint;

@@ -34,20 +34,20 @@ class BalanceController extends \yii\web\Controller
     public function actionIndex()
     {
         $bittrexBalance = $this->Bittrex->getBalances()['result'];
-        $bittrexSummary = BittrexParser::getBittrexSummary($bittrexBalance, $this->currentPrices);
+        $bittrexSummary = BittrexParser::getSummary($bittrexBalance, $this->currentPrices['Bittrex']);
 
         $binanceBalance = $this->Binance->getAccountInfo();
-        $binanceSummary = BinanceParser::getBinanceSummary($binanceBalance, $this->currentPrices);
+        $binanceSummary = BinanceParser::getSummary($binanceBalance, $this->currentPrices['Binance']);
 
         $bittrexBalanceProvider = new ArrayDataProvider([
-            'allModels' => $bittrexSummary['bittrexSummary'],
+            'allModels' => $bittrexSummary['summary'],
             'sort' => [
                 'attributes' => ['Value', 'Currency'],
             ],
         ]);
 
         $binanceBalanceProvider = new ArrayDataProvider([
-            'allModels' => $binanceSummary['binanceSummary'],
+            'allModels' => $binanceSummary['summary'],
             'sort' => [
                 'attributes' => ['Value', 'Currency'],
             ],
@@ -59,9 +59,9 @@ class BalanceController extends \yii\web\Controller
         return $this->render('index', [
             'bittrexBalanceProvider' => $bittrexBalanceProvider,
             'binanceBalanceProvider' => $binanceBalanceProvider,
-            'bittrexSumValue' => $bittrexSummary['bittrexSumValue'],
-            'binanceSumValue' => $binanceSummary['binanceSumValue'],
-            'binanceSumValueUSDT' => $binanceSummary['binanceSumValueUSDT'],
+            'bittrexSumValue' => $bittrexSummary['sumBTC'],
+            'binanceSumValue' => $binanceSummary['sumBTC'],
+            'binanceSumValueUSDT' => $binanceSummary['sumUSDT'],
             'btcPrice' => $btcPrice['result'],
             'plnPrice' => $plnPrice,
             'configuration' => $this->configuration,

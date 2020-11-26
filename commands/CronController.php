@@ -7,6 +7,7 @@
 
 namespace app\commands;
 
+use app\models\PortfolioEngine;
 use yii\console\Controller;
 use app\models\BotEngine;
 use app\models\EndPointCacher;
@@ -15,7 +16,7 @@ use app\models\Configuration;
 
 class CronController extends Controller
 {
-    public function actionMinute()
+    public function actionMinute(): void
     {
         $configuration = new Configuration();
         $checkPendingOrders = (int)$configuration->getValue('check_pending_orders');
@@ -27,6 +28,12 @@ class CronController extends Controller
         }
         $engine->checkOpenOrders();
         $engine->createPendingOrdersForClosedOrders();
+    }
+
+    public function actionDaily(): void
+    {
+        $portfolioEngine = new PortfolioEngine();
+        $portfolioEngine->handleTickerMonitor();
     }
 
     public function actionDownloadMarkets()

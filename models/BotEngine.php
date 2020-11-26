@@ -409,4 +409,12 @@ class BotEngine
     {
         return $this->marketLastBids;
     }
+
+    public function getExchangesSummaries(): array
+    {
+        $summary['Binance'] = $this->Binance->getBalanceSummary();
+        $summary['Bittrex'] = $this->Bittrex->getBalanceSummary();
+
+        return $summary;
+    }
 }
