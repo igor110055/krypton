@@ -9,6 +9,7 @@ use yii\grid\GridView;
 /* @var $bittrexBalanceProvider ArrayDataProvider */
 /* @var $bittrexSumValue float */
 /* @var $binanceSumValue float */
+/* @var $binanceSumValueUSDT float */
 /* @var $btcPrice array */
 /* @var $plnPrice float */
 /* @var $configuration Configuration */
@@ -77,15 +78,30 @@ $percentDiff = round($plnDiff / $configuration->getValue('pln_deposit') * 100, 2
             'value' => function($data) {
                 return number_format($data['Price'], 8);
             },
-            'contentOptions'=> ['style'=>'width: 24%;']
+            'contentOptions'=> ['style'=>'width: 12%;']
+        ],
+        [
+            'attribute' => 'PriceUSDT',
+            'value' => function($data) {
+                return number_format($data['PriceUSDT'], 4, '.', '');
+            },
+            'contentOptions'=> ['style'=>'width: 12%;']
         ],
         [
             'attribute' => 'Value',
             'value' => function($data) {
                 return number_format($data['Value'], 8);
             },
-            'contentOptions'=> ['style'=>'width: 24%;'],
+            'contentOptions'=> ['style'=>'width: 12%;'],
             'footer' => number_format($binanceSumValue, 8)
+        ],
+        [
+            'attribute' => 'ValueUSDT',
+            'value' => function($data) {
+                return number_format($data['ValueUSDT'], 4, '.', '');
+            },
+            'contentOptions'=> ['style'=>'width: 12%;'],
+            'footer' => number_format($binanceSumValueUSDT, 4, '.', '')
         ],
     ],
 ]); ?>

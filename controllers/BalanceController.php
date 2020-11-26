@@ -61,6 +61,7 @@ class BalanceController extends \yii\web\Controller
             'binanceBalanceProvider' => $binanceBalanceProvider,
             'bittrexSumValue' => $bittrexSummary['bittrexSumValue'],
             'binanceSumValue' => $binanceSummary['binanceSumValue'],
+            'binanceSumValueUSDT' => $binanceSummary['binanceSumValueUSDT'],
             'btcPrice' => $btcPrice['result'],
             'plnPrice' => $plnPrice,
             'configuration' => $this->configuration,
