@@ -40,7 +40,7 @@ class AjaxController extends Controller
     public function actionGetPrecision()
     {
         if (Yii::$app->request->isAjax) {
-            $step = 1;
+            $step = 0;
 
             Yii::$app->response->format = Response::FORMAT_JSON;
 
@@ -52,7 +52,10 @@ class AjaxController extends Controller
 
             foreach ($exchangeInfo['symbols'] as $symbol) {
                 if ($symbol['symbol'] == $data['market']) {
-                    $step = strpos($symbol['filters'][2]['stepSize'], '1', 0) - 1;
+                    $step = strpos($symbol['filters'][2]['stepSize'], '1', 0);
+                    if ($step > 1) {
+                        $step -= 1;
+                    }
                 }
             }
             return $step;
