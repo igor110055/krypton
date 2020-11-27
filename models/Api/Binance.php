@@ -93,6 +93,10 @@ class Binance implements ExchangeInterface
     {
         $endPoint = 'api/v3/order';
 
+        if (strstr($symbol, 'BTC')) {
+            $price = number_format($price, 8);
+        }
+
         $params['symbol'] = $symbol;
         $params['side'] = 'BUY';
         $params['type'] = 'LIMIT';
@@ -102,7 +106,7 @@ class Binance implements ExchangeInterface
 
         $result = $this->postWithAuth($endPoint, $params);
 
-        if ($result['orderId']) {
+        if (isset($result['orderId'])) {
             return [
                 'success' => true,
                 'orderId' => $result['orderId']

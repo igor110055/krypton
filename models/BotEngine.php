@@ -138,7 +138,7 @@ class BotEngine
                 }
 
                 $result = $api->placeBuyOrder($pendingOrder->market, $pendingOrder->quantity, $offerPrice);
-                if ($result['success'] && $result['orderId']) {
+                if ($result['success']) {
 
                     $this->sendPlaceOrderMail($pendingOrder);
 
