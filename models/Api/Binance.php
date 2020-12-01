@@ -135,7 +135,7 @@ class Binance implements ExchangeInterface
 
         $result = $this->postWithAuth($endPoint, $params);
 
-        if ($result['orderId']) {
+        if (isset($result['orderId'])) {
             return [
                 'success' => true,
                 'orderId' => $result['orderId']
