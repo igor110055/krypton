@@ -164,8 +164,13 @@ class BotEngine
 
                 break;
             case 'SELL':
-                $bestOffer = $actualTicker['bid'];
-                $result = $api->placeSellOrder($pendingOrder->market, $pendingOrder->quantity, $bestOffer);
+//                $bestOffer = $actualTicker['bid'];
+                if ($pendingOrder->transaction_type == $pendingOrder::TRANSACTION_BEST) {
+                    $offerPrice = $bestOffer = $actualTicker['bid'];
+                } else {
+                    $offerPrice = $pendingOrder->price;
+                }
+                $result = $api->placeSellOrder($pendingOrder->market, $pendingOrder->quantity, $offerPrice);
                 if ($result['success']) {
                     $this->sendPlaceOrderMail($pendingOrder);
                     $uuid = $pendingOrder->uuid;

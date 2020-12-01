@@ -122,6 +122,10 @@ class Binance implements ExchangeInterface
     {
         $endPoint = 'api/v3/order';
 
+        if (strstr($symbol, 'BTC')) {
+            $price = number_format($price, 8);
+        }
+
         $params['symbol'] = $symbol;
         $params['side'] = 'SELL';
         $params['type'] = 'LIMIT';
