@@ -13,8 +13,9 @@ use yii\grid\GridView;
 /* @var $btcPrice array */
 /* @var $plnPrice float */
 /* @var $configuration Configuration */
+/* @var $hodlBTCvalueSum float */
 
-$btcSumValue = $binanceSumValue + $bittrexSumValue;
+$btcSumValue = $binanceSumValue + $bittrexSumValue + $hodlBTCvalueSum;
 $usdValue = $btcSumValue * $btcPrice['Last'];
 $plnValue = $usdValue * $plnPrice;
 $plnDiff = $plnValue -  $configuration->getValue('pln_deposit');
@@ -56,6 +57,8 @@ $percentDiff = round($plnDiff / $configuration->getValue('pln_deposit') * 100, 2
     </div>
 </div>
 
+<h1>Hodl Balance</h1>
+BTC: <?php echo $hodlBTCvalueSum; ?>
 
 <h1>Binance Balance</h1>
 

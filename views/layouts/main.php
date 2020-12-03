@@ -38,6 +38,7 @@ AppAsset::register($this);
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
             ['label' => 'Monitor', 'url' => ['/portfolio-monitor/']],
+            ['label' => 'Hodl processing', 'url' => ['/hodl/show-processing']],
             ['label' => 'Hodl', 'url' => ['/hodl/']],
             ['label' => 'Balance', 'url' => ['/balance/index?sort=-Value']],
             ['label' => 'Open orders', 'url' => ['/order/show-open']],
@@ -46,8 +47,6 @@ AppAsset::register($this);
             ['label' => 'Pending orders', 'url' => ['/pending-order/index']],
             ['label' => 'Alerts', 'url' => ['/alert/index']],
             ['label' => 'Lags', 'url' => ['/lag/index']],
-            ['label' => 'About', 'url' => ['/site/about']],
-            ['label' => 'Oscylators', 'url' => ['/site/oscylators']],
             ['label' => 'Configuration', 'url' => ['/configuration/index']],
             Yii::$app->user->isGuest ? (
                 ['label' => 'Login', 'url' => ['/site/login']]

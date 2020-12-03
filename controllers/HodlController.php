@@ -2,9 +2,11 @@
 
 namespace app\controllers;
 
+use app\models\BotEngine;
 use Yii;
 use app\models\HodlPosition;
 use app\models\HodlPositionSearch;
+use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -43,6 +45,39 @@ class HodlController extends Controller
             'dataProvider' => $dataProvider,
         ]);
     }
+
+    /**
+     * Lists processing HodlPosition models.
+     * @return mixed
+     */
+    public function actionShowProcessing()
+    {
+        $botEngine = new BotEngine();
+        $botEngine->prepareCurrentPrices();
+        $currentPrices = $botEngine->getMarketLastBids();
+
+        $query = HodlPosition::find()->where(['status' => HodlPosition::STATUS_PROCESSING])
+            ->orderBy(['buy_date' => SORT_DESC]);
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+
+        $orders = (array)$dataProvider->getModels();
+        foreach ($orders as $order) {
+            $order['sell_price'] = $currentPrices['Binance'][$order['market']];
+            $diff = $order['sell_price'] - $order['buy_price'];
+            $order['price_diff'] = round($diff / $order['sell_price'] * 100, 2);
+            $order['sell_value'] = $order['quantity'] * $order['sell_price'];
+            $order['val_diff'] = $order['sell_value'] - $order['buy_value'];
+        }
+        $dataProvider->setModels($orders);
+
+        return $this->render('show-processing', [
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
 
     /**
      * Displays a single HodlPosition model.

@@ -72,4 +72,17 @@ class HodlPosition extends \yii\db\ActiveRecord
             'comment' => 'Comment',
         ];
     }
+
+    public static function getProcessingBTCvalueSum(array $currentPrices): float
+    {
+        $hodlPositions = HodlPosition::find()->where(['status' => HodlPosition::STATUS_PROCESSING])->all();
+        $hodlBTCvalueSum = 0;
+        foreach ($hodlPositions as $position) {
+            $asset = str_replace('USDT', '', $position->market);
+            $value = $position->quantity * $currentPrices['Binance'][$asset . 'BTC'];
+            $hodlBTCvalueSum += $value;
+        }
+
+        return $hodlBTCvalueSum;
+    }
 }

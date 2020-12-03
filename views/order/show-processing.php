@@ -29,10 +29,8 @@ $this->params['breadcrumbs'][] = $this->title;
         'tableOptions' => ['class' => 'table table-bordered'],
         'rowOptions' => function ($model) {
             if ($model->price_diff < 0) {
-//                    return ['class' => 'bg-danger'];
                 return ['class' => 'text-danger'];
             } elseif($model->price_diff > 0) {
-//                    return ['class' => 'bg-success'];
                 return ['class' => 'text-success'];
             }
         },

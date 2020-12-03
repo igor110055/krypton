@@ -6,6 +6,7 @@ use app\models\Api\Binance;
 use app\models\Api\Bittrex;
 use app\models\BotEngine;
 use app\models\Configuration;
+use app\models\HodlPosition;
 use app\utils\BinanceParser;
 use app\utils\BittrexParser;
 use app\utils\Currency;
@@ -33,6 +34,8 @@ class BalanceController extends \yii\web\Controller
 
     public function actionIndex()
     {
+        $hodlBTCvalueSum = HodlPosition::getProcessingBTCvalueSum($this->currentPrices);
+
         $bittrexBalance = $this->Bittrex->getBalances()['result'];
         $bittrexSummary = BittrexParser::getSummary($bittrexBalance, $this->currentPrices['Bittrex']);
 
@@ -65,6 +68,7 @@ class BalanceController extends \yii\web\Controller
             'btcPrice' => $btcPrice['result'],
             'plnPrice' => $plnPrice,
             'configuration' => $this->configuration,
+            'hodlBTCvalueSum' => $hodlBTCvalueSum
         ]);
     }
 }

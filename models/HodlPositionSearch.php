@@ -32,14 +32,8 @@ class HodlPositionSearch extends HodlPosition
         return Model::scenarios();
     }
 
-    /**
-     * Creates data provider instance with search query applied
-     *
-     * @param array $params
-     *
-     * @return ActiveDataProvider
-     */
-    public function search($params)
+
+    public function search(array $params): ActiveDataProvider
     {
         $query = HodlPosition::find();
 
@@ -74,7 +68,7 @@ class HodlPositionSearch extends HodlPosition
         ]);
 
         $query->andFilterWhere(['like', 'market', $this->market])
-            ->andFilterWhere(['like', 'status', $this->status])
+            ->andFilterWhere(['like', 'status', HodlPosition::STATUS_DONE])
             ->andFilterWhere(['like', 'comment', $this->comment]);
 
         return $dataProvider;
