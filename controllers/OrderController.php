@@ -118,7 +118,7 @@ class OrderController extends Controller
             }
             $ordersUuids[] = $order['uuid'];
             $order['price'] = number_format($order['price'], 8);
-            $order['current_price'] = number_format($this->currentPrices[$order['market']], 8);
+            $order['current_price'] = number_format($this->currentPrices[$order['exchange']][$order['market']], 8);
             $diff = $order['current_price'] - $order['price'];
             $order['price_diff'] = round($diff / $order['current_price'] * 100, 2);
             $order['quantity_remaining'] = $openOrdersExchangeData[$order['uuid']]['QuantityRemaining'];
