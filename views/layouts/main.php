@@ -46,7 +46,7 @@ AppAsset::register($this);
             ['label' => 'Orders', 'url' => ['/order/index']],
             ['label' => 'Pending orders', 'url' => ['/pending-order/index']],
             ['label' => 'Alerts', 'url' => ['/alert/index']],
-            ['label' => 'Lags', 'url' => ['/lag/index']],
+//            ['label' => 'Lags', 'url' => ['/lag/index']],
             ['label' => 'Configuration', 'url' => ['/configuration/index']],
             Yii::$app->user->isGuest ? (
                 ['label' => 'Login', 'url' => ['/site/login']]

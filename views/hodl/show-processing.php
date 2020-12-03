@@ -16,6 +16,10 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
+        'tableOptions' => ['class' => 'table table-striped table-bordered'],
+        'options' => [
+            'class' => 'table-responsive',
+        ],
         'rowOptions' => function ($model) {
             if ($model->price_diff < 0) {
                 return ['class' => 'text-danger'];

@@ -21,6 +21,10 @@ $this->title = 'Monitor';
     <?php echo GridView::widget([
         'dataProvider' => $dataProvider,
 //        'filterModel' => $searchModel,
+        'tableOptions' => ['class' => 'table table-striped table-bordered'],
+        'options' => [
+            'class' => 'table-responsive',
+        ],
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
             'id',

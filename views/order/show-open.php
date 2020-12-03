@@ -26,7 +26,10 @@ $this->params['breadcrumbs'][] = $this->title;
     Pjax::begin(['id' => 'processing_orders_grid']);
     echo GridView::widget([
         'dataProvider' => $dataProvider,
-        'tableOptions' => ['class' => 'table table-bordered'],
+        'tableOptions' => ['class' => 'table table-striped table-bordered'],
+        'options' => [
+            'class' => 'table-responsive',
+        ],
         'rowOptions' => function ($model) {
             if ($model->price_diff < 0) {
 //                    return ['class' => 'bg-danger'];
@@ -70,7 +73,10 @@ $this->params['breadcrumbs'][] = $this->title;
     Pjax::begin(['id' => 'diff_orders_grid']);
     echo GridView::widget([
         'dataProvider' => $diffProvider,
-        'tableOptions' => ['class' => 'table table-bordered'],
+        'tableOptions' => ['class' => 'table table-striped table-bordered'],
+        'options' => [
+            'class' => 'table-responsive',
+        ],
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
             'OrderUuid',

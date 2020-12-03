@@ -64,7 +64,10 @@ BTC: <?php echo $hodlBTCvalueSum; ?>
 
 <?php echo GridView::widget([
     'dataProvider' => $binanceBalanceProvider,
-    'options' => ['style' => 'width:100%'],
+    'tableOptions' => ['class' => 'table table-striped table-bordered'],
+    'options' => [
+        'class' => 'table-responsive',
+    ],
     'showFooter' => true,
     'columns' => [
         ['class' => 'yii\grid\SerialColumn'],
@@ -113,7 +116,10 @@ BTC: <?php echo $hodlBTCvalueSum; ?>
 
 <?php echo GridView::widget([
     'dataProvider' => $bittrexBalanceProvider,
-    'options' => ['style' => 'width:100%'],
+    'tableOptions' => ['class' => 'table table-striped table-bordered'],
+    'options' => [
+        'class' => 'table-responsive',
+    ],
     'showFooter' => true,
     'columns' => [
         ['class' => 'yii\grid\SerialColumn'],

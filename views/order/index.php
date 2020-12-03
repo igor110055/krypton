@@ -18,7 +18,10 @@ $this->params['breadcrumbs'][] = $this->title;
     Pjax::begin();
     echo GridView::widget([
         'dataProvider' => $dataProvider,
-        'tableOptions' => ['class' => 'table table-bordered'],
+        'tableOptions' => ['class' => 'table table-striped table-bordered'],
+        'options' => [
+            'class' => 'table-responsive',
+        ],
         'rowOptions' => function ($model) {
             if ($model->sell_price > 0) {
                 $diff = $model->sell_price - $model->price;
