@@ -33,16 +33,16 @@ use kartik\widgets\DateTimePicker;
 
     <?= $form->field($model, 'buy_price')->textInput() ?>
 
-    <?= $form->field($model, 'sell_price')->textInput() ?>
-
     <?= $form->field($model, 'buy_value')->textInput() ?>
-
-    <?= $form->field($model, 'sell_value')->textInput() ?>
 
     <?= $form->field($model, 'status')->dropDownList([
         $model::STATUS_PROCESSING => $model::STATUS_PROCESSING,
         $model::STATUS_DONE => $model::STATUS_DONE,
     ]) ?>
+
+    <?= $form->field($model, 'sell_price')->textInput() ?>
+
+    <?= $form->field($model, 'sell_value')->textInput() ?>
 
     <?= $form->field($model, 'val_diff')->textInput() ?>
 
