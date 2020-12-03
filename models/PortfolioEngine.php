@@ -19,12 +19,14 @@ class PortfolioEngine
     }
     public function handleTickerMonitor(): void
     {
+        $this->botEngine->prepareCurrentPrices();
+
         $summary = $this->botEngine->getExchangesSummaries();
-        $hodlBtcValue = 0;
+        $hodlBtcValue = HodlPosition::getProcessingBTCvalueSum($this->botEngine->getMarketLastBids());
         $exchangeBtcValue = $summary['Binance']['sumBTC'] + $summary['Bittrex']['sumBTC'];
 
         $btcValue = $hodlBtcValue + $exchangeBtcValue;
-        $hodlPercent = 0;
+        $hodlPercent = round($hodlBtcValue / $btcValue * 100, 2);
         $btcPrice = $summary['Binance']['summary']['BTC']['PriceUSDT'];
         $usdPrice = Currency::getUsdToPlnRate();
         $deposit = $this->configuration->getValue('pln_deposit');
@@ -37,7 +39,7 @@ class PortfolioEngine
 
         $portfolioTicker = new PortfolioTicker();
         $portfolioTicker->created_at = date('Y-m-d H:i:s');
-        $portfolioTicker->hodl_btc_value = 0;
+        $portfolioTicker->hodl_btc_value = $hodlBtcValue;
         $portfolioTicker->exchange_btc_value = number_format($exchangeBtcValue, 8);
         $portfolioTicker->hodl_percent = $hodlPercent;
         $portfolioTicker->btc_price = $summary['Binance']['summary']['BTC']['PriceUSDT'];
