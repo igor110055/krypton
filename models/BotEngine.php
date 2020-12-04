@@ -103,7 +103,7 @@ class BotEngine
 
         if ($currentMarketPrice > $order->price) {
             $diff = $currentMarketPrice - $order->price;
-            $percentDiff = round($diff / $currentMarketPrice * 100, 2);
+            $percentDiff = round($diff / $order->price * 100, 2);
 
             $newStopLoss = $currentMarketPrice - $currentMarketPrice / 100;
             $stopLossDiff = $newStopLoss - $order->stop_loss;
@@ -259,6 +259,7 @@ class BotEngine
 
         foreach ($orders as $order) {
             if (!in_array($order->uuid, $openOrdersUuids)) {
+                //sprawdzenie ile się kupiło i aktualizacja ilości
                 $order->status = Order::STATUS_CLOSED;
                 $order->save();
                 $this->sendRealizedOrderMail($order);

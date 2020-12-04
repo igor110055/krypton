@@ -75,7 +75,7 @@ class OrderController extends Controller
             $order['price'] = number_format($order['price'], 8);
             $order['current_price'] = number_format($this->currentPrices[$order['exchange']][$order['market']], 8);
             $diff = $order['current_price'] - $order['price'];
-            $order['price_diff'] = round($diff / $order['current_price'] * 100, 2);
+            $order['price_diff'] = round($diff / $order['price'] * 100, 2);
             $order['current_value'] = number_format($order['quantity'] * $order['current_price'], 8);
             if ($order['stop_loss'] > 0) {
                 $order['stop_loss'] = number_format($order['stop_loss'], 8);
@@ -120,7 +120,7 @@ class OrderController extends Controller
             $order['price'] = number_format($order['price'], 8);
             $order['current_price'] = number_format($this->currentPrices[$order['exchange']][$order['market']], 8);
             $diff = $order['current_price'] - $order['price'];
-            $order['price_diff'] = round($diff / $order['current_price'] * 100, 2);
+            $order['price_diff'] = round($diff / $order['price'] * 100, 2);
             $order['quantity_remaining'] = $openOrdersExchangeData[$order['uuid']]['QuantityRemaining'];
             $order['open_date'] = $openOrdersExchangeData[$order['uuid']]['Opened'];
         }

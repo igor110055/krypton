@@ -86,7 +86,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value' => function($model) {
                     if ($model->sell_price > 0) {
                         $diff = $model->sell_price - $model->price;
-                        $val = round($diff / $model->sell_price * 100, 2);
+                        $val = round($diff / $model->price * 100, 2);
                     } else {
                         $val = null;
                     }

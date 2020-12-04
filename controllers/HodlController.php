@@ -67,7 +67,7 @@ class HodlController extends Controller
         foreach ($orders as $order) {
             $order['sell_price'] = $currentPrices['Binance'][$order['market']];
             $diff = $order['sell_price'] - $order['buy_price'];
-            $order['price_diff'] = round($diff / $order['sell_price'] * 100, 2);
+            $order['price_diff'] = round($diff / $order['buy_price'] * 100, 2);
             $order['sell_value'] = $order['quantity'] * $order['sell_price'];
             $order['val_diff'] = $order['sell_value'] - $order['buy_value'];
         }
@@ -102,7 +102,7 @@ class HodlController extends Controller
         $model = new HodlPosition();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['index']);
         }
 
         return $this->render('create', [
