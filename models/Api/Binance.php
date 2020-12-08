@@ -93,10 +93,6 @@ class Binance implements ExchangeInterface
     {
         $endPoint = 'api/v3/order';
 
-        if (strstr($symbol, 'BTC')) {
-            $price = number_format($price, 8);
-        }
-
         $params['symbol'] = $symbol;
         $params['side'] = 'BUY';
         $params['type'] = 'LIMIT';
@@ -114,6 +110,7 @@ class Binance implements ExchangeInterface
         } else {
             return [
                 'success' => false,
+                'msg' => $result['msg']
             ];
         }
     }
@@ -121,10 +118,6 @@ class Binance implements ExchangeInterface
     public function placeSellOrder(string $symbol, float $quantity, float $price): array
     {
         $endPoint = 'api/v3/order';
-
-        if (strstr($symbol, 'BTC')) {
-            $price = number_format($price, 8);
-        }
 
         $params['symbol'] = $symbol;
         $params['side'] = 'SELL';
@@ -143,6 +136,7 @@ class Binance implements ExchangeInterface
         } else {
             return [
                 'success' => false,
+                'msg' => $result['msg']
             ];
         }
     }
@@ -212,6 +206,23 @@ class Binance implements ExchangeInterface
         $summary = BinanceParser::getSummary($balance, $currentPrices);
 
         return $summary;
+    }
+
+    public function getQtyPrecision(string $market): int
+    {
+        $step = 0;
+        $exchangeInfo = $this->getExchangeInfo();
+
+        foreach ($exchangeInfo['symbols'] as $symbol) {
+            if ($symbol['symbol'] == $market) {
+                $step = strpos($symbol['filters'][2]['stepSize'], '1', 0);
+                if ($step > 1) {
+                    $step -= 1;
+                }
+            }
+        }
+
+        return $step;
     }
 
     private function getResponse($endPoint, $params = null): array

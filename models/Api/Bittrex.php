@@ -147,6 +147,7 @@ class Bittrex implements ExchangeInterface
         } else {
             return [
                 'success' => false,
+                'msg' => ''
             ];
         }
     }
@@ -173,6 +174,7 @@ class Bittrex implements ExchangeInterface
         } else {
             return [
                 'success' => false,
+                'msg' => $result['message']
             ];
         }
     }

@@ -103,7 +103,7 @@ class BotEngine
 
         if ($currentMarketPrice > $order->price) {
             $diff = $currentMarketPrice - $order->price;
-            $percentDiff = round($diff / $order->price * 100, 2);
+            $percentDiff = round($diff / $currentMarketPrice * 100, 2);
 
             $newStopLoss = $currentMarketPrice - $currentMarketPrice / 100;
             $stopLossDiff = $newStopLoss - $order->stop_loss;
@@ -138,7 +138,7 @@ class BotEngine
                 }
 
                 $result = $api->placeBuyOrder($pendingOrder->market, $pendingOrder->quantity, $offerPrice);
-                if ($result['success']) {
+                if ($result['success'] && $result['orderId']) {
 
                     $this->sendPlaceOrderMail($pendingOrder);
 
@@ -159,18 +159,13 @@ class BotEngine
                     $order->save();
                     $pendingOrder->delete();
                 } else {
-                    $this->errorMail($pendingOrder, 'Error with pending order: ' . $pendingOrder->id);
+                    $this->errorMail($pendingOrder, 'Error with pending order: ' . $pendingOrder->id."\n" . $result['msg']);
                 }
 
                 break;
             case 'SELL':
-//                $bestOffer = $actualTicker['bid'];
-                if ($pendingOrder->transaction_type == $pendingOrder::TRANSACTION_BEST) {
-                    $offerPrice = $bestOffer = $actualTicker['bid'];
-                } else {
-                    $offerPrice = $pendingOrder->price;
-                }
-                $result = $api->placeSellOrder($pendingOrder->market, $pendingOrder->quantity, $offerPrice);
+                $bestOffer = $actualTicker['bid'];
+                $result = $api->placeSellOrder($pendingOrder->market, $pendingOrder->quantity, $bestOffer);
                 if ($result['success']) {
                     $this->sendPlaceOrderMail($pendingOrder);
                     $uuid = $pendingOrder->uuid;
@@ -189,7 +184,7 @@ class BotEngine
                         $order->save();
                     }
                 } else {
-                    $this->errorMail($pendingOrder, 'Error with pending order: ' . $pendingOrder->id);
+                    $this->errorMail($pendingOrder, 'Error with pending order: ' . $pendingOrder->id."\n" . $result['msg']);
                 }
                 break;
         }
@@ -224,7 +219,7 @@ class BotEngine
             $return['msg'] = '';
         } else {
             $return['success'] = false;
-            $return['msg'] = $result['message'];
+            $return['msg'] = $result['msg'];
         }
 
         return $return;
@@ -259,7 +254,6 @@ class BotEngine
 
         foreach ($orders as $order) {
             if (!in_array($order->uuid, $openOrdersUuids)) {
-                //sprawdzenie ile się kupiło i aktualizacja ilości
                 $order->status = Order::STATUS_CLOSED;
                 $order->save();
                 $this->sendRealizedOrderMail($order);
@@ -272,6 +266,8 @@ class BotEngine
         $orders = Order::findAll([
             'status' => Order::STATUS_CLOSED
         ]);
+
+        //sprawdzenie ile faktycznie weszło
 
         foreach ($orders as $order) {
 
