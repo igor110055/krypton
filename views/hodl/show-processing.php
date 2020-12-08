@@ -44,7 +44,12 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'sell_value',
                 'label' => 'Current value'
             ],
-            'val_diff',
+            [
+                'attribute' => 'val_diff',
+                'value' => function ($model){
+                    return round($model->val_diff, 4);
+                }
+            ],
             'price_diff',
             'pln_value',
             'pln_diff_value',
