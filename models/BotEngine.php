@@ -71,6 +71,10 @@ class BotEngine
 
             $currentMarketPrice = $this->marketLastBids[$pendingOrder->exchange][$pendingOrder->market];
 
+            if ($currentMarketPrice <= 0) {
+                continue;
+            }
+
             switch ($pendingOrder->condition) {
                 case 'COND_MORE':
                     if ($currentMarketPrice >= $pendingOrder->price) {

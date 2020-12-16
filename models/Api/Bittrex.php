@@ -137,7 +137,11 @@ class Bittrex implements ExchangeInterface
             ];
         }
 
+        $log = [$endPoint, $params];
+        \Yii::info($log, 'bittrex');
+
         $result = $this->getResponse($endPoint, $params, true);
+        \Yii::info($result, 'bittrex');
 
         if ($result['success']) {
             return [
@@ -147,7 +151,7 @@ class Bittrex implements ExchangeInterface
         } else {
             return [
                 'success' => false,
-                'msg' => ''
+                'msg' => $result['message']
             ];
         }
     }
