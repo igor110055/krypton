@@ -1,6 +1,8 @@
 <?php
 
 /* @var $this yii\web\View */
+/* @var $dataset array */
+/* @var $result */
 
 $this->title = 'Krypton';
 ?>
@@ -8,46 +10,56 @@ $this->title = 'Krypton';
 
     <div class="body-content">
         <div class="row">
-            <h1>Oscylators</h1>
+            <h1>Dashboard</h1>
 
         </div>
-
-        <div class="row">
-            <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/doc/">Yii Documentation &raquo;</a></p>
-            </div>
-            <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/forum/">Yii Forum &raquo;</a></p>
-            </div>
-            <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/extensions/">Yii Extensions &raquo;</a></p>
-            </div>
+        <div style="width:100%;">
+            <canvas id="myChart"></canvas>
         </div>
-
         <pre>
             <?php print_r($result) ?>
         </pre>
 
     </div>
 </div>
+<?php
+$labels = implode(',', $dataset['days']);
+$values = implode(',', $dataset['values']);
+$script = <<< JS
+var ctx = $('#myChart');
+var myChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: [$labels],
+        datasets: [{
+            label: 'Profit chart',
+            data: [$values],
+        }]
+    },
+    options: {
+        responsive: true,
+        scales: {
+            xAxes: [{
+                display: true,
+                scaleLabel: {
+                    display: true,
+                    labelString: 'Day'
+                }
+            }],
+            yAxes: [{
+                display: true,
+                scaleLabel: {
+                    display: true,
+                    labelString: 'Value'
+                },
+                ticks: {
+                    suggestedMin: 1000,
+                    suggestedMax: 20000
+                }
+            }]
+        }
+    }
+});
+JS;
+$position = \yii\web\View::POS_READY;
+$this->registerJs($script, $position);

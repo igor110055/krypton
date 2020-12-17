@@ -18,9 +18,12 @@ class AppAsset extends AssetBundle
     public $basePath = '@webroot';
     public $baseUrl = '@web';
     public $css = [
+        'css/chart/Chart.min.css',
         'css/site.css',
     ];
     public $js = [
+        'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js',
+        'js/chart/Chart.min.js',
     ];
     public $depends = [
         'yii\web\YiiAsset',

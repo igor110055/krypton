@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\PortfolioTicker;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -67,9 +68,17 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
+        $monitorRows = PortfolioTicker::find()->all();
+        $dataset = [];
+        foreach ($monitorRows as $row) {
+            $dataset['days'][] = "'" . $row['created_at'] . "'";
+            $dataset['values'][] = $row['pln_diff'];
+        }
+
+//        var_dump($dataset);exit;
         $result = '';
-        $bot = new BotEngine();
-        $bot->checkOpenOrders();
+//        $bot = new BotEngine();
+
 //        $result = $bot->getExchangeClient('Binance')->getPrices();
 //        $bot->prepareActualPrices();
 //        $result = $bot->getMarketLastBids();
@@ -81,7 +90,8 @@ class SiteController extends Controller
 //        $result = $client->placeBuyOrder('RENUSDT', 117.4, 0.34859);
 //        $result = $client->getOpenOrders();
         return $this->render('index', [
-            'result' => $result
+            'result' => $result,
+            'dataset' => $dataset
         ]);
     }
 
