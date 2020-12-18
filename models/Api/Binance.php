@@ -100,7 +100,11 @@ class Binance implements ExchangeInterface
         $params['price'] = $price;
         $params['timeInForce'] = 'GTC';
 
+        \Yii::info($params, 'binance');
+
         $result = $this->postWithAuth($endPoint, $params);
+
+        \Yii::info($result, 'binance');
 
         if (isset($result['orderId'])) {
             return [
@@ -126,7 +130,11 @@ class Binance implements ExchangeInterface
         $params['price'] = $price;
         $params['timeInForce'] = 'GTC';
 
+        \Yii::info($params, 'binance');
+
         $result = $this->postWithAuth($endPoint, $params);
+
+        \Yii::info($result, 'binance');
 
         if (isset($result['orderId'])) {
             return [

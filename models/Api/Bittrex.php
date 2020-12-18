@@ -169,7 +169,12 @@ class Bittrex implements ExchangeInterface
             ];
         }
 
+        $log = [$endPoint, $market, $quantity, $rate];
+        \Yii::info($log, 'bittrex');
+
         $result = $this->getResponse($endPoint, $params, true);
+        \Yii::info($result, 'bittrex');
+
         if ($result['success']) {
             return [
                 'success' => true,
