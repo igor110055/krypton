@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\models\BotEngine;
+use app\utils\Currency;
 use Yii;
 use app\models\HodlPosition;
 use app\models\HodlPositionSearch;
@@ -63,6 +64,8 @@ class HodlController extends Controller
             'query' => $query,
         ]);
 
+        $usdPrice = Currency::getUsdToPlnRate();
+
         $orders = (array)$dataProvider->getModels();
         foreach ($orders as $order) {
             $order['sell_price'] = $currentPrices['Binance'][$order['market']];
@@ -70,6 +73,9 @@ class HodlController extends Controller
             $order['price_diff'] = round($diff / $order['buy_price'] * 100, 2);
             $order['sell_value'] = $order['quantity'] * $order['sell_price'];
             $order['val_diff'] = $order['sell_value'] - $order['buy_value'];
+            $order['pln_buy_value'] = round($order['buy_value'] * $usdPrice, 2);
+            $order['pln_value'] = round($order['sell_value'] * $usdPrice, 2);
+            $order['pln_diff_value'] = round(($order['sell_value'] * $usdPrice) - ($order['buy_value'] * $usdPrice), 2);
         }
         $dataProvider->setModels($orders);
 

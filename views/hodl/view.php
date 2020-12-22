@@ -41,6 +41,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'status',
             'val_diff',
             'price_diff',
+            'pln_buy_value',
             'pln_value',
             'pln_diff_value',
             'comment',

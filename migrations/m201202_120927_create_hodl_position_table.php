@@ -26,6 +26,7 @@ class m201202_120927_create_hodl_position_table extends Migration
             'val_diff' => $this->float(),
             'price_diff' => $this->float(),
             'pln_value' => $this->float(),
+            'pln_buy_value' => $this->float(),
             'pln_diff_value' => $this->float(),
             'comment' => $this->string()
         ]);

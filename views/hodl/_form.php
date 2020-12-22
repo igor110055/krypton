@@ -48,6 +48,7 @@ use kartik\widgets\DateTimePicker;
 
     <?= $form->field($model, 'price_diff')->textInput() ?>
 
+    <?= $form->field($model, 'pln_buy_value')->textInput() ?>
     <?= $form->field($model, 'pln_value')->textInput() ?>
 
     <?= $form->field($model, 'pln_diff_value')->textInput() ?>

@@ -19,6 +19,7 @@ use Yii;
  * @property string $status
  * @property double $val_diff
  * @property double $price_diff
+ * @property double $pln_buy_value
  * @property double $pln_value
  * @property double $pln_diff_value
  * @property string $comment
@@ -44,7 +45,7 @@ class HodlPosition extends \yii\db\ActiveRecord
     {
         return [
             [['buy_date', 'sell_date'], 'safe'],
-            [['quantity', 'buy_price', 'sell_price', 'buy_value', 'sell_value', 'val_diff', 'price_diff', 'pln_value', 'pln_diff_value'], 'number'],
+            [['quantity', 'buy_price', 'sell_price', 'buy_value', 'sell_value', 'val_diff', 'price_diff', 'pln_buy_value', 'pln_value', 'pln_diff_value'], 'number'],
             [['market', 'status', 'comment'], 'string', 'max' => 255],
         ];
     }
@@ -67,6 +68,7 @@ class HodlPosition extends \yii\db\ActiveRecord
             'status' => 'Status',
             'val_diff' => 'Val Diff',
             'price_diff' => 'Price Diff',
+            'pln_buy_value' => 'Pln buy value',
             'pln_value' => 'Pln Value',
             'pln_diff_value' => 'Pln Diff Value',
             'comment' => 'Comment',

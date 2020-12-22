@@ -50,10 +50,11 @@ $this->params['breadcrumbs'][] = $this->title;
                     return round($model->val_diff, 4);
                 }
             ],
-            'price_diff',
+            'pln_buy_value',
             'pln_value',
             'pln_diff_value',
-            'comment',
+            'price_diff',
+//            'comment',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],
