@@ -67,7 +67,7 @@ class HodlPosition extends \yii\db\ActiveRecord
             'sell_value' => 'Sell Value',
             'status' => 'Status',
             'val_diff' => 'Val Diff',
-            'price_diff' => 'Price Diff',
+            'price_diff' => '% change',
             'pln_buy_value' => 'Pln buy value',
             'pln_value' => 'Pln Value',
             'pln_diff_value' => 'Pln Diff Value',
