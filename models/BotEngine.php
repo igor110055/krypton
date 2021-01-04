@@ -129,6 +129,8 @@ class BotEngine
 
     public function placeOrder(PendingOrder $pendingOrder)
     {
+        \Yii::info('####CENA ZLAPALA###', 'general');
+        \Yii::info($pendingOrder->market, 'general');
         $api = $this->getExchangeClient($pendingOrder->exchange);
         $actualTicker = $api->getCurrentPrice($pendingOrder->market);
 

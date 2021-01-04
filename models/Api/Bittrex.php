@@ -158,6 +158,7 @@ class Bittrex implements ExchangeInterface
 
     public function placeSellOrder($market, $quantity, $rate)
     {
+        \Yii::info('####SELL START###', 'bittrex');
         $endPoint = 'market/selllimit';
         $params = null;
 

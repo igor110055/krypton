@@ -55,6 +55,13 @@ $config = [
                     'logVars' => [],
                     'logFile' => '@runtime/logs/exchange/bittrex.log',
                 ],
+                [
+                    'class' => 'yii\log\FileTarget',
+                    'levels' => ['info', 'trace', 'error', 'warning'],
+                    'categories' => ['general'],
+                    'logVars' => [],
+                    'logFile' => '@runtime/logs/exchange/general.log',
+                ],
             ],
         ],
         'db' => $db,
