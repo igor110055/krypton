@@ -71,7 +71,9 @@ class SiteController extends Controller
         $monitorRows = PortfolioTicker::find()->all();
         $dataset = [];
         foreach ($monitorRows as $row) {
-            $dataset['days'][] = "'" . $row['created_at'] . "'";
+            $date = date_create_from_format('Y-m-d H:i:s', $row['created_at']);
+            $date = date_format($date, 'Y-m-d');
+            $dataset['days'][] = "'" . $date . "'";
             $dataset['values'][] = $row['pln_diff'];
         }
 
