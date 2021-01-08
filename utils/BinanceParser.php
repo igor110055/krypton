@@ -127,8 +127,8 @@ class BinanceParser extends ExchangeParser
                     $binanceSummary['BTC']['PriceUSDT'] = (float)$currentPrices['BTCUSDT'];
                     $binanceSummary['BTC']['Value'] = $binanceSummary['BTC']['Balance'];
                     $binanceSummary['BTC']['ValueUSDT'] =  $binanceSummary['BTC']['Balance'] * $binanceSummary['BTC']['PriceUSDT'];
-                    $binanceSum += $binanceSummary[$asset['asset']]['Value'];
-                    $binanceSumUSDT += $binanceSummary[$asset['asset']]['ValueUSDT'];
+                    $binanceSum += $binanceSummary['BTC']['Value'];
+                    $binanceSumUSDT += $binanceSummary['BTC']['ValueUSDT'];
                 }
                 if ($asset['asset'] == 'USDT') {
                     $binanceSummary['USDT']['Currency'] ='USDT';

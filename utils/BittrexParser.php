@@ -22,7 +22,7 @@ class BittrexParser extends ExchangeParser
     public static function getPricesFromSummaries(array $marketSummaries)
     {
         foreach ($marketSummaries['result'] as $marketSummary) {
-            if (strstr($marketSummary['MarketName'], 'BTC')){
+            if (strstr($marketSummary['MarketName'], 'BTC') || strstr($marketSummary['MarketName'], 'USDT')){
                 $marketLastBids[$marketSummary['MarketName']] = $marketSummary['Last'];
             }
         }
@@ -32,33 +32,53 @@ class BittrexParser extends ExchangeParser
 
     public static function getSummary(array $bittrexBalance, array $currentPrices): array
     {
+//        echo'<pre>';var_dump($currentPrices);exit;
         $bittrexSummary = [];
         $bittrexSumValue = 0;
+        $bittrexSumValueUSDT = 0;
 
-        foreach ($bittrexBalance as $crypto) {
+        foreach ($bittrexBalance as $asset) {
 
-            if ($crypto['Currency'] != 'BTC' && isset($currentPrices['BTC-' . $crypto['Currency']])) {
-                $value = $crypto['Balance'] * $currentPrices['BTC-' . $crypto['Currency']];
+            if ($asset['Currency'] != 'BTC' && isset($currentPrices['BTC-' . $asset['Currency']])) {
+                $value = $asset['Balance'] * $currentPrices['BTC-' . $asset['Currency']];
                 if ($value > 0.0001) {
-                    $bittrexSummary[$crypto['Currency']]['Currency'] = $crypto['Currency'];
-                    $bittrexSummary[$crypto['Currency']]['Balance'] = $crypto['Balance'];
-                    $bittrexSummary[$crypto['Currency']]['Price'] = $currentPrices['BTC-' . $crypto['Currency']];
-                    $bittrexSummary[$crypto['Currency']]['Value'] = $value;
+                    $bittrexSummary[$asset['Currency']]['Currency'] = $asset['Currency'];
+                    $bittrexSummary[$asset['Currency']]['Balance'] = $asset['Balance'];
+                    $bittrexSummary[$asset['Currency']]['Price'] = $currentPrices['BTC-' . $asset['Currency']];
+                    $priceUSDT = $currentPrices['USDT-' . $asset['Currency']] ?? 0;
+                    $bittrexSummary[$asset['Currency']]['PriceUSDT'] = $priceUSDT;
+                    $bittrexSummary[$asset['Currency']]['Value'] = $value;
+                    $bittrexSummary[$asset['Currency']]['ValueUSDT'] = $bittrexSummary[$asset['Currency']]['Balance'] * $bittrexSummary[$asset['Currency']]['PriceUSDT'];
                     $bittrexSumValue += $value;
+                    $bittrexSumValueUSDT += $bittrexSummary[$asset['Currency']]['ValueUSDT'];
                 }
             }
-            if ($crypto['Currency'] == 'BTC') {
+            if ($asset['Currency'] == 'BTC') {
                 $bittrexSummary['BTC']['Currency'] = 'BTC';
-                $bittrexSummary['BTC']['Balance'] = $crypto['Balance'];
+                $bittrexSummary['BTC']['Balance'] = $asset['Balance'];
                 $bittrexSummary['BTC']['Price'] = 0;
-                $bittrexSummary['BTC']['Value'] = $crypto['Balance'];
-                $bittrexSumValue += $crypto['Balance'];
+                $bittrexSummary['BTC']['PriceUSDT'] = (float)$currentPrices['USDT-BTC'];
+                $bittrexSummary['BTC']['Value'] = $asset['Balance'];
+                $bittrexSummary['BTC']['ValueUSDT'] =  $bittrexSummary['BTC']['Balance'] * $bittrexSummary['BTC']['PriceUSDT'];
+                $bittrexSumValue += $asset['Balance'];
+                $bittrexSumValueUSDT += $bittrexSummary['BTC']['ValueUSDT'];
+            }
+            if ($asset['Currency'] == 'USDT') {
+                $bittrexSummary['USDT']['Currency'] = 'USDT';
+                $bittrexSummary['USDT']['Balance'] = $asset['Balance'];
+                $bittrexSummary['USDT']['Price'] = 1 / (float)$currentPrices['USDT-BTC'];
+                $bittrexSummary['USDT']['PriceUSDT'] = 1;
+                $bittrexSummary['USDT']['Value'] = $bittrexSummary['USDT']['Balance'] * $bittrexSummary['USDT']['Price'];
+                $bittrexSummary['USDT']['ValueUSDT'] = $bittrexSummary['USDT']['Balance'] * $bittrexSummary['USDT']['PriceUSDT'];
+                $bittrexSumValue += $bittrexSummary['USDT']['Value'];
+                $bittrexSumValueUSDT += $bittrexSummary['USDT']['ValueUSDT'];
             }
         }
 
         return [
             'summary' => $bittrexSummary,
-            'sumBTC' => $bittrexSumValue
+            'sumBTC' => $bittrexSumValue,
+            'sumUSDT' => $bittrexSumValueUSDT,
         ];
     }
 }

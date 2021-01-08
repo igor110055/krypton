@@ -37,6 +37,8 @@ class BalanceController extends \yii\web\Controller
         $hodlBTCvalueSum = HodlPosition::getProcessingBTCvalueSum($this->currentPrices);
 
         $bittrexBalance = $this->Bittrex->getBalances()['result'];
+//        echo '<pre>';
+//        var_dump($bittrexBalance);exit;
         $bittrexSummary = BittrexParser::getSummary($bittrexBalance, $this->currentPrices['Bittrex']);
 
         $binanceBalance = $this->Binance->getAccountInfo();
@@ -63,6 +65,7 @@ class BalanceController extends \yii\web\Controller
             'bittrexBalanceProvider' => $bittrexBalanceProvider,
             'binanceBalanceProvider' => $binanceBalanceProvider,
             'bittrexSumValue' => $bittrexSummary['sumBTC'],
+            'bittrexSumValueUSDT' => $bittrexSummary['sumUSDT'],
             'binanceSumValue' => $binanceSummary['sumBTC'],
             'binanceSumValueUSDT' => $binanceSummary['sumUSDT'],
             'btcPrice' => $btcPrice['result'],
