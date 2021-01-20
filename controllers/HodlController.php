@@ -57,12 +57,10 @@ class HodlController extends Controller
         $botEngine->prepareCurrentPrices();
         $currentPrices = $botEngine->getMarketLastBids();
 
-        $query = HodlPosition::find()->where(['status' => HodlPosition::STATUS_PROCESSING])
-            ->orderBy(['buy_date' => SORT_DESC]);
+        $params = Yii::$app->request->queryParams;
 
-        $dataProvider = new ActiveDataProvider([
-            'query' => $query,
-        ]);
+        $searchModel = new HodlPositionSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         $usdPrice = Currency::getUsdToPlnRate();
 
@@ -77,6 +75,22 @@ class HodlController extends Controller
             $order['pln_value'] = round($order['sell_value'] * $usdPrice, 2);
             $order['pln_diff_value'] = round(($order['sell_value'] * $usdPrice) - ($order['buy_value'] * $usdPrice), 2);
         }
+
+
+        if (isset($params['sort']) && strstr($params['sort'],'price_diff')) {
+            if(!strstr($params['sort'], '-')) {
+                usort($orders, function($a, $b)
+                {
+                    return $a->price_diff < $b->price_diff;
+                });
+            } else {
+                usort($orders, function($a, $b)
+                {
+                    return $b->price_diff < $a->price_diff;
+                });
+            }
+        }
+
         $dataProvider->setModels($orders);
 
         return $this->render('show-processing', [
