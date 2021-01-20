@@ -23,7 +23,6 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php endif; ?>
 
     <?php
-    Pjax::begin(['id' => 'processing_orders_grid']);
     echo GridView::widget([
         'dataProvider' => $dataProvider,
         'tableOptions' => ['class' => 'table table-striped table-bordered'],
@@ -65,7 +64,6 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ],
     ]);
-    Pjax::end();
 
     ?>
 
