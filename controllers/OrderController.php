@@ -72,17 +72,11 @@ class OrderController extends Controller
 
         $orders = (array)$dataProvider->getModels();
         foreach ($orders as $order) {
-            $order['price'] = number_format($order['price'], 8);
-            $order['current_price'] = number_format($this->currentPrices[$order['exchange']][$order['market']], 8);
+            $order['price'] = (float)$order['price'];
+            $order['current_price'] = (float)$this->currentPrices[$order['exchange']][$order['market']];
             $diff = $order['current_price'] - $order['price'];
             $order['price_diff'] = round($diff / $order['price'] * 100, 2);
-            $order['current_value'] = number_format($order['quantity'] * $order['current_price'], 8);
-            if ($order['stop_loss'] > 0) {
-                $order['stop_loss'] = number_format($order['stop_loss'], 8);
-            }
-            if ($order['take_profit'] > 0) {
-                $order['take_profit'] = number_format($order['take_profit'], 8);
-            }
+            $order['current_value'] = $order['quantity'] * $order['current_price'];
         }
         $dataProvider->setModels($orders);
 

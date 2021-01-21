@@ -154,8 +154,8 @@ class BotEngine
                     $order->exchange = $pendingOrder->exchange;
                     $order->market = $pendingOrder->market;
                     $order->quantity = $pendingOrder->quantity;
-                    $order->price = $pendingOrder->price;
-                    $order->value = $pendingOrder->price * $pendingOrder->quantity;
+                    $order->price = $offerPrice;
+                    $order->value = $offerPrice * $pendingOrder->quantity;
                     $order->type = $pendingOrder->type;
                     $order->stop_loss = $pendingOrder->stop_loss;
                     $order->take_profit = $pendingOrder->take_profit;

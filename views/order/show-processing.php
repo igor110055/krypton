@@ -44,13 +44,62 @@ $this->params['breadcrumbs'][] = $this->title;
             'exchange',
             'market',
             'quantity',
-            'price',
-            'current_price',
+            [
+                'attribute' => 'price',
+                'value' => function ($model){
+                    if (strstr($model->market, 'BTC')) {
+                        return number_format($model->price, 8, '.', '');
+                    } else {
+                        return number_format($model->price, 4, '.', '');
+                    }
+                }
+            ],
+            [
+                'attribute' => 'current_price',
+                'value' => function ($model){
+                    if (strstr($model->market, 'BTC')) {
+                        return number_format($model->current_price, 8, '.', '');
+                    } else {
+                        return number_format($model->current_price, 4, '.', '');
+                    }
+                }
+            ],
             'value',
-            'current_value',
+            [
+                'attribute' => 'current_value',
+                'value' => function ($model){
+                    if (strstr($model->market, 'BTC')) {
+                        return number_format($model->current_value, 8, '.', '');
+                    } else {
+                        return number_format($model->current_value, 4, '.', '');
+                    }
+                }
+            ],
             'price_diff',
-            'stop_loss',
-            'take_profit',
+            [
+                'attribute' => 'stop_loss',
+                'value' => function ($model){
+                    if ($model->stop_loss > 0) {
+                        if (strstr($model->market, 'BTC')) {
+                            return number_format($model->stop_loss, 8, '.', '');
+                        } else {
+                            return number_format($model->stop_loss, 4, '.', '');
+                        }
+                    }
+                }
+            ],
+            [
+                'attribute' => 'take_profit',
+                'value' => function ($model){
+                    if ($model->take_profit > 0) {
+                        if (strstr($model->market, 'BTC')) {
+                            return number_format($model->take_profit, 8, '.', '');
+                        } else {
+                            return number_format($model->take_profit, 4, '.', '');
+                        }
+                    }
+                }
+            ],
             'status',
             'crdate',
             [
