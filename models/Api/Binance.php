@@ -97,7 +97,7 @@ class Binance implements ExchangeInterface
         $params['side'] = 'BUY';
         $params['type'] = 'LIMIT';
         $params['quantity'] = $quantity;
-        $params['price'] = $price;
+        $params['price'] = number_format($price, 8);
         $params['timeInForce'] = 'GTC';
 
         \Yii::info($params, 'binance');
