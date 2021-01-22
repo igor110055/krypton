@@ -77,6 +77,7 @@ class OrderController extends Controller
             $diff = $order['current_price'] - $order['price'];
             $order['price_diff'] = round($diff / $order['price'] * 100, 2);
             $order['current_value'] = $order['quantity'] * $order['current_price'];
+            $order['value_diff'] = $order['current_value'] - $order['value'];
         }
         $dataProvider->setModels($orders);
 

@@ -75,7 +75,20 @@ $this->params['breadcrumbs'][] = $this->title;
                     }
                 }
             ],
-            'price_diff',
+            [
+                'attribute' => 'value_diff',
+                'value' => function ($model){
+                    if (strstr($model->market, 'BTC')) {
+                        return number_format($model->value_diff, 8, '.', '');
+                    } else {
+                        return number_format($model->value_diff, 4, '.', '');
+                    }
+                }
+            ],
+            [
+                'attribute' => 'price_diff',
+                'label' => 'Price %'
+            ],
             [
                 'attribute' => 'stop_loss',
                 'value' => function ($model){
