@@ -16,6 +16,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
+        'filterModel' => $searchModel,
+        'filterPosition' => GridView::FILTER_POS_HEADER,
         'tableOptions' => ['class' => 'table table-striped table-bordered'],
         'options' => [
             'class' => 'table-responsive',
@@ -29,31 +31,60 @@ $this->params['breadcrumbs'][] = $this->title;
         },
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
-            'id',
-            'buy_date',
+            [
+                'attribute' => 'id',
+                'filter' => false
+            ],
+            [
+                'attribute' => 'buy_date',
+                'filter' => false
+            ],
             'market',
-            'quantity',
-            'buy_price',
+            [
+                'attribute' => 'quantity',
+                'filter' => false
+            ],
+            [
+                'attribute' => 'buy_price',
+                'filter' => false
+            ],
             [
                 'attribute' => 'sell_price',
-                'label' => 'Current price'
+                'label' => 'Current price',
+                'filter' => false
             ],
-            'buy_value',
+            [
+                'attribute' => 'buy_value',
+                'filter' => false
+            ],
             [
                 'attribute' => 'sell_value',
-                'label' => 'Current value'
+                'label' => 'Current value',
+                'filter' => false
             ],
             [
                 'attribute' => 'val_diff',
                 'value' => function ($model){
                     return round($model->val_diff, 4);
-                }
+                },
+                'filter' => false
             ],
-            'pln_buy_value',
-            'pln_value',
-            'pln_diff_value',
-            'price_diff',
+            [
+                'attribute' => 'pln_buy_value',
+                'filter' => false
+            ],
+            [
+                'attribute' => 'pln_value',
+                'filter' => false
+            ],
+            [
+                'attribute' => 'pln_diff_value',
+                'filter' => false
+            ],
+            [
+                'attribute' => 'price_diff',
+                'filter' => false
+            ],
 //            'comment',
 
             ['class' => 'yii\grid\ActionColumn'],

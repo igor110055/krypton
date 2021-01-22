@@ -95,6 +95,7 @@ class HodlController extends Controller
 
         return $this->render('show-processing', [
             'dataProvider' => $dataProvider,
+            'searchModel' => $searchModel
         ]);
     }
 
