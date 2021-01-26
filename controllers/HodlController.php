@@ -65,16 +65,42 @@ class HodlController extends Controller
         $usdPrice = Currency::getUsdToPlnRate();
 
         $orders = (array)$dataProvider->getModels();
+        $summary = [
+            'quantity' => 0,
+            'buy_value' => 0,
+            'sell_value' => 0,
+            'val_diff' => 0,
+            'pln_buy_value' => 0,
+            'pln_value' => 0,
+            'pln_diff_value' => 0,
+            'avg_price' => 0
+        ];
         foreach ($orders as $order) {
             $order['sell_price'] = $currentPrices['Binance'][$order['market']];
             $diff = $order['sell_price'] - $order['buy_price'];
-            $order['price_diff'] = round($diff / $order['buy_price'] * 100, 2);
+            $order['price_diff'] = $diff / $order['buy_price'] * 100;
             $order['sell_value'] = $order['quantity'] * $order['sell_price'];
             $order['val_diff'] = $order['sell_value'] - $order['buy_value'];
-            $order['pln_buy_value'] = round($order['buy_value'] * $usdPrice, 2);
-            $order['pln_value'] = round($order['sell_value'] * $usdPrice, 2);
-            $order['pln_diff_value'] = round(($order['sell_value'] * $usdPrice) - ($order['buy_value'] * $usdPrice), 2);
+            $order['pln_buy_value'] = $order['buy_value'] * $usdPrice;
+            $order['pln_value'] = $order['sell_value'] * $usdPrice;
+            $order['pln_diff_value'] = ($order['sell_value'] * $usdPrice) - ($order['buy_value'] * $usdPrice);
+
+            if (isset($params['HodlPositionSearch']) && $params['HodlPositionSearch']['market'] != '') {
+                $summary['quantity'] += $order['quantity'];
+            }
+            $summary['buy_value'] += $order['buy_value'];
+            $summary['sell_value'] += $order['sell_value'];
+            $summary['val_diff'] += $order['val_diff'];
+            $summary['pln_buy_value'] += $order['pln_buy_value'];
+            $summary['pln_value'] += $order['pln_value'];
+            $summary['pln_diff_value'] += $order['pln_diff_value'];
         }
+        if (isset($params['HodlPositionSearch']) && $params['HodlPositionSearch']['market'] != '') {
+            $summary['avg_price'] = $summary['buy_value'] / $summary['quantity'];
+        }
+
+        $globalDiff = $summary['sell_value'] - $summary['buy_value'];
+        $summary['global_price_diff'] = $globalDiff / $summary['buy_value'] * 100;
 
 
         if (isset($params['sort']) && strstr($params['sort'],'price_diff')) {
@@ -95,7 +121,8 @@ class HodlController extends Controller
 
         return $this->render('show-processing', [
             'dataProvider' => $dataProvider,
-            'searchModel' => $searchModel
+            'searchModel' => $searchModel,
+            'summary' => $summary
         ]);
     }
 

@@ -64,7 +64,7 @@ class HodlPositionSearch extends HodlPosition
         ]);
 
         $query->andFilterWhere(['like', 'market', $this->market])
-            ->andFilterWhere(['like', 'status', HodlPosition::STATUS_DONE])
+            ->andFilterWhere(['like', 'status', HodlPosition::STATUS_PROCESSING])
             ->andFilterWhere(['like', 'comment', $this->comment]);
 
         return $dataProvider;
