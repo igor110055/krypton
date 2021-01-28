@@ -109,7 +109,7 @@ class BinanceParser extends ExchangeParser
         $binanceSumUSDT = 0;
 
         foreach ($binanceBalance['balances'] as $asset) {
-            if ($asset['free'] + $asset['locked'] > 0 && $asset['asset'] != 'TWT') {
+            if ($asset['free'] + $asset['locked'] > 0 && $asset['asset'] != 'EUR') {
                 if ($asset['asset'] != 'BTC' && $asset['asset'] != 'USDT' && $asset['asset'] != 'BUSD') {
                     $binanceSummary[$asset['asset']]['Currency'] = $asset['asset'];
                     $binanceSummary[$asset['asset']]['Balance'] = $asset['free'] + $asset['locked'];
