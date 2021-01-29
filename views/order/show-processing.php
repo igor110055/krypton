@@ -47,8 +47,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'id',
                 'filter' => false
             ],
-            'exchange',
-            'market',
+            [
+                'attribute' => 'exchange',
+                'filter' => ['binance' => 'Binance', 'bittrex' => 'Bittrex'],
+            ],
+            [
+                'attribute' => 'market',
+                'filter' => ['btc' => 'BTC', 'usdt' => 'USDT'],
+            ],
             [
                 'attribute' => 'quantity',
                 'filter' => false,
