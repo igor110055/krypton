@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\models\Api\Bittrex;
 use app\models\BotEngine;
+use app\models\OrderSearch;
 use Yii;
 use app\models\Order;
 use yii\data\ActiveDataProvider;
@@ -63,14 +64,21 @@ class OrderController extends Controller
 
     public function actionShowProcessing()
     {
-        $query = Order::find()->where(['status' => Order::STATUS_PROCESSED])
-            ->orderBy(['crdate' => SORT_DESC]);
-
-        $dataProvider = new ActiveDataProvider([
-            'query' => $query,
-        ]);
+        $params = Yii::$app->request->queryParams;
+        $searchModel = new OrderSearch();
+        $dataProvider = $searchModel->search($params);
 
         $orders = (array)$dataProvider->getModels();
+
+        $summary = [
+            'value' => 0,
+            'current_value' => 0,
+            'value_diff' => 0,
+            'global_price_diff' => 0,
+            'value_USDT' => 0,
+            'current_value_USDT' => 0,
+            'value_diff_USDT' => 0
+        ];
         foreach ($orders as $order) {
             $order['price'] = (float)$order['price'];
             $order['current_price'] = (float)$this->currentPrices[$order['exchange']][$order['market']];
@@ -78,11 +86,32 @@ class OrderController extends Controller
             $order['price_diff'] = round($diff / $order['price'] * 100, 2);
             $order['current_value'] = $order['quantity'] * $order['current_price'];
             $order['value_diff'] = $order['current_value'] - $order['value'];
+
+            if (isset($params['OrderSearch']) && $params['OrderSearch']['market'] != '') {
+                $summary['value'] += $order['value'];
+                $summary['current_value'] += $order['current_value'];
+//                $summary['value_diff'] += $order['value_diff'];
+            }
         }
         $dataProvider->setModels($orders);
 
+        if (isset($params['OrderSearch']) && $params['OrderSearch']['market'] != '') {
+            $summary['value_diff'] = $summary['current_value'] - $summary['value'];
+            $globalDiff = $summary['current_value'] - $summary['value'];
+            $summary['global_price_diff'] = $globalDiff / $summary['value'] * 100;
+
+            if (strstr($params['OrderSearch']['market'], 'btc')) {
+                $btcPrice = (float)$this->currentPrices['Binance']['BTCUSDT'];
+                $summary['value_USDT'] = $btcPrice * $summary['value'];
+                $summary['current_value_USDT'] = $btcPrice * $summary['current_value'];
+                $summary['value_diff_USDT'] = $btcPrice * $summary['value_diff'];
+            }
+        }
+
         return $this->render('show-processing', [
-            'dataProvider' => $dataProvider
+            'dataProvider' => $dataProvider,
+            'searchModel' => $searchModel,
+            'summary' => $summary
         ]);
     }
 

@@ -60,7 +60,7 @@ class HodlController extends Controller
         $params = Yii::$app->request->queryParams;
 
         $searchModel = new HodlPositionSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider = $searchModel->search($params);
 
         $usdPrice = Currency::getUsdToPlnRate();
 

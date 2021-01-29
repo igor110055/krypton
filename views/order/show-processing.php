@@ -6,6 +6,8 @@ use yii\widgets\Pjax;
 
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
+/* @var $searchModel app\models\OrderSearch */
+/* @var $summary array */
 
 $this->title = 'Processing Orders';
 $this->params['breadcrumbs'][] = $this->title;
@@ -26,6 +28,8 @@ $this->params['breadcrumbs'][] = $this->title;
     echo GridView::widget([
         'dataProvider' => $dataProvider,
         'tableOptions' => ['class' => 'table table-striped table-bordered'],
+        'filterModel' => $searchModel,
+        'filterPosition' => GridView::FILTER_POS_HEADER,
         'options' => [
             'class' => 'table-responsive',
         ],
@@ -36,14 +40,19 @@ $this->params['breadcrumbs'][] = $this->title;
                 return ['class' => 'text-success'];
             }
         },
+        'showFooter' => true,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-            'id',
-//            'uuid',
-//            'type',
+            [
+                'attribute' => 'id',
+                'filter' => false
+            ],
             'exchange',
             'market',
-            'quantity',
+            [
+                'attribute' => 'quantity',
+                'filter' => false,
+            ],
             [
                 'attribute' => 'price',
                 'value' => function ($model){
@@ -52,7 +61,8 @@ $this->params['breadcrumbs'][] = $this->title;
                     } else {
                         return number_format($model->price, 4, '.', '');
                     }
-                }
+                },
+                'filter' => false,
             ],
             [
                 'attribute' => 'current_price',
@@ -62,9 +72,14 @@ $this->params['breadcrumbs'][] = $this->title;
                     } else {
                         return number_format($model->current_price, 4, '.', '');
                     }
-                }
+                },
+                'filter' => false,
             ],
-            'value',
+            [
+                'attribute' => 'value',
+                'filter' => false,
+                'footer' => round($summary['value'], 8)
+            ],
             [
                 'attribute' => 'current_value',
                 'value' => function ($model){
@@ -73,7 +88,8 @@ $this->params['breadcrumbs'][] = $this->title;
                     } else {
                         return number_format($model->current_value, 4, '.', '');
                     }
-                }
+                },
+                'footer' => round($summary['current_value'], 8)
             ],
             [
                 'attribute' => 'value_diff',
@@ -83,11 +99,13 @@ $this->params['breadcrumbs'][] = $this->title;
                     } else {
                         return number_format($model->value_diff, 4, '.', '');
                     }
-                }
+                },
+                'footer' => round($summary['value_diff'], 8)
             ],
             [
                 'attribute' => 'price_diff',
-                'label' => 'Price %'
+                'label' => 'Price %',
+                'footer' => round($summary['global_price_diff'], 2)
             ],
             [
                 'attribute' => 'stop_loss',
@@ -99,7 +117,8 @@ $this->params['breadcrumbs'][] = $this->title;
                             return number_format($model->stop_loss, 4, '.', '');
                         }
                     }
-                }
+                },
+                'filter' => false,
             ],
             [
                 'attribute' => 'take_profit',
@@ -111,7 +130,8 @@ $this->params['breadcrumbs'][] = $this->title;
                             return number_format($model->take_profit, 4, '.', '');
                         }
                     }
-                }
+                },
+                'filter' => false,
             ],
             'status',
             'crdate',
@@ -130,3 +150,17 @@ $this->params['breadcrumbs'][] = $this->title;
     ?>
 
 </div>
+<table>
+    <tr>
+        <td style="width: 100px">Value</td>
+        <td><?php echo round($summary['value_USDT'], 2); ?></td>
+    </tr>
+    <tr>
+        <td>Current value</td>
+        <td><?php echo round($summary['current_value_USDT'], 2); ?></td>
+    </tr>
+    <tr>
+        <td>Diff</td>
+        <td><?php echo round($summary['value_diff_USDT'], 2); ?></td>
+    </tr>
+</table>
