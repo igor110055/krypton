@@ -156,17 +156,19 @@ $this->params['breadcrumbs'][] = $this->title;
     ?>
 
 </div>
-<table>
-    <tr>
-        <td style="width: 100px">Value</td>
-        <td><?php echo round($summary['value_USDT'], 2); ?></td>
-    </tr>
-    <tr>
-        <td>Current value</td>
-        <td><?php echo round($summary['current_value_USDT'], 2); ?></td>
-    </tr>
-    <tr>
-        <td>Diff</td>
-        <td><?php echo round($summary['value_diff_USDT'], 2); ?></td>
-    </tr>
-</table>
+<div style="width: 25%;">
+    <table class="table table-striped table-bordered">
+        <tr>
+            <td style="width: 50%">Value</td>
+            <td><?php echo round($summary['value_USDT'], 2); ?></td>
+        </tr>
+        <tr>
+            <td>Current value</td>
+            <td><?php echo round($summary['current_value_USDT'], 2); ?></td>
+        </tr>
+        <tr>
+            <td>Diff</td>
+            <td><?php echo round($summary['value_diff_USDT'], 2); ?></td>
+        </tr>
+    </table>
+</div>
