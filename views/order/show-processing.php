@@ -43,10 +43,10 @@ $this->params['breadcrumbs'][] = $this->title;
         'showFooter' => true,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-            [
-                'attribute' => 'id',
-                'filter' => false
-            ],
+//            [
+//                'attribute' => 'id',
+//                'filter' => false
+//            ],
             [
                 'attribute' => 'exchange',
                 'filter' => ['binance' => 'Binance', 'bittrex' => 'Bittrex'],
@@ -87,6 +87,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 'footer' => round($summary['value'], 8)
             ],
             [
+                'attribute' => 'value_usdt',
+                'filter' => false,
+                'value' => function ($model) {
+                    return round($model->value_usdt, 4);
+                },
+                'footer' => round($summary['summary_value_usdt'], 4)
+            ],
+            [
                 'attribute' => 'current_value',
                 'value' => function ($model){
                     if (strstr($model->market, 'BTC')) {
@@ -96,6 +104,15 @@ $this->params['breadcrumbs'][] = $this->title;
                     }
                 },
                 'footer' => round($summary['current_value'], 8)
+            ],
+            [
+                'attribute' => 'current_value_usdt',
+                'filter' => false,
+                'label' => 'CV usdt',
+                'value' => function ($model) {
+                    return round($model->current_value_usdt, 4);
+                },
+                'footer' => round($summary['summary_current_value_usdt'], 4)
             ],
             [
                 'attribute' => 'value_diff',
@@ -119,7 +136,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'price_diff',
                 'label' => 'Price %',
-                'footer' => round($summary['global_price_diff'], 2)
+                'footer' => round($summary['global_price_diff'], 2),
             ],
             [
                 'attribute' => 'stop_loss',
@@ -162,20 +179,4 @@ $this->params['breadcrumbs'][] = $this->title;
 
     ?>
 
-</div>
-<div style="width: 25%;">
-    <table class="table table-striped table-bordered">
-        <tr>
-            <td style="width: 50%">Value</td>
-            <td><?php echo round($summary['value_USDT'], 2); ?></td>
-        </tr>
-        <tr>
-            <td>Current value</td>
-            <td><?php echo round($summary['current_value_USDT'], 2); ?></td>
-        </tr>
-        <tr>
-            <td>Diff</td>
-            <td><?php echo round($summary['value_diff_USDT'], 2); ?></td>
-        </tr>
-    </table>
 </div>

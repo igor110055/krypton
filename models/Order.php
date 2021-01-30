@@ -35,10 +35,12 @@ class Order extends \yii\db\ActiveRecord
     public $price_diff = null;
     public $val_diff = null;
     public $current_value = null;
+    public $current_value_usdt = null;
     public $value_diff = null;
     public $value_diff_usdt = null;
     public $quantity_remaining = null;
     public $open_date = null;
+    public $value_usdt = null;
 
     /**
      * {@inheritdoc}

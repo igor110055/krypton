@@ -80,26 +80,38 @@ class OrderController extends Controller
             'current_value_USDT' => 0,
             'value_diff_USDT' => 0,
             'value_diff_usdt' => 0,
+            'summary_value_usdt' => 0,
+            'summary_current_value_usdt' => 0
         ];
         foreach ($orders as $order) {
             $order['price'] = (float)$order['price'];
             $order['current_price'] = (float)$this->currentPrices[$order['exchange']][$order['market']];
             $diff = $order['current_price'] - $order['price'];
+
             $order['price_diff'] = round($diff / $order['price'] * 100, 2);
             $order['current_value'] = $order['quantity'] * $order['current_price'];
             $order['value_diff'] = $order['current_value'] - $order['value'];
             if (strstr($order['market'], 'BTC')) {
                 $order['value_diff_usdt'] = $order['value_diff'] * $btcPrice;
+                $order['value_usdt'] = $order['value'] * $btcPrice;
+                $order['current_value_usdt'] = $order['current_value'] * $btcPrice;
             } else {
                 $order['value_diff_usdt'] = $order['value_diff'];
+                $order['value_usdt'] = $order['value'];
+                $order['current_value_usdt'] = $order['current_value'];
             }
             if (isset($params['OrderSearch']) && $params['OrderSearch']['market'] != '') {
                 $summary['value'] += $order['value'];
                 $summary['current_value'] += $order['current_value'];
             }
+            $summary['summary_value_usdt'] += $order['value_usdt'];
+            $summary['summary_current_value_usdt'] += $order['current_value_usdt'];
             $summary['value_diff_usdt'] += $order['value_diff_usdt'];
         }
         $dataProvider->setModels($orders);
+
+        $globalDiff = $summary['summary_current_value_usdt'] - $summary['summary_value_usdt'];
+        $summary['global_price_diff'] = $globalDiff / $summary['summary_value_usdt'] * 100;
 
         if (isset($params['OrderSearch']) && $params['OrderSearch']['market'] != '') {
             $summary['value_diff'] = $summary['current_value'] - $summary['value'];
