@@ -109,6 +109,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 'footer' => round($summary['value_diff'], 8)
             ],
             [
+                'attribute' => 'value_diff_usdt',
+                'label' => 'Value diff USDT',
+                'value' => function ($model) {
+                    return round($model->value_diff_usdt, 4);
+                },
+                'footer' => round($summary['value_diff_usdt'], 4)
+            ],
+            [
                 'attribute' => 'price_diff',
                 'label' => 'Price %',
                 'footer' => round($summary['global_price_diff'], 2)
@@ -139,7 +147,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
                 'filter' => false,
             ],
-            'status',
             'crdate',
             [
                 'class' => 'yii\grid\ActionColumn',

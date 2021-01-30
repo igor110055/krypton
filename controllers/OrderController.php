@@ -67,6 +67,7 @@ class OrderController extends Controller
         $params = Yii::$app->request->queryParams;
         $searchModel = new OrderSearch();
         $dataProvider = $searchModel->search($params);
+        $btcPrice = (float)$this->currentPrices['Binance']['BTCUSDT'];
 
         $orders = (array)$dataProvider->getModels();
 
@@ -77,7 +78,8 @@ class OrderController extends Controller
             'global_price_diff' => 0,
             'value_USDT' => 0,
             'current_value_USDT' => 0,
-            'value_diff_USDT' => 0
+            'value_diff_USDT' => 0,
+            'value_diff_usdt' => 0,
         ];
         foreach ($orders as $order) {
             $order['price'] = (float)$order['price'];
@@ -86,12 +88,16 @@ class OrderController extends Controller
             $order['price_diff'] = round($diff / $order['price'] * 100, 2);
             $order['current_value'] = $order['quantity'] * $order['current_price'];
             $order['value_diff'] = $order['current_value'] - $order['value'];
-
+            if (strstr($order['market'], 'BTC')) {
+                $order['value_diff_usdt'] = $order['value_diff'] * $btcPrice;
+            } else {
+                $order['value_diff_usdt'] = $order['value_diff'];
+            }
             if (isset($params['OrderSearch']) && $params['OrderSearch']['market'] != '') {
                 $summary['value'] += $order['value'];
                 $summary['current_value'] += $order['current_value'];
-//                $summary['value_diff'] += $order['value_diff'];
             }
+            $summary['value_diff_usdt'] += $order['value_diff_usdt'];
         }
         $dataProvider->setModels($orders);
 
@@ -101,7 +107,7 @@ class OrderController extends Controller
             $summary['global_price_diff'] = $globalDiff / $summary['value'] * 100;
 
             if (strstr($params['OrderSearch']['market'], 'btc')) {
-                $btcPrice = (float)$this->currentPrices['Binance']['BTCUSDT'];
+
                 $summary['value_USDT'] = $btcPrice * $summary['value'];
                 $summary['current_value_USDT'] = $btcPrice * $summary['current_value'];
                 $summary['value_diff_USDT'] = $btcPrice * $summary['value_diff'];
