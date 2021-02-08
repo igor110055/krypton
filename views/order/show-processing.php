@@ -56,6 +56,30 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filter' => ['btc' => 'BTC', 'usdt' => 'USDT'],
             ],
             [
+                'attribute' => 'price_diff',
+                'label' => 'Price %',
+                'footer' => round($summary['global_price_diff'], 2),
+            ],
+            [
+                'attribute' => 'value_diff_usdt',
+                'label' => 'Val diff $',
+                'value' => function ($model) {
+                    return round($model->value_diff_usdt, 4);
+                },
+                'footer' => round($summary['value_diff_usdt'], 4)
+            ],
+            [
+                'attribute' => 'value_diff',
+                'value' => function ($model){
+                    if (strstr($model->market, 'BTC')) {
+                        return number_format($model->value_diff, 8, '.', '');
+                    } else {
+                        return number_format($model->value_diff, 4, '.', '');
+                    }
+                },
+                'footer' => round($summary['value_diff'], 8)
+            ],
+            [
                 'attribute' => 'quantity',
                 'filter' => false,
             ],
@@ -72,6 +96,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'attribute' => 'current_price',
+                'label' => 'Curr Price',
                 'value' => function ($model){
                     if (strstr($model->market, 'BTC')) {
                         return number_format($model->current_price, 8, '.', '');
@@ -83,11 +108,13 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'attribute' => 'value',
+                'label' => 'Val',
                 'filter' => false,
                 'footer' => round($summary['value'], 8)
             ],
             [
                 'attribute' => 'value_usdt',
+                'label' => 'Val USDT',
                 'filter' => false,
                 'value' => function ($model) {
                     return round($model->value_usdt, 4);
@@ -96,6 +123,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'attribute' => 'current_value',
+                'label' => 'Curr Val',
                 'value' => function ($model){
                     if (strstr($model->market, 'BTC')) {
                         return number_format($model->current_value, 8, '.', '');
@@ -113,30 +141,6 @@ $this->params['breadcrumbs'][] = $this->title;
                     return round($model->current_value_usdt, 4);
                 },
                 'footer' => round($summary['summary_current_value_usdt'], 4)
-            ],
-            [
-                'attribute' => 'value_diff',
-                'value' => function ($model){
-                    if (strstr($model->market, 'BTC')) {
-                        return number_format($model->value_diff, 8, '.', '');
-                    } else {
-                        return number_format($model->value_diff, 4, '.', '');
-                    }
-                },
-                'footer' => round($summary['value_diff'], 8)
-            ],
-            [
-                'attribute' => 'value_diff_usdt',
-                'label' => 'Value diff USDT',
-                'value' => function ($model) {
-                    return round($model->value_diff_usdt, 4);
-                },
-                'footer' => round($summary['value_diff_usdt'], 4)
-            ],
-            [
-                'attribute' => 'price_diff',
-                'label' => 'Price %',
-                'footer' => round($summary['global_price_diff'], 2),
             ],
             [
                 'attribute' => 'stop_loss',
