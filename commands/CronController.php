@@ -18,16 +18,19 @@ class CronController extends Controller
 {
     public function actionMinute(): void
     {
-        $configuration = new Configuration();
-        $checkPendingOrders = (int)$configuration->getValue('check_pending_orders');
-        $engine = new BotEngine();
-        $engine->prepareCurrentPrices();
-        $engine->checkAlerts();
-        if ($checkPendingOrders) {
-            $engine->checkPendingOrders();
+        for ($i = 0; $i < 3; $i++) {
+            $configuration = new Configuration();
+            $checkPendingOrders = (int)$configuration->getValue('check_pending_orders');
+            $engine = new BotEngine();
+            $engine->prepareCurrentPrices();
+            $engine->checkAlerts();
+            if ($checkPendingOrders) {
+                $engine->checkPendingOrders();
+            }
+            $engine->checkOpenOrders();
+            $engine->createPendingOrdersForClosedOrders();
+            sleep(15);
         }
-        $engine->checkOpenOrders();
-        $engine->createPendingOrdersForClosedOrders();
     }
 
     public function actionDaily(): void
