@@ -144,16 +144,20 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'attribute' => 'stop_loss',
+                'format' => 'raw',
                 'value' => function ($model){
+                    $val = null;
                     if ($model->stop_loss > 0) {
                         if (strstr($model->market, 'BTC')) {
-                            return number_format($model->stop_loss, 8, '.', '');
+                            $val = number_format($model->stop_loss, 8, '.', '');
                         } else {
-                            return number_format($model->stop_loss, 4, '.', '');
+                            $val = number_format($model->stop_loss, 4, '.', '');
                         }
                     }
+                    return Html::textInput("stop_loss[$model->id]", $val, ['style' => 'width: 100px']);
                 },
                 'filter' => false,
+                'footer' => '<button>Set</button>'
             ],
             [
                 'attribute' => 'take_profit',
