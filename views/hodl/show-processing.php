@@ -110,7 +110,16 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
 //            'comment',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'template' => '{update} {delete}',
+                'buttons' => [
+                    'update' => function($url, $model, $key) {
+                        $url = '/hodl/update?id=' . $model->id;
+                        return Html::a('<span class="glyphicon glyphicon-pencil"></span>', $url);
+                    }
+                ],
+            ],
         ],
     ]); ?>
 </div>

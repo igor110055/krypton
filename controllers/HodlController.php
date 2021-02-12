@@ -8,6 +8,7 @@ use Yii;
 use app\models\HodlPosition;
 use app\models\HodlPositionSearch;
 use yii\data\ActiveDataProvider;
+use yii\data\Sort;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -40,6 +41,7 @@ class HodlController extends Controller
     {
         $searchModel = new HodlPositionSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider->query->andFilterWhere(['like', 'status', HodlPosition::STATUS_DONE]);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -61,6 +63,7 @@ class HodlController extends Controller
 
         $searchModel = new HodlPositionSearch();
         $dataProvider = $searchModel->search($params);
+        $dataProvider->query->andFilterWhere(['like', 'status', HodlPosition::STATUS_PROCESSING]);
 
         $usdPrice = Currency::getUsdToPlnRate();
 
