@@ -40,7 +40,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'price_diff',
             'pln_value',
             'pln_diff_value',
-            //'comment',
+            'comment',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

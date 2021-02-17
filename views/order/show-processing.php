@@ -24,6 +24,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?php endif; ?>
 
+    <?php Pjax::begin(['id' => 'processing-table', 'timeout' => false, 'enablePushState' => false]); ?>
     <?php
     echo GridView::widget([
         'dataProvider' => $dataProvider,
@@ -154,10 +155,11 @@ $this->params['breadcrumbs'][] = $this->title;
                             $val = number_format($model->stop_loss, 4, '.', '');
                         }
                     }
-                    return Html::textInput("stop_loss[$model->id]", $val, ['style' => 'width: 100px']);
+                    $key = (string)$model->uuid;
+                    return Html::textInput("stop_loss[$key]", $val, ['style' => 'width: 100px', 'class' => 'stop-loss-input']);
                 },
                 'filter' => false,
-                'footer' => '<button>Set</button>'
+                'footer' => '<button id="set-stop-loss">Set</button>'
             ],
             [
                 'attribute' => 'take_profit',
@@ -178,7 +180,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'template'=>'{update} {delete} {sell}',
                 'buttons' => [
                     'sell' => function ($url, $model, $key) {
-                        return Html::a('Sell', $url);
+                        return Html::a('Sell', $url, ['data-pjax' => 0]);
                     }
                 ]
             ],
@@ -186,5 +188,28 @@ $this->params['breadcrumbs'][] = $this->title;
     ]);
 
     ?>
-
+    <?php Pjax::end(); ?>
 </div>
+<?php
+
+$script = <<<JS
+$('#processing-table').on('click', '#set-stop-loss', function(e) {
+    // e.preventDefault();
+    let data = $('.stop-loss-input').serialize();
+    $.ajax({
+        url: '/order/update-stop-loss',
+        type: 'POST',
+        dataType: 'json',
+        data: data,
+        success : function(result) {
+            console.log(result);
+        }
+    }).done(function(data) {
+        $.pjax.reload({container:"#processing-table"});
+    });
+ });
+JS;
+
+
+$this->registerJs($script, \yii\web\View::POS_READY);
+?>

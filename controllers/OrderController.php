@@ -5,6 +5,7 @@ namespace app\controllers;
 use app\models\Api\Bittrex;
 use app\models\BotEngine;
 use app\models\OrderSearch;
+use app\models\PendingOrder;
 use Yii;
 use app\models\Order;
 use yii\data\ActiveDataProvider;
@@ -291,5 +292,54 @@ class OrderController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    public function actionUpdateStopLoss()
+    {
+        if(!Yii::$app->request->isAjax) {
+            return false;
+        }
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+        $ids = [];
+        $params = Yii::$app->request->post();
+
+        foreach($params['stop_loss'] as $uuid => $stopLossValue) {
+
+            $order = Order::findOne(['uuid' => $uuid]);
+            if ($order) {
+                $order->stop_loss = $stopLossValue;
+                $order->save();
+            }
+
+            $pendingOrder = PendingOrder::findOne(['uuid' => $uuid, 'condition' => 'COND_LESS']);
+            if ($pendingOrder) {
+                if ($stopLossValue > 0) {
+                    $pendingOrder->price = $stopLossValue;
+                    $pendingOrder->save();
+                } else {
+                    $pendingOrder->delete();
+                }
+                $ids[] = $pendingOrder->id;
+            } elseif ($stopLossValue > 0) {
+                $pendingOrder = new PendingOrder();
+                $pendingOrder->exchange = $order->exchange;
+                $pendingOrder->market = $order->market;
+                $pendingOrder->quantity = $order->quantity;
+                $pendingOrder->price = (float)$stopLossValue;
+                $pendingOrder->value = $stopLossValue * $order->quantity;
+                $pendingOrder->type = 'SELL';
+                $pendingOrder->condition = 'COND_LESS';
+                $pendingOrder->uuid = $order->uuid;
+                $pendingOrder->transaction_type = $order->transaction_type;
+                $pendingOrder->save();
+            }
+        }
+
+        $response = [
+            'result' => 'ok',
+            'affectedIds' => $ids
+        ];
+        return $response;
     }
 }
