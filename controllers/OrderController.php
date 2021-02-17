@@ -262,6 +262,10 @@ class OrderController extends Controller
 
     public function actionSell($id)
     {
+        if(Yii::$app->request->isAjax) {
+            return false;
+        }
+
         $order = $this->findModel($id);
         if (!$order) {
             return false;
