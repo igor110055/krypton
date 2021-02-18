@@ -28,31 +28,57 @@ $this->params['breadcrumbs'][] = $this->title;
             'class' => 'table-responsive',
         ],
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
-            'id',
-            'exchange',
-            'market',
-            'quantity',
-            ['attribute' => 'price',
+            ['class' => 'yii\grid\SerialColumn',
+                'contentOptions'=>[ 'style'=>'width: 60px']
+            ],
+            [
+                'attribute' => 'id',
+                'contentOptions'=>[ 'style'=>'width: 100px'],
+            ],
+            [
+                'attribute' => 'exchange',
+                'contentOptions'=>[ 'style'=>'width: 100px'],
+            ],
+            [
+                'attribute' => 'market',
+                'contentOptions'=>[ 'style'=>'width: 100px'],
+            ],
+            [
+                'attribute' => 'quantity',
+                'contentOptions'=>[ 'style'=>'width: 100px'],
+            ],
+            [
+                'attribute' => 'price',
                 'value' => function($model) {
                     return number_format($model->price, 8);
-            }],
+                    },
+                'contentOptions' => ['style'=>'width: 120px'],
+            ],
             ['attribute' => 'value',
                 'value' => function($model) {
                     return round($model->value,3);
-            }],
-            'condition',
-            'type',
-            ['attribute' => 'stop_loss',
+                }
+            ],
+            [
+                'attribute' => 'condition',
+                'contentOptions'=>[ 'style'=>'width: 120px'],
+            ],
+            [
+                'attribute' => 'type',
+                'contentOptions'=>[ 'style'=>'width: 60px'],
+            ],
+            [
+                'attribute' => 'stop_loss',
                 'value' => function($model) {
                     if ($model->stop_loss > 0) {
                         $val = number_format($model->stop_loss, 8);
                     } else {
                         $val = null;
                     }
-                    return $val;
-                }],
+                        return $val;
+                    },
+                'contentOptions'=>[ 'style'=>'width: 120px'],
+            ],
             ['attribute' => 'take_profit',
                 'value' => function($model) {
                     if ($model->take_profit > 0) {
@@ -61,11 +87,19 @@ $this->params['breadcrumbs'][] = $this->title;
                         $val = null;
                     }
                     return $val;
-                }],
+                },
+                'contentOptions'=>[ 'style'=>'width: 120px'],
+                ],
             'uuid',
-            'transaction_type',
-
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'attribute' => 'transaction_type',
+                'label' => 'Type',
+                'contentOptions'=>[ 'style'=>'width: 120px'],
+            ],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'contentOptions'=> ['style'=>'width: 100px']
+            ],
         ]
     ]); ?>
     <?php Pjax::end(); ?>

@@ -85,9 +85,9 @@ class BotEngine
                     if ($currentMarketPrice <= $pendingOrder->price) {
                         $this->placeOrder($pendingOrder);
                     }
-                    if ($pendingOrder && $pendingOrder->type == 'SELL') {
-                        $this->checkRisingStopLoss($pendingOrder, $currentMarketPrice);
-                    }
+//                    if ($pendingOrder && $pendingOrder->type == 'SELL') {
+//                        $this->checkRisingStopLoss($pendingOrder, $currentMarketPrice);
+//                    }
                     break;
             }
         }

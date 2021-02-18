@@ -208,6 +208,8 @@ $('#processing-table').on('click', '#set-stop-loss', function(e) {
         $.pjax.reload({container:"#processing-table"});
     });
  });
+
+setInterval(function(){ $.pjax.reload({container:"#processing-table"}); }, 10000);
 JS;
 
 
