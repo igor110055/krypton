@@ -209,7 +209,7 @@ $('#processing-table').on('click', '#set-stop-loss', function(e) {
     });
  });
 
-setInterval(function(){ $.pjax.reload({container:"#processing-table"}); }, 10000);
+setInterval(function(){ $.pjax.reload({container:"#processing-table", timeout: 1000}); }, 10000);
 JS;
 
 
