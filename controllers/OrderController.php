@@ -320,6 +320,7 @@ class OrderController extends Controller
             if ($pendingOrder) {
                 if ($stopLossValue > 0) {
                     $pendingOrder->price = $stopLossValue;
+                    $pendingOrder->value = (float)$stopLossValue * $order->quantity;
                     $pendingOrder->save();
                 } else {
                     $pendingOrder->delete();
@@ -331,7 +332,7 @@ class OrderController extends Controller
                 $pendingOrder->market = $order->market;
                 $pendingOrder->quantity = $order->quantity;
                 $pendingOrder->price = (float)$stopLossValue;
-                $pendingOrder->value = $stopLossValue * $order->quantity;
+                $pendingOrder->value = (float)$stopLossValue * $order->quantity;
                 $pendingOrder->type = 'SELL';
                 $pendingOrder->condition = 'COND_LESS';
                 $pendingOrder->uuid = $order->uuid;
