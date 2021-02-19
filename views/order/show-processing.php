@@ -15,6 +15,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="order-show-processing">
 
     <h1><?= Html::encode($this->title) ?></h1>
+    <button id="refresh">REFRESH</button>
 
     <?php if (Yii::$app->session->hasFlash('orderSoldResult')): ?>
 
@@ -70,21 +71,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 'footer' => round($summary['value_diff_usdt'], 4)
             ],
             [
-                'attribute' => 'value_diff',
-                'value' => function ($model){
-                    if (strstr($model->market, 'BTC')) {
-                        return number_format($model->value_diff, 8, '.', '');
-                    } else {
-                        return number_format($model->value_diff, 4, '.', '');
-                    }
-                },
-                'footer' => round($summary['value_diff'], 8)
-            ],
-            [
-                'attribute' => 'quantity',
-                'filter' => false,
-            ],
-            [
                 'attribute' => 'price',
                 'value' => function ($model){
                     if (strstr($model->market, 'BTC')) {
@@ -105,6 +91,21 @@ $this->params['breadcrumbs'][] = $this->title;
                         return number_format($model->current_price, 4, '.', '');
                     }
                 },
+                'filter' => false,
+            ],
+            [
+                'attribute' => 'value_diff',
+                'value' => function ($model){
+                    if (strstr($model->market, 'BTC')) {
+                        return number_format($model->value_diff, 8, '.', '');
+                    } else {
+                        return number_format($model->value_diff, 4, '.', '');
+                    }
+                },
+                'footer' => round($summary['value_diff'], 8)
+            ],
+            [
+                'attribute' => 'quantity',
                 'filter' => false,
             ],
             [
@@ -209,7 +210,10 @@ $('#processing-table').on('click', '#set-stop-loss', function(e) {
     });
  });
 
-setInterval(function(){ $.pjax.reload({container:"#processing-table", timeout: 1000}); }, 10000);
+$('#refresh').on('click', function(e) {
+     $.pjax.reload({container:"#processing-table"});
+});
+
 JS;
 
 
