@@ -145,9 +145,6 @@ class BotEngine
 
                 $result = $api->placeBuyOrder($pendingOrder->market, $pendingOrder->quantity, $offerPrice);
                 if ($result['success'] && $result['orderId']) {
-
-                    $this->sendPlaceOrderMail($pendingOrder);
-
                     $order = new Order();
 
                     $order->uuid = (string)$result['orderId'];
@@ -164,6 +161,7 @@ class BotEngine
 
                     $order->save();
                     $pendingOrder->delete();
+                    $this->sendPlaceOrderMail($pendingOrder);
                 } else {
                     $this->errorMail($pendingOrder, 'Error with pending order: ' . $pendingOrder->id."\n" . $result['msg']);
                 }
@@ -173,7 +171,6 @@ class BotEngine
                 $bestOffer = $actualTicker['bid'];
                 $result = $api->placeSellOrder($pendingOrder->market, $pendingOrder->quantity, $bestOffer);
                 if ($result['success']) {
-                    $this->sendPlaceOrderMail($pendingOrder);
                     $uuid = $pendingOrder->uuid;
                     $pendingOrder->delete();
                     $oppositeOrder = PendingOrder::find()->where(['uuid' => $uuid])->one();
@@ -189,6 +186,7 @@ class BotEngine
                         $order->sell_placed = date('Y-m-d H:i:s');
                         $order->save();
                     }
+                    $this->sendPlaceOrderMail($pendingOrder);
                 } else {
                     $this->errorMail($pendingOrder, 'Error with pending order: ' . $pendingOrder->id."\n" . $result['msg']);
                 }
@@ -335,18 +333,20 @@ class BotEngine
     {
         $value = $pendingOrder->price * $pendingOrder->quantity;
         $value = round($value, 2);
+        $order = Order::findOne(['uuid' => $pendingOrder->uuid]);
 
         $subject = '[' . $pendingOrder->market . '] ' . $pendingOrder->type  . ': price: ' . number_format($pendingOrder->price, 8) . ' | val: ' . $value;
 
         if ($pendingOrder->type == 'SELL') {
-            switch ($pendingOrder->condition) {
-                case 'COND_MORE':
-                    $body = 'Order placed. Earn :)';
-                    break;
-                case 'COND_LESS':
-                    $body = 'Order placed. Loss :(';
-                    break;
+            $result = '';
+            if ($order) {
+                if($pendingOrder->price > $order->price) {
+                    $result = 'Earn:)';
+                } else {
+                    $result = 'Loss:(';
+                }
             }
+            $body = 'Order placed '. $result;
         } else {
             $body = 'Order placed.';
         }
