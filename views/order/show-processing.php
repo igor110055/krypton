@@ -25,7 +25,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?php endif; ?>
 
-    <?php Pjax::begin(['id' => 'processing-table', 'timeout' => false, 'enablePushState' => false]); ?>
+    <?php Pjax::begin(['id' => 'processing-table', 'timeout' => false, 'enablePushState' => true]); ?>
     <?php
     echo GridView::widget([
         'dataProvider' => $dataProvider,
