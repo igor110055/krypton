@@ -44,11 +44,11 @@ $this->params['breadcrumbs'][] = $this->title;
         },
         'showFooter' => true,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-//            [
-//                'attribute' => 'id',
-//                'filter' => false
-//            ],
+//            ['class' => 'yii\grid\SerialColumn'],
+            [
+                'attribute' => 'id',
+                'filter' => false
+            ],
             [
                 'attribute' => 'exchange',
                 'filter' => ['binance' => 'Binance', 'bittrex' => 'Bittrex'],

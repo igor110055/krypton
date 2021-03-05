@@ -43,15 +43,15 @@ $percentDiff = round($plnDiff / $configuration->getValue('pln_deposit') * 100, 2
     <div style="width: 45%; margin-left:5%">
         <table class="table table-striped table-bordered">
             <tr>
-                <th>Sum of deposits</th>
+                <th>PLN deposit</th>
                 <td><?php echo $configuration->getValue('pln_deposit') ?></td>
             </tr>
             <tr>
-                <th>Diff</th>
+                <th>PLN profit</th>
                 <td><?php echo round($plnDiff, 2) ?></td>
             </tr>
             <tr>
-                <th>%</th>
+                <th>% profit</th>
                 <td><?php echo $percentDiff ?></td>
             </tr>
         </table>

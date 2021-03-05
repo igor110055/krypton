@@ -33,6 +33,13 @@ class CronController extends Controller
         }
     }
 
+    public function actionCheckBalances()
+    {
+        $engine = new BotEngine();
+        $engine->prepareCurrentPrices();
+        $engine->checkBalancesForOrders();
+    }
+
     public function actionDaily(): void
     {
         $portfolioEngine = new PortfolioEngine();

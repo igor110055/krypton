@@ -3,12 +3,13 @@ namespace app\models;
 
 use app\interfaces\ExchangeInterface;
 use app\models\Api\Binance;
+use app\models\PendingOrder;
 use app\utils\BittrexParser;
 use Yii;
 use app\models\Alert;
 use app\models\Api\Bittrex;
-use app\models\PendingOrder;
 use app\models\Order;
+use yii\helpers\ArrayHelper;
 
 class BotEngine
 {
@@ -424,5 +425,54 @@ class BotEngine
         $summary['Bittrex'] = $this->Bittrex->getBalanceSummary();
 
         return $summary;
+    }
+
+    public function checkBalancesForOrders(): void
+    {
+        $orders = Order::findAll(['status' => Order::STATUS_PROCESSED]);
+        $balance = $this->Binance->getAccountInfo();
+        $balanceIndexed = ArrayHelper::index($balance['balances'], 'asset');
+
+        $group = [];
+        foreach ($orders as $order) {
+            $asset = str_replace('BTC', '', $order->market);
+            $asset = str_replace('USDT', '', $asset);
+            if (!isset($group[$asset])) {
+                $group[$asset] = $order->quantity;
+            } else {
+                $group[$asset] += $order->quantity;
+            }
+        }
+        foreach ($group as $groupedAsset => $qty) {
+            if(isset($balanceIndexed[$groupedAsset]['free'])) {
+                $diff = $balanceIndexed[$groupedAsset]['free'] - $qty;
+                if ($diff < 0) {
+                    $diffRounded = floor($diff * 100) / 100;
+                    $order = Order::find()->where(['status' => Order::STATUS_PROCESSED])
+                        ->andWhere(['like', 'market', $groupedAsset])
+                        ->orderBy('crdate DESC')
+                        ->one();
+                    $params = [$order->id, $order->market, $order->quantity];
+                    \Yii::info('QTY change', 'binance');
+                    \Yii::info($params, 'binance');
+
+                    $newOrderQty = $order->quantity + $diffRounded;
+                    $order->quantity = $newOrderQty;
+                    $order->value = $newOrderQty * $order->price;
+                    $order->save();
+                    $paramsNew = [$order->id, $order->market, $order->quantity];
+                    \Yii::info($paramsNew, 'binance');
+
+                    $pendingOrders = PendingOrder::findAll(['uuid' => $order->uuid]);
+                    foreach ($pendingOrders as $pendingOrder) {
+                        $pendingOrder->quantity = $newOrderQty;
+                        $pendingOrder->value = $newOrderQty * $pendingOrder->price;
+                        $pendingOrder->save();
+                        $paramsPending = [$pendingOrder->id, $pendingOrder->market, $pendingOrder->quantity];
+                        \Yii::info($paramsPending, 'binance');
+                    }
+                }
+            }
+        }
     }
 }
