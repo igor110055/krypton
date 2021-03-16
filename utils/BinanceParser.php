@@ -159,4 +159,18 @@ class BinanceParser extends ExchangeParser
             'sumUSDT' => $binanceSumUSDT
         ];
     }
+
+    public static function getStepPosition(array $exchangeInfo, string $market): int
+    {
+        $step = 0;
+        foreach ($exchangeInfo['symbols'] as $symbol) {
+            if ($symbol['symbol'] == $market) {
+                $step = strpos($symbol['filters'][2]['stepSize'], '1', 0);
+                if ($step > 1) {
+                    $step -= 1;
+                }
+            }
+        }
+        return $step;
+    }
 }

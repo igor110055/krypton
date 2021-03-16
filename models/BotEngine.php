@@ -4,6 +4,7 @@ namespace app\models;
 use app\interfaces\ExchangeInterface;
 use app\models\Api\Binance;
 use app\models\PendingOrder;
+use app\utils\BinanceParser;
 use app\utils\BittrexParser;
 use Yii;
 use app\models\Alert;
@@ -272,8 +273,6 @@ class BotEngine
             'status' => Order::STATUS_CLOSED
         ]);
 
-        //sprawdzenie ile faktycznie weszło
-
         foreach ($orders as $order) {
 
             if ($order->take_profit) {
@@ -432,6 +431,7 @@ class BotEngine
         $orders = Order::findAll(['status' => Order::STATUS_PROCESSED]);
         $balance = $this->Binance->getAccountInfo();
         $balanceIndexed = ArrayHelper::index($balance['balances'], 'asset');
+        $exchangeInfo = $this->Binance->getExchangeInfo();
 
         $group = [];
         foreach ($orders as $order) {
@@ -444,34 +444,44 @@ class BotEngine
             }
         }
         foreach ($group as $groupedAsset => $qty) {
-            if(isset($balanceIndexed[$groupedAsset]['free'])) {
-                $diff = $balanceIndexed[$groupedAsset]['free'] - $qty;
-                if ($diff < 0) {
-                    $diffRounded = floor($diff * 100) / 100;
-                    $order = Order::find()->where(['status' => Order::STATUS_PROCESSED])
-                        ->andWhere(['like', 'market', $groupedAsset])
-                        ->orderBy('crdate DESC')
-                        ->one();
-                    $params = [$order->id, $order->market, $order->quantity];
-                    \Yii::info('QTY change', 'binance');
-                    \Yii::info($params, 'binance');
+            if (!isset($balanceIndexed[$groupedAsset]['free'])) {
+                continue;
+            }
 
-                    $newOrderQty = $order->quantity + $diffRounded;
-                    $order->quantity = $newOrderQty;
-                    $order->value = $newOrderQty * $order->price;
-                    $order->save();
-                    $paramsNew = [$order->id, $order->market, $order->quantity];
-                    \Yii::info($paramsNew, 'binance');
+            $diff = $balanceIndexed[$groupedAsset]['free'] - $qty;
+            if ($diff >= 0) {
+                continue;
+            }
 
-                    $pendingOrders = PendingOrder::findAll(['uuid' => $order->uuid]);
-                    foreach ($pendingOrders as $pendingOrder) {
-                        $pendingOrder->quantity = $newOrderQty;
-                        $pendingOrder->value = $newOrderQty * $pendingOrder->price;
-                        $pendingOrder->save();
-                        $paramsPending = [$pendingOrder->id, $pendingOrder->market, $pendingOrder->quantity];
-                        \Yii::info($paramsPending, 'binance');
-                    }
-                }
+            $order = Order::find()->where(['status' => Order::STATUS_PROCESSED])
+                ->andWhere(['like', 'market', $groupedAsset])
+                ->orderBy('crdate DESC')
+                ->one();
+
+            $params = [$order->id, $order->market, $order->quantity];
+            \Yii::info('QTY change', 'binance');
+            \Yii::info($params, 'binance');
+
+            $round = BinanceParser::getStepPosition($exchangeInfo, $order->market);
+            $diffRounded = floor($diff * pow(10, $round)) / pow(10, $round);
+            $newOrderQty = $order->quantity + $diffRounded;
+
+            $order->quantity = $newOrderQty;
+            $order->value = $newOrderQty * $order->price;
+            $order->save();
+
+            $paramsNew = [$order->id, $order->market, $order->quantity];
+            \Yii::info($paramsNew, 'binance');
+
+            $pendingOrders = PendingOrder::findAll(['uuid' => $order->uuid]);
+            foreach ($pendingOrders as $pendingOrder) {
+
+                $pendingOrder->quantity = $newOrderQty;
+                $pendingOrder->value = $newOrderQty * $pendingOrder->price;
+                $pendingOrder->save();
+
+                $paramsPending = [$pendingOrder->id, $pendingOrder->market, $pendingOrder->quantity];
+                \Yii::info($paramsPending, 'binance');
             }
         }
     }

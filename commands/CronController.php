@@ -27,6 +27,7 @@ class CronController extends Controller
             if ($checkPendingOrders) {
                 $engine->checkPendingOrders();
             }
+            sleep(1);
             $engine->checkOpenOrders();
             $engine->createPendingOrdersForClosedOrders();
             sleep(15);
