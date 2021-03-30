@@ -2,13 +2,12 @@
 
 namespace app\controllers;
 
+use app\models\Api\CoinGecko;
 use app\models\BotEngine;
 use app\utils\Currency;
 use Yii;
 use app\models\HodlPosition;
 use app\models\HodlPositionSearch;
-use yii\data\ActiveDataProvider;
-use yii\data\Sort;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -79,7 +78,14 @@ class HodlController extends Controller
             'avg_price' => 0
         ];
         foreach ($orders as $order) {
-            $order['sell_price'] = $currentPrices['Binance'][$order['market']];
+
+            if (isset($currentPrices['Binance'][$order['market']])) {
+                $currentPrice = $currentPrices['Binance'][$order['market']];
+            } else {
+                $currentPrice = $this->getPriceFromCoinGecko($order['market']);
+            }
+
+            $order['sell_price'] = $currentPrice;
             $diff = $order['sell_price'] - $order['buy_price'];
             $order['price_diff'] = $diff / $order['buy_price'] * 100;
             $order['sell_value'] = $order['quantity'] * $order['sell_price'];
@@ -209,5 +215,19 @@ class HodlController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    //todo move this to external service
+    private function getPriceFromCoinGecko($market)
+    {
+        $price = 0;
+        $client = new CoinGecko();
+        if ($market == 'YLDUSDT') {
+            $ids = ['yield-app'];
+            $result = $client->getTokenPrices($ids);
+            $price = $result['yield-app']['usd'];
+        }
+
+        return $price;
     }
 }

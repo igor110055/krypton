@@ -11,11 +11,6 @@ use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
 use app\models\Api\Bittrex;
-use app\models\Api\Binance;
-use app\models\BotEngine;
-use app\models\Predictor\DataHandler;
-use app\models\Predictor\Indicator;
-use app\models\Predictor\Predictor;
 
 class SiteController extends Controller
 {
@@ -77,20 +72,8 @@ class SiteController extends Controller
             $dataset['values'][] = $row['pln_diff'];
         }
 
-//        var_dump($dataset);exit;
         $result = '';
-//        $bot = new BotEngine();
 
-//        $result = $bot->getExchangeClient('Binance')->getPrices();
-//        $bot->prepareActualPrices();
-//        $result = $bot->getMarketLastBids();
-//        $client = new Binance();
-//        $result = $client->getAllOrders('BTCUSDT');
-//        $result = $client->getMyTrades('BTCUSDT');
-//        $result = $client->checkOrder('ETHUSDT', '2009924003');
-//        $result = $client->getAccountInfo();
-//        $result = $client->placeBuyOrder('RENUSDT', 117.4, 0.34859);
-//        $result = $client->getOpenOrders();
         return $this->render('index', [
             'result' => $result,
             'dataset' => $dataset

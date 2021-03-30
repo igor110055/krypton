@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use app\models\Api\CoinGecko;
 use Yii;
 
 /**
@@ -85,10 +86,31 @@ class HodlPosition extends \yii\db\ActiveRecord
                 continue;
             }
             $asset = str_replace('USDT', '', $position->market);
-            $value = $position->quantity * $currentPrices['Binance'][$asset . 'BTC'];
+
+            if (isset($currentPrices['Binance'][$asset . 'BTC'])) {
+                $currentPrice = $currentPrices['Binance'][$asset . 'BTC'];
+            } else {
+                $currentPrice = self::getPriceFromCoinGecko($asset);
+            }
+
+            $value = $position->quantity * $currentPrice;
             $hodlBTCvalueSum += $value;
         }
 
         return $hodlBTCvalueSum;
+    }
+
+    //todo move this to external service
+    private static function getPriceFromCoinGecko($asset)
+    {
+        $price = 0;
+        $client = new CoinGecko();
+        if ($asset == 'YLD') {
+            $ids = ['yield-app'];
+            $result = $client->getTokenPrices($ids, 'btc');
+            $price = $result['yield-app']['btc'];
+        }
+
+        return $price;
     }
 }
