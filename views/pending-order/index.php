@@ -50,7 +50,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'price',
                 'value' => function($model) {
-                    return number_format($model->price, 8);
+                    return number_format($model->price, 8, '.', false);
                     },
                 'contentOptions' => ['style'=>'width: 120px'],
             ],
