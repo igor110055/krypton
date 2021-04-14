@@ -28,13 +28,15 @@ $plnDiff = $plnValue -  $configuration->getValue('pln_deposit');
 $percentDiff = round($plnDiff / $configuration->getValue('pln_deposit') * 100, 2);
 
 $summaryUsd = $usdValue + $usdtStaked;
-$summaryValue = $summaryUsd * $plnPrice;
+$summaryPlnValue = $summaryUsd * $plnPrice;
 
+$summaryPlnDiff = $summaryPlnValue -  $configuration->getValue('pln_deposit');
+$summaryPercentProfit = round($summaryPlnDiff / $configuration->getValue('pln_deposit') * 100, 2);
 
 ?>
 <h1>Summary</h1>
 <div style="display: flex">
-    <div style="width: 45%; margin-right:5%">
+    <div style="width: 45%; margin-right:5%; min-height: 350px">
         <table class="table table-striped table-bordered">
             <tr>
                 <th style="width: 50%">BTC value</th>
@@ -50,15 +52,14 @@ $summaryValue = $summaryUsd * $plnPrice;
             </tr>
         </table>
         <br />
-        <br />
         <table class="table table-striped table-bordered">
             <tr>
-                <th style="width: 50%">USD summary</th>
-                <td><?php echo round($summaryUsd,2) ?></td>
+                <th style="width: 50%">USDT staked</th>
+                <td><?php echo round($usdtStaked, 2) ?></td>
             </tr>
             <tr>
-                <th>PLN summary</th>
-                <td><?php echo round($summaryValue,2) ?></td>
+                <th>PLN staked</th>
+                <td><?php echo round($plnStaked, 2) ?></td>
             </tr>
         </table>
     </div>
@@ -78,15 +79,25 @@ $summaryValue = $summaryUsd * $plnPrice;
             </tr>
         </table>
         <br />
+        <table class="table table-striped table-bordered">
+            <tr>
+                <th style="width: 50%">USD summary</th>
+                <td><?php echo round($summaryUsd,2) ?></td>
+            </tr>
+            <tr>
+                <th>PLN summary</th>
+                <td><?php echo round($summaryPlnValue,2) ?></td>
+            </tr>
+        </table>
         <br />
         <table class="table table-striped table-bordered">
             <tr>
-                <th style="width: 50%">USDT staked</th>
-                <td><?php echo round($usdtStaked, 2) ?></td>
+                <th style="width: 50%">PLN summary profit</th>
+                <td><?php echo round($summaryPlnDiff,2) ?></td>
             </tr>
             <tr>
-                <th>PLN staked</th>
-                <td><?php echo round($plnStaked, 2) ?></td>
+                <th>PLN summary %</th>
+                <td><?php echo round($summaryPercentProfit,2) ?></td>
             </tr>
         </table>
     </div>
