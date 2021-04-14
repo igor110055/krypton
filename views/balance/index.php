@@ -73,7 +73,7 @@ $summaryPercentProfit = round($summaryPlnDiff / $configuration->getValue('pln_de
     <div style="width: 45%; margin-left:5%">
         <table class="table table-striped table-bordered">
             <tr>
-                <th>PLN profit</th>
+                <th style="width: 50%">PLN profit</th>
                 <td><?php echo round($plnDiff, 2) ?></td>
             </tr>
             <tr>
