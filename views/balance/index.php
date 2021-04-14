@@ -39,6 +39,13 @@ $summaryPercentProfit = round($summaryPlnDiff / $configuration->getValue('pln_de
     <div style="width: 45%; margin-right:5%; min-height: 350px">
         <table class="table table-striped table-bordered">
             <tr>
+                <th style="width: 50%">PLN deposit</th>
+                <td><?php echo $configuration->getValue('pln_deposit') ?></td>
+            </tr>
+        </table>
+        <br />
+        <table class="table table-striped table-bordered">
+            <tr>
                 <th style="width: 50%">BTC value</th>
                 <td><?php echo round($btcSumValue, 8) ?></td>
             </tr>
@@ -65,10 +72,6 @@ $summaryPercentProfit = round($summaryPlnDiff / $configuration->getValue('pln_de
     </div>
     <div style="width: 45%; margin-left:5%">
         <table class="table table-striped table-bordered">
-            <tr>
-                <th style="width: 50%">PLN deposit</th>
-                <td><?php echo $configuration->getValue('pln_deposit') ?></td>
-            </tr>
             <tr>
                 <th>PLN profit</th>
                 <td><?php echo round($plnDiff, 2) ?></td>
