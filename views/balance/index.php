@@ -16,18 +16,28 @@ use yii\grid\GridView;
 /* @var $configuration Configuration */
 /* @var $hodlBTCvalueSum float */
 
+$this->title = "Balance";
+
+$usdtStaked = $configuration->getValue('usdt_staked');
+$plnStaked = $usdtStaked * $plnPrice;
+
 $btcSumValue = $binanceSumValue + $bittrexSumValue + $hodlBTCvalueSum;
 $usdValue = $btcSumValue * $btcPrice['Last'];
 $plnValue = $usdValue * $plnPrice;
 $plnDiff = $plnValue -  $configuration->getValue('pln_deposit');
 $percentDiff = round($plnDiff / $configuration->getValue('pln_deposit') * 100, 2);
+
+$summaryUsd = $usdValue + $usdtStaked;
+$summaryValue = $summaryUsd * $plnPrice;
+
+
 ?>
 <h1>Summary</h1>
 <div style="display: flex">
     <div style="width: 45%; margin-right:5%">
         <table class="table table-striped table-bordered">
             <tr>
-                <th>BTC value</th>
+                <th style="width: 50%">BTC value</th>
                 <td><?php echo round($btcSumValue, 8) ?></td>
             </tr>
             <tr>
@@ -39,11 +49,23 @@ $percentDiff = round($plnDiff / $configuration->getValue('pln_deposit') * 100, 2
                 <td><?php echo round($plnValue,2) ?></td>
             </tr>
         </table>
+        <br />
+        <br />
+        <table class="table table-striped table-bordered">
+            <tr>
+                <th style="width: 50%">USD summary</th>
+                <td><?php echo round($summaryUsd,2) ?></td>
+            </tr>
+            <tr>
+                <th>PLN summary</th>
+                <td><?php echo round($summaryValue,2) ?></td>
+            </tr>
+        </table>
     </div>
     <div style="width: 45%; margin-left:5%">
         <table class="table table-striped table-bordered">
             <tr>
-                <th>PLN deposit</th>
+                <th style="width: 50%">PLN deposit</th>
                 <td><?php echo $configuration->getValue('pln_deposit') ?></td>
             </tr>
             <tr>
@@ -53,6 +75,18 @@ $percentDiff = round($plnDiff / $configuration->getValue('pln_deposit') * 100, 2
             <tr>
                 <th>% profit</th>
                 <td><?php echo $percentDiff ?></td>
+            </tr>
+        </table>
+        <br />
+        <br />
+        <table class="table table-striped table-bordered">
+            <tr>
+                <th style="width: 50%">USDT staked</th>
+                <td><?php echo round($usdtStaked, 2) ?></td>
+            </tr>
+            <tr>
+                <th>PLN staked</th>
+                <td><?php echo round($plnStaked, 2) ?></td>
             </tr>
         </table>
     </div>
