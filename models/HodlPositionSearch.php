@@ -41,6 +41,9 @@ class HodlPositionSearch extends HodlPosition
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination' => [
+                'pageSize' => 50,
+            ],
         ]);
 
         if (!($this->load($params) && $this->validate())) {
