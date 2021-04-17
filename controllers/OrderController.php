@@ -238,7 +238,7 @@ class OrderController extends Controller
         }
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['index']);
+            return $this->redirect(['show-processing']);
         }
 
         return $this->render('update', [

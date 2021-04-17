@@ -108,7 +108,9 @@ class HodlPosition extends \yii\db\ActiveRecord
         if ($asset == 'YLD') {
             $ids = ['yield-app'];
             $result = $client->getTokenPrices($ids, 'btc');
-            $price = $result['yield-app']['btc'];
+            if ($result) {
+                $price = $result['yield-app']['btc'];
+            }
         }
 
         return $price;

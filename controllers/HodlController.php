@@ -225,7 +225,9 @@ class HodlController extends Controller
         if ($market == 'YLDUSDT') {
             $ids = ['yield-app'];
             $result = $client->getTokenPrices($ids);
-            $price = $result['yield-app']['usd'];
+            if ($result) {
+                $price = $result['yield-app']['usd'];
+            }
         }
 
         return $price;

@@ -42,8 +42,11 @@ class CoinGecko
 
         $response = $this->curl->get($url);
 
-        return \json_decode($response, true);
-
+        if ($response) {
+            return \json_decode($response, true);
+        } else {
+            return [];
+        }
     }
 
     private function getApiUrl()
