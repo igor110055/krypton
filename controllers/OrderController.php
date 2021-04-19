@@ -92,7 +92,7 @@ class OrderController extends Controller
             $order['price_diff'] = round($diff / $order['price'] * 100, 2);
             $order['current_value'] = $order['quantity'] * $order['current_price'];
             $order['value_diff'] = $order['current_value'] - $order['value'];
-            if (strstr($order['market'], 'BTC')) {
+            if (strstr($order['market'], 'BTC') && !strstr($order['market'], 'USDT')) {
                 $order['value_diff_usdt'] = $order['value_diff'] * $btcPrice;
                 $order['value_usdt'] = $order['value'] * $btcPrice;
                 $order['current_value_usdt'] = $order['current_value'] * $btcPrice;
