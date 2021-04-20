@@ -91,6 +91,7 @@ class OrderController extends Controller
 
             if ($params['OrderSearch']['market'] == 'btc' && $order['market'] == 'BTCUSDT') {
                 unset($orders[$key]);
+                $dataProvider->setTotalCount($dataProvider->getTotalCount() - 1);
                 continue;
             }
 
