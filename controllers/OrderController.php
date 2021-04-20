@@ -89,7 +89,7 @@ class OrderController extends Controller
 
         foreach ($orders as $key => $order) {
 
-            if ($params['OrderSearch']['market'] == 'btc' && $order['market'] == 'BTCUSDT') {
+            if ($params && $params['OrderSearch']['market'] == 'btc' && $order['market'] == 'BTCUSDT') {
                 unset($orders[$key]);
                 $dataProvider->setTotalCount($dataProvider->getTotalCount() - 1);
                 continue;
