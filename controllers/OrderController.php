@@ -72,6 +72,7 @@ class OrderController extends Controller
 
         $orders = (array)$dataProvider->getModels();
 
+
         $summary = [
             'value' => 0,
             'current_value' => 0,
@@ -84,7 +85,15 @@ class OrderController extends Controller
             'summary_value_usdt' => 0,
             'summary_current_value_usdt' => 0
         ];
-        foreach ($orders as $order) {
+
+
+        foreach ($orders as $key => $order) {
+
+            if ($params['OrderSearch']['market'] == 'btc' && $order['market'] == 'BTCUSDT') {
+                unset($orders[$key]);
+                continue;
+            }
+
             $order['price'] = (float)$order['price'];
             $order['current_price'] = (float)$this->currentPrices[$order['exchange']][$order['market']];
             $diff = $order['current_price'] - $order['price'];
