@@ -85,10 +85,10 @@ $('#pendingorder-market').change(function (data) {
           '</table>';
         $('#actualPrice').html(html);
         $('#pendingorder-price').val(parseFloat(data.Bid).toFixed(8));
-        $('#pendingorder-value').val(0.01);
+        $('#pendingorder-value').val(0.02);
         calcQty();
-        var stop_loss = data.Bid - (data.Bid * 0.02);
-        var take_profit = data.Bid + (data.Bid * 0.02);
+        var stop_loss = parseFloat(data.Bid) - parseFloat(data.Bid * 0.2);
+        var take_profit = parseFloat(data.Bid) + parseFloat(data.Bid * 0.12);
         $('#pendingorder-stop_loss').val(parseFloat(stop_loss).toFixed(8));
         $('#pendingorder-take_profit').val(parseFloat(take_profit).toFixed(8));
     });

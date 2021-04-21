@@ -164,16 +164,21 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'attribute' => 'take_profit',
+                'format' => 'raw',
                 'value' => function ($model){
+                    $val = null;
                     if ($model->take_profit > 0) {
                         if (strstr($model->market, 'BTC')) {
-                            return number_format($model->take_profit, 8, '.', '');
+                            $val = number_format($model->take_profit, 8, '.', '');
                         } else {
-                            return number_format($model->take_profit, 4, '.', '');
+                            $val = number_format($model->take_profit, 4, '.', '');
                         }
                     }
+                    $key = (string)$model->uuid;
+                    return Html::textInput("take_profit[$key]", $val, ['style' => 'width: 100px', 'class' => 'take-profit-input']);
                 },
                 'filter' => false,
+                'footer' => '<button id="set-take-profit">Set</button>'
             ],
             'crdate',
             [
@@ -199,6 +204,22 @@ $('#processing-table').on('click', '#set-stop-loss', function(e) {
     let data = $('.stop-loss-input').serialize();
     $.ajax({
         url: '/order/update-stop-loss',
+        type: 'POST',
+        dataType: 'json',
+        data: data,
+        success : function(result) {
+            console.log(result);
+        }
+    }).done(function(data) {
+        $.pjax.reload({container:"#processing-table"});
+    });
+ });
+
+$('#processing-table').on('click', '#set-take-profit', function(e) {
+    // e.preventDefault();
+    let data = $('.take-profit-input').serialize();
+    $.ajax({
+        url: '/order/update-take-profit',
         type: 'POST',
         dataType: 'json',
         data: data,

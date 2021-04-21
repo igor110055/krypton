@@ -357,4 +357,54 @@ class OrderController extends Controller
         ];
         return $response;
     }
+
+    public function actionUpdateTakeProfit()
+    {
+        if(!Yii::$app->request->isAjax) {
+            return false;
+        }
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+        $ids = [];
+        $params = Yii::$app->request->post();
+
+        foreach($params['take_profit'] as $uuid => $value) {
+
+            $order = Order::findOne(['uuid' => $uuid]);
+            if ($order) {
+                $order->take_profit = $value;
+                $order->save();
+            }
+
+            $pendingOrder = PendingOrder::findOne(['uuid' => $uuid, 'condition' => 'COND_MORE']);
+            if ($pendingOrder) {
+                if ($value > 0) {
+                    $pendingOrder->price = $value;
+                    $pendingOrder->value = (float)$value * $order->quantity;
+                    $pendingOrder->save();
+                } else {
+                    $pendingOrder->delete();
+                }
+                $ids[] = $pendingOrder->id;
+            } elseif ($value > 0) {
+                $pendingOrder = new PendingOrder();
+                $pendingOrder->exchange = $order->exchange;
+                $pendingOrder->market = $order->market;
+                $pendingOrder->quantity = $order->quantity;
+                $pendingOrder->price = (float)$value;
+                $pendingOrder->value = (float)$value * $order->quantity;
+                $pendingOrder->type = 'SELL';
+                $pendingOrder->condition = 'COND_MORE';
+                $pendingOrder->uuid = $order->uuid;
+                $pendingOrder->transaction_type = $order->transaction_type;
+                $pendingOrder->save();
+            }
+        }
+
+        $response = [
+            'result' => 'ok',
+            'affectedIds' => $ids
+        ];
+        return $response;
+    }
 }
