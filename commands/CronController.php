@@ -27,11 +27,17 @@ class CronController extends Controller
             if ($checkPendingOrders) {
                 $engine->checkPendingOrders();
             }
-            sleep(1);
+            sleep(3);
             $engine->checkOpenOrders();
             $engine->createPendingOrdersForClosedOrders();
             sleep(15);
         }
+    }
+
+    public function actionCheckOpenOrders2()
+    {
+        $engine = new BotEngine();
+        $engine->checkOpenOrders2();
     }
 
     public function actionCheckBalances()

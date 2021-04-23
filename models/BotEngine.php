@@ -231,6 +231,13 @@ class BotEngine
         return $return;
     }
 
+    public function checkOpenOrders2()
+    {
+        $binanceOpenOrders = $this->getExchangeClient('Binance')->getOpenOrders();
+        var_dump($binanceOpenOrders);
+        exit;
+    }
+
     public function checkOpenOrders()
     {
         $orders = Order::findAll([
@@ -458,19 +465,20 @@ class BotEngine
                 ->orderBy('crdate DESC')
                 ->one();
 
-            $params = [$order->id, $order->market, $order->quantity];
+            $params = [$order->id, $order->market, $order->price, $order->quantity];
             \Yii::info('QTY change', 'binance');
             \Yii::info($params, 'binance');
 
             $round = BinanceParser::getStepPosition($exchangeInfo, $order->market);
             $diffRounded = floor($diff * pow(10, $round)) / pow(10, $round);
             $newOrderQty = $order->quantity + $diffRounded;
+            \Yii::info([$round, $diffRounded, $newOrderQty], 'binance');
 
             $order->quantity = $newOrderQty;
             $order->value = $newOrderQty * $order->price;
             $order->save();
 
-            $paramsNew = [$order->id, $order->market, $order->quantity];
+            $paramsNew = [$order->id, $order->market, $order->quantity, $order->price];
             \Yii::info($paramsNew, 'binance');
 
             $pendingOrders = PendingOrder::findAll(['uuid' => $order->uuid]);
