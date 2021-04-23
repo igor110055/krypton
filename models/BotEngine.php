@@ -465,7 +465,7 @@ class BotEngine
                 ->orderBy('crdate DESC')
                 ->one();
 
-            $params = [$order->id, $order->market, $order->price, $order->quantity];
+            $params = [$order->id, $order->market, $order->price, $order->quantity, $balanceIndexed[$groupedAsset]['free']];
             \Yii::info('QTY change', 'binance');
             \Yii::info($params, 'binance');
 
