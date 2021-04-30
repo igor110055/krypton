@@ -455,6 +455,10 @@ class BotEngine
                 continue;
             }
 
+            if ($balanceIndexed[$groupedAsset]['free'] == 0) {
+                continue;
+            }
+
             $diff = $balanceIndexed[$groupedAsset]['free'] - $qty;
             if ($diff >= 0) {
                 continue;
