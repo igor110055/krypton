@@ -20,6 +20,7 @@ use Yii;
  * @property double $btc_value
  * @property double $usdt_value
  * @property double $pln_value
+ * @property double $staked
  */
 class PortfolioTicker extends \yii\db\ActiveRecord
 {
@@ -38,7 +39,7 @@ class PortfolioTicker extends \yii\db\ActiveRecord
     {
         return [
             [['created_at'], 'safe'],
-            [['hodl_btc_value', 'exchange_btc_value', 'hodl_percent', 'btc_price', 'usd_price', 'deposit', 'pln_diff', 'change', 'btc_value', 'usdt_value', 'pln_value'], 'number'],
+            [['hodl_btc_value', 'exchange_btc_value', 'hodl_percent', 'btc_price', 'usd_price', 'deposit', 'pln_diff', 'change', 'btc_value', 'usdt_value', 'pln_value', 'staked'], 'number'],
         ];
     }
 
@@ -61,6 +62,7 @@ class PortfolioTicker extends \yii\db\ActiveRecord
             'btc_value' => 'BTC Value',
             'usdt_value' => 'USDT Value',
             'pln_value' => 'PLN Value',
+            'staked' => 'Staked'
         ];
     }
 }

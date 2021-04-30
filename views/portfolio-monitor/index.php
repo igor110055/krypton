@@ -34,6 +34,7 @@ $this->title = 'Monitor';
             'exchange_btc_value',
             'btc_value',
             'btc_price',
+            'staked',
             'usdt_value',
             'usd_price',
             'pln_value',

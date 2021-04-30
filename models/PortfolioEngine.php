@@ -31,8 +31,11 @@ class PortfolioEngine
         $btcPrice = $currentPrices['Binance']['BTCUSDT'];
         $usdPrice = Currency::getUsdToPlnRate();
         $deposit = $this->configuration->getValue('pln_deposit');
+        $stakedUSDT = $this->configuration->getValue('usdt_staked');
+        $usdtPrice = 1 / $currentPrices['Binance']['BTCUSDT'];
+        $stakedBTCValue = $stakedUSDT * $usdtPrice;
 
-        $usdValue = $btcValue * $btcPrice;
+        $usdValue = ($btcValue + $stakedBTCValue) * $btcPrice;
         $plnValue = round($usdValue * $usdPrice, 2);
 
         $plnDiff = $plnValue - $deposit;
@@ -51,6 +54,7 @@ class PortfolioEngine
         $portfolioTicker->btc_value = $btcValue;
         $portfolioTicker->usdt_value = $usdValue;
         $portfolioTicker->pln_value = $plnValue;
+        $portfolioTicker->staked = $stakedUSDT;
 
         $portfolioTicker->save();
     }
