@@ -27,6 +27,10 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
 
             'id',
+            [
+                'attribute' => 'portfolio',
+                'value' => 'portfolio.name'
+            ],
             'buy_date',
             'sell_date',
             'market',

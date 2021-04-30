@@ -18,7 +18,7 @@ class HodlPositionSearch extends HodlPosition
     {
         return [
             [['id'], 'integer'],
-            [['buy_date', 'sell_date', 'market', 'status', 'comment'], 'safe'],
+            [['buy_date', 'sell_date', 'market', 'status', 'comment', 'portfolio'], 'safe'],
             [['quantity', 'buy_price', 'sell_price', 'buy_value', 'sell_value', 'val_diff', 'price_diff', 'pln_value', 'pln_diff_value'], 'number'],
         ];
     }

@@ -38,6 +38,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filter' => false
             ],
             [
+                'attribute' => 'portfolio',
+                'value' => 'portfolio.name'
+            ],
+            [
                 'attribute' => 'buy_date',
                 'filter' => false
             ],
@@ -108,7 +112,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
                 'footer' => round($summary['global_price_diff'], 2),
             ],
-//            'comment',
+            'comment',
 
             [
                 'class' => 'yii\grid\ActionColumn',

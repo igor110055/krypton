@@ -46,7 +46,7 @@ class HodlPosition extends \yii\db\ActiveRecord
     {
         return [
             [['buy_date', 'sell_date'], 'safe'],
-            [['quantity', 'buy_price', 'sell_price', 'buy_value', 'sell_value', 'val_diff', 'price_diff', 'pln_buy_value', 'pln_value', 'pln_diff_value'], 'number'],
+            [['portfolio_id', 'quantity', 'buy_price', 'sell_price', 'buy_value', 'sell_value', 'val_diff', 'price_diff', 'pln_buy_value', 'pln_value', 'pln_diff_value'], 'number'],
             [['market', 'status', 'comment'], 'string', 'max' => 255],
         ];
     }
@@ -73,7 +73,13 @@ class HodlPosition extends \yii\db\ActiveRecord
             'pln_value' => 'Pln Value',
             'pln_diff_value' => 'Pln Diff Value',
             'comment' => 'Comment',
+            'portfolio_id' => 'Portfolio'
         ];
+    }
+
+    public function getPortfolio()
+    {
+        return $this->hasOne(HodlPortfolio::class, ['id' => 'portfolio_id']);
     }
 
     public static function getProcessingBTCvalueSum(array $currentPrices): float

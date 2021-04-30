@@ -1,5 +1,7 @@
 <?php
 
+use app\models\HodlPortfolio;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use kartik\widgets\DateTimePicker;
@@ -13,19 +15,23 @@ use kartik\widgets\DateTimePicker;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'buy_date')->widget(DateTimePicker::classname(), [
+    <?= $form->field($model, 'buy_date')->widget(DateTimePicker::class, [
         'options' => ['placeholder' => 'Put time ...'],
         'pluginOptions' => [
             'autoclose' => true
         ]
     ]); ?>
 
-    <?= $form->field($model, 'sell_date')->widget(DateTimePicker::classname(), [
+    <?= $form->field($model, 'sell_date')->widget(DateTimePicker::class, [
         'options' => ['placeholder' => 'Put time ...'],
         'pluginOptions' => [
             'autoclose' => true
         ]
     ]); ?>
+
+    <?= $form->field($model, 'portfolio_id')->dropDownList(
+        ArrayHelper::map(HodlPortfolio::find()->asArray()->all(), 'id', 'name')
+    ) ?>
 
     <?= $form->field($model, 'market')->textInput(['maxlength' => true]) ?>
 
