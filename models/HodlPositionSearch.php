@@ -17,8 +17,8 @@ class HodlPositionSearch extends HodlPosition
     public function rules()
     {
         return [
-            [['id'], 'integer'],
-            [['buy_date', 'sell_date', 'market', 'status', 'comment', 'portfolio'], 'safe'],
+            [['portfolio_id'], 'integer'],
+            [['buy_date', 'sell_date', 'market', 'status', 'comment'], 'safe'],
             [['quantity', 'buy_price', 'sell_price', 'buy_value', 'sell_value', 'val_diff', 'price_diff', 'pln_value', 'pln_diff_value'], 'number'],
         ];
     }
@@ -50,6 +50,8 @@ class HodlPositionSearch extends HodlPosition
             return $dataProvider;
         }
 
+        $query->joinWith(['portfolio']);
+
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
@@ -64,6 +66,7 @@ class HodlPositionSearch extends HodlPosition
             'price_diff' => $this->price_diff,
             'pln_value' => $this->pln_value,
             'pln_diff_value' => $this->pln_diff_value,
+            'hodl_portfolio.id' => $this->portfolio_id,
         ]);
 
         $query->andFilterWhere(['like', 'market', $this->market])

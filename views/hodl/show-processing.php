@@ -1,5 +1,7 @@
 <?php
 
+use app\models\HodlPortfolio;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
@@ -38,8 +40,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filter' => false
             ],
             [
-                'attribute' => 'portfolio',
-                'value' => 'portfolio.name'
+                'attribute' => 'portfolio_id',
+                'value' => 'portfolio.name',
+                'filter' => ArrayHelper::map(HodlPortfolio::find()->asArray()->all(), 'id', 'name')
             ],
             [
                 'attribute' => 'buy_date',

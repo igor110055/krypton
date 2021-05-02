@@ -45,8 +45,9 @@ class HodlPosition extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['portfolio_id'], 'integer'],
             [['buy_date', 'sell_date'], 'safe'],
-            [['portfolio_id', 'quantity', 'buy_price', 'sell_price', 'buy_value', 'sell_value', 'val_diff', 'price_diff', 'pln_buy_value', 'pln_value', 'pln_diff_value'], 'number'],
+            [['quantity', 'buy_price', 'sell_price', 'buy_value', 'sell_value', 'val_diff', 'price_diff', 'pln_buy_value', 'pln_value', 'pln_diff_value'], 'number'],
             [['market', 'status', 'comment'], 'string', 'max' => 255],
         ];
     }
