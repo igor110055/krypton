@@ -75,8 +75,18 @@ class HodlController extends Controller
             'pln_buy_value' => 0,
             'pln_value' => 0,
             'pln_diff_value' => 0,
-            'avg_price' => 0
+            'avg_price' => 0,
+            'global_price_diff' => 0
         ];
+
+        if (count($orders) == 0) {
+            return $this->render('show-processing', [
+                'dataProvider' => $dataProvider,
+                'searchModel' => $searchModel,
+                'summary' => $summary
+            ]);
+        }
+
         foreach ($orders as $order) {
 
             if (isset($currentPrices['Binance'][$order['market']])) {
