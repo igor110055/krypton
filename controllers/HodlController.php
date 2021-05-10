@@ -238,6 +238,13 @@ class HodlController extends Controller
                 $price = $result['yield-app']['usd'];
             }
         }
+        if ($market == 'GHXUSDT') {
+            $ids = ['gamercoin'];
+            $result = $client->getTokenPrices($ids);
+            if ($result) {
+                $price = $result['gamercoin']['usd'];
+            }
+        }
 
         return $price;
     }

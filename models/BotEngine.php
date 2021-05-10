@@ -170,8 +170,13 @@ class BotEngine
 
                 break;
             case 'SELL':
-                $bestOffer = $actualTicker['bid'];
-                $result = $api->placeSellOrder($pendingOrder->market, $pendingOrder->quantity, $bestOffer);
+
+                if ($pendingOrder->transaction_type == $pendingOrder::TRANSACTION_BEST) {
+                    $offerPrice = $actualTicker['bid'];
+                } else {
+                    $offerPrice = $pendingOrder->price;
+                }
+                $result = $api->placeSellOrder($pendingOrder->market, $pendingOrder->quantity, $offerPrice);
                 if ($result['success']) {
                     $uuid = $pendingOrder->uuid;
                     $pendingOrder->delete();
@@ -182,8 +187,8 @@ class BotEngine
                     $order = Order::find()->where(['uuid' => $uuid])->one();
                     if ($order) {
                         $order->status = Order::STATUS_DONE;
-                        $order->sell_price = $bestOffer;
-                        $order->sell_value = $pendingOrder->quantity * $bestOffer;
+                        $order->sell_price = $offerPrice;
+                        $order->sell_value = $pendingOrder->quantity * $offerPrice;
                         $order->sell_uuid = $result['orderId'];
                         $order->sell_placed = date('Y-m-d H:i:s');
                         $order->save();
