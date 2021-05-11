@@ -138,7 +138,7 @@ BTC: <?php echo $hodlBTCvalueSum; ?>
         [
             'attribute' => 'PriceUSDT',
             'value' => function($data) {
-                return number_format($data['PriceUSDT'], 4, '.', '');
+                return number_format($data['PriceUSDT'], 8, '.', '');
             },
             'contentOptions'=> ['style'=>'width: 12%;']
         ],

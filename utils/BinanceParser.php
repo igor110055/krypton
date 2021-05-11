@@ -113,7 +113,13 @@ class BinanceParser extends ExchangeParser
                 if ($asset['asset'] != 'BTC' && $asset['asset'] != 'USDT' && $asset['asset'] != 'BUSD') {
                     $binanceSummary[$asset['asset']]['Currency'] = $asset['asset'];
                     $binanceSummary[$asset['asset']]['Balance'] = $asset['free'] + $asset['locked'];
-                    $binanceSummary[$asset['asset']]['Price'] = $currentPrices[$asset['asset'] . 'BTC'];
+                    if (isset($currentPrices[$asset['asset'] . 'BTC'])) {
+                        $binanceSummary[$asset['asset']]['Price'] = $currentPrices[$asset['asset'] . 'BTC'];
+                        $binanceSummary[$asset['asset']]['Value'] = $binanceSummary[$asset['asset']]['Balance'] * $binanceSummary[$asset['asset']]['Price'];
+                    } else {
+                        $binanceSummary[$asset['asset']]['Price'] = 0;
+                        $binanceSummary[$asset['asset']]['Value'] = $binanceSummary[$asset['asset']]['Balance'] * $currentPrices[$asset['asset'] . 'USDT'] * (1 / (float)$currentPrices['BTCUSDT']);
+                    }
                     if (isset($currentPrices[$asset['asset'] . 'USDT'])) {
                         $binanceSummary[$asset['asset']]['PriceUSDT'] = $currentPrices[$asset['asset'] . 'USDT'];
                         $binanceSummary[$asset['asset']]['ValueUSDT'] = $binanceSummary[$asset['asset']]['Balance'] * $binanceSummary[$asset['asset']]['PriceUSDT'];
@@ -121,7 +127,7 @@ class BinanceParser extends ExchangeParser
                         $binanceSummary[$asset['asset']]['PriceUSDT'] = 0;
                         $binanceSummary[$asset['asset']]['ValueUSDT'] = $binanceSummary[$asset['asset']]['Balance'] * $binanceSummary[$asset['asset']]['Price'] * (float)$currentPrices['BTCUSDT'];
                     }
-                    $binanceSummary[$asset['asset']]['Value'] = $binanceSummary[$asset['asset']]['Balance'] * $binanceSummary[$asset['asset']]['Price'];
+
                     $binanceSum += $binanceSummary[$asset['asset']]['Value'];
                     $binanceSumUSDT += $binanceSummary[$asset['asset']]['ValueUSDT'];
                 }
