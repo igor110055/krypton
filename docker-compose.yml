@@ -1,7 +1,9 @@
 version: '2'
 services:
   php:
-    image: yiisoftware/yii2-php:7.4-apache
+    build:
+      context: ./docker
+      dockerfile: Dockerfile
     volumes:
       - ~/.composer-docker/cache:/root/.composer/cache:delegated
       - ./:/app:delegated
