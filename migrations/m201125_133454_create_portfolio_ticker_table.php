@@ -22,6 +22,7 @@ class m201125_133454_create_portfolio_ticker_table extends Migration
             'usd_price' => $this->float(),
             'deposit' => $this->float(),
             'pln_diff' => $this->float(),
+            'change' => $this->float(),
             'btc_value' => $this->float(),
             'usdt_value' => $this->float(),
             'pln_value' => $this->float(),

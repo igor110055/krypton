@@ -34,12 +34,6 @@ class CronController extends Controller
         }
     }
 
-    public function actionCheckOpenOrders2()
-    {
-        $engine = new BotEngine();
-        $engine->checkOpenOrders2();
-    }
-
     public function actionCheckBalances()
     {
         $engine = new BotEngine();
