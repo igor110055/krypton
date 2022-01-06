@@ -252,6 +252,7 @@ class Binance implements ExchangeInterface
         $url = $this->getApiUrl() . $endpoint;
 
         $params['timestamp'] = round(microtime(true) * 1000);
+        $params['recvWindow'] = 50000;
         $string = $this->buildQueryString($params);
         $params['signature'] = $this->generateSign($string);
         $url .= '?' . http_build_query($params);

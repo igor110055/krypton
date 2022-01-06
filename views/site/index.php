@@ -23,8 +23,10 @@ $this->title = 'Krypton';
     </div>
 </div>
 <?php
-$labels = implode(',', $dataset['days']);
-$values = implode(',', $dataset['values']);
+if (isset($dataset['days']) && isset($dataset['values'])) {
+
+    $labels = implode(',', $dataset['days']);
+    $values = implode(',', $dataset['values']);
 $script = <<< JS
 var ctx = $('#myChart');
 var myChart = new Chart(ctx, {
@@ -61,5 +63,6 @@ var myChart = new Chart(ctx, {
     }
 });
 JS;
-$position = \yii\web\View::POS_READY;
-$this->registerJs($script, $position);
+    $position = \yii\web\View::POS_READY;
+    $this->registerJs($script, $position);
+}

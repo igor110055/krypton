@@ -76,7 +76,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     if (strstr($model->market, 'BTC')) {
                         return number_format($model->price, 8, '.', '');
                     } else {
-                        return number_format($model->price, 4, '.', '');
+                        return number_format($model->price, 8, '.', '');
                     }
                 },
                 'filter' => false,
@@ -88,7 +88,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     if (strstr($model->market, 'BTC')) {
                         return number_format($model->current_price, 8, '.', '');
                     } else {
-                        return number_format($model->current_price, 4, '.', '');
+                        return number_format($model->current_price, 8, '.', '');
                     }
                 },
                 'filter' => false,
