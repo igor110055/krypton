@@ -4,3 +4,8 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 # Otherwise forward it to index.php
 RewriteRule . index.php
+
+AuthType Basic
+AuthName "Access to the staging site"
+AuthUserFile /app/web/.htpasswd
+Require valid-user
